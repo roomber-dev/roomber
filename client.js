@@ -9,6 +9,44 @@ $(() => {
 	getMessages()
 })
 
+function animate(element, anim, duration, end) {
+	element.addEventListener("animationend", (e) => {
+		console.log("END");
+		if(e.animationName == anim) {
+			end();
+		}
+	});
+	element.style = `animation: ${duration} ${anim}`;
+}
+
+$(document).ready(function() {
+	let loading = $("#loading-back")[0];
+	animate(loading, "fade-out", "1s", () => {
+		loading.remove();
+		console.log("REMOVE");
+	});
+	popup("Welcome to Roomber!", `
+		<input id="reg-username" class="textbox" placeholder="Username"/>
+		<br>
+		<input id="reg-password" class="textbox" placeholder="Password"/>
+	`, [
+		{
+			label: "Register",
+			click: popup => {
+				console.log("register");
+				popup.close()
+			}
+		},
+		{
+			label: "Log in",
+			click: popup => {
+				console.log("login");
+				popup.close()
+			}
+		}
+	]);
+});
+
 let newMessage = (message) => {
 	$("#message").val("");
 
@@ -48,27 +86,6 @@ function sendMessage(message){
 
 var socket = io();
 socket.on('message', addMessages);
-
-popup("Welcome to Roomber!", `
-	<input id="reg-username" class="textbox" placeholder="Username"/>
-	<br>
-	<input id="reg-password" class="textbox" placeholder="Password"/>
-`, [
-	{
-		label: "Register",
-		click: popup => {
-			console.log("register");
-			popup.close()
-		}
-	},
-	{
-		label: "Log in",
-		click: popup => {
-			console.log("login");
-			popup.close()
-		}
-	}
-]);
 
 window.addEventListener('contextmenu', (event) => {
 	event.preventDefault()
