@@ -1,0 +1,267 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-size: 20px;
+    font-family: 'Noto Sans';
+    color: white;
+    overflow: hidden;
+    background: url("assets/test-bg.jpg");
+    background-size: cover;
+}
+
+.flex {
+    display: flex;
+    height: 100%;
+}
+
+.flex-down {
+    flex-direction: column;
+}
+
+/*#message-box,
+#channels,
+#topbar {
+    
+}*/
+
+
+#topbar {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.topbar-main {
+    display: flex;
+    height: 100%;
+}
+
+#channels, #chat-area {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#channels {
+    width: 20%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#messages {
+    position: absolute;
+    top: 10%;
+    left: 200px;
+    right: 0;
+    bottom: 8%;
+    overflow-y: scroll;
+}
+
+#channels {
+    display: flex;
+    /*align-items: center;
+    justify-content: center;*/
+    text-align: left;
+}
+
+#channels ul {
+    margin: 5px;
+}
+
+#channels {
+    width: 200px;
+}
+
+#topbar-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#roomber-logo {
+    width: 40px;
+    margin: 4px;
+    object-fit: contain;
+}
+
+#other-stuff {
+    flex: 1;
+}
+
+#message-box {
+    padding: 10px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 202px;
+    max-height: 7%;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+#message-box .message-input {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+#message {
+    flex: 1;
+    width: 80%;
+    margin-right: 10px;
+    padding: 5px;
+    background: rgba(0, 0, 0, 0.6);
+    outline: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    color: white;
+    font-size: 16px;
+    opacity: 0.8;
+    transition: 1s opacity;
+}
+
+#message:hover {
+    opacity: 1.0;
+}
+
+#send {
+    width: 10%;
+    background: rgba(0, 0, 0, 0.6);
+    outline: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    color: white;
+    font-weight: bold;
+    border-radius: 4px;
+    opacity: 0.8;
+    transition: 1s opacity;
+}
+
+#send:hover {
+    opacity: 1.0;
+}
+
+#chat::-webkit-scrollbar,
+#chat::-moz-scrollbar {
+    width: 1em;
+}
+   
+#chat::-webkit-scrollbar-track,
+#chat::-moz-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    /*background-image: linear-gradient(to down, #00941c, #0095ba  );*/
+    background-color: #00941c;
+}
+   
+#chat::-webkit-scrollbar-thumb,
+#chat::-moz-scrollbar-thumb {
+    background-color: #0095ba;
+
+    border: 3px solid #a7a7a7;
+    padding: 2px;
+    border-radius: 10px;
+
+
+    transition: background-color .3s ease-out;
+    -moz-transition: background-color .3s ease-out;
+    -webkit-transition: background-color .3s ease-out;
+    -o-transition: background-color .3s ease-out;
+}
+  
+#chat::-webkit-scrollbar-thumb:hover,
+#chat::-moz-scrollbar-thumb:hover {
+    background-color:#006c86;
+}
+
+@keyframes message-enter {
+    from {
+        opacity: 0.2;
+        top: -10px;
+    }
+
+    to {
+        opacity: 1;
+        top: 0;
+    }
+}
+
+.message {
+    margin: 5px;
+    position: relative;
+    border-radius: 6px;
+    padding: 5px;
+}
+
+.glass {
+    background: rgba(0, 0, 0, 0.4);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    outline: 1px solid rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.3);
+}
+
+.username {
+    font-weight: bold;
+    /*background: #546e7a;*/
+    color: white;
+    padding: 2px 4px;
+    font-size: 120%;
+    border-radius: 4px;
+    margin: 0 5px 0 0;
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.avatar {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    vertical-align: middle;
+    background-color: rgba(0, 0, 0, 0.1);
+    margin-right: 10px;
+}
+
+.timestamp {
+    font-size: 14px;
+    margin: 10px 2px;
+    opacity: 0.7;
+    justify-self: flex-end;
+}
+
+.failed {
+    color: red;
+}
+
+.sending {
+    opacity: 50%;
+}
+
+.msg {
+    width: 100%;
+}
+
+.msg-flex {
+    flex: 1;
+}
+
+.msgln {
+    word-wrap: break-word;
+    word-break: break-all;
+}
+
+.textbox {
+    background: rgb(32, 32, 32);
+    color: #C7C7C7;
+    margin-top: 14px;
+    padding: 6px;
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 6px;
+}

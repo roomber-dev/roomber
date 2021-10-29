@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>roomber v4</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="popup_style.css">
+</head>
+<body>
+	<div class="topbar-main flex-down">
+        <div id="topbar" class="glass">
+            <div id="topbar-content">
+                <img id="roomber-logo" src="assets/roomber-logo.png">
+                <!-- other stuff will be in this div, will rename it later -->
+                <div id="other-stuff"></div>
+            </div>
+        </div>
+        <div class="flex">
+            <div id="channels" class="glass">
+                <ul>
+                    <li>#example1</li>
+                    <li>#example2</li>
+                    <li>#example3</li>
+                </ul>
+            </div>
+            <div id="chat-area">
+                <div id="messages">
+                    <!-- initially empty -->
+                </div>
+                <div id="message-box" class="glass">
+                    <div class="message-input">
+                        <input id="message" placeholder="Message" autocomplete="off" />
+                        <button id="send">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="popup.js"></script>
+	<script src="client.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+.popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    font-family: 'Noto Sans';
+    color: #C7C7C7;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+@keyframes popup-before {
+    0% {
+        transform: scale(80%);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(100%);
+        opacity: 1.0;
+    }
+}
+
+@keyframes popup-after {
+    0% {
+        transform: scale(100%);
+        opacity: 1.0;
+    }
+
+    100% {
+        transform: scale(70%);
+        opacity: 0.0;
+    }
+}
+
+@keyframes popup-blur-before {
+    0% {
+        opacity: 0.0;
+    }
+
+    100% {
+        opacity: 1.0;
+    }
+}
+
+@keyframes popup-blur-after {
+    0% {
+        opacity: 1.0;
+    }
+
+    100% {
+        opacity: 0.0;
+    }
+}
+
+.popup-content {
+    display: flex;
+    background: transparent;
+    width: 40%;
+    min-width: 250px;
+    height: fit-content;
+    flex-direction: column;
+    z-index: 2;
+}
+
+.popup-main {
+    flex: 1;
+    padding: 30px;
+    background: #1B1B1B;
+    border-radius: 8px 8px 0px 0px;
+    outline: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid #2F2F2F;
+}
+
+.popup-footer {
+    flex-basis: 45px;
+    min-height: 45px !important;
+    display: flex;
+    justify-content: right;
+    background: rgba(27, 27, 27, 0.8);
+    border-radius: 0px 0px 6px 6px;
+    outline: 1px solid rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.popup-footer .popup-button {
+    width: 80px;
+    margin: 6px;
+}
+
+.popup-button {
+    background: #1B1B1B;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    transition: 0.5s background;
+    color: white;
+}
+
+.popup-button:hover {
+    background: #2F2F2F;
+}
+
+.popup-blur {
+    background: rgba(0,0,0,0.1);
+    backdrop-filter: blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
