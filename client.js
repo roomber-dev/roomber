@@ -1,9 +1,9 @@
 
 
 $(() => {
-	$("#send").click(()=>{
+	$("#send").click(() => {
 		sendMessage({
-			name: "someever for now", 
+			name: "someever for now",
 			message: $("#message").val(),
 			timestamp: new Date().getTime()
 		});
@@ -11,8 +11,8 @@ $(() => {
 	getMessages()
 })
 
-$(document).ready(function() {
-	$("#loading-back").fadeOut(1000, "swing", function() {
+$(document).ready(function () {
+	$("#loading-back").fadeOut(1000, "swing", function () {
 		$("#loading-back").remove();
 	});
 	popup("Welcome to Roomber!", `
@@ -62,15 +62,15 @@ let newMessage = (message) => {
 function addMessages(message) {
 	$("#messages").append(newMessage(message));
 }
-	
+
 function getMessages() {
-	$.get('http://localhost:3000/messages', 
-	(data) => {
-		data.forEach(addMessages);
-	})
+	$.get('http://localhost:3000/messages',
+		(data) => {
+			data.forEach(addMessages);
+		})
 }
 
-function sendMessage(message){
+function sendMessage(message) {
 	$.post('http://localhost:3000/messages', message)
 }
 
@@ -79,4 +79,18 @@ socket.on('message', addMessages);
 
 window.addEventListener('contextmenu', (event) => {
 	event.preventDefault()
-  })
+})
+
+socket.on('disconnect', function () {
+	console.log(
+		"%cConnection lost.",
+		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+});
+
+socket.on('connect', function () {
+	console.log(
+		"%cConnected.",
+		"color:lime;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+});

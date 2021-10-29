@@ -1,10 +1,13 @@
+const path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
-var config = require('./config.js');
+var config = require('./config/config.js');
+
+let userson = 0;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded(
@@ -15,7 +18,12 @@ app.use(express.static(__dirname));
 var dbUrl = config.dbUrl;
 
 mongoose.connect(dbUrl, (err) => { 
-	console.log('mongodb connected',err);
+	if(err) {
+		console.log('failed to connect to mongodb: ',err);
+	} else {
+		console.log('mongodb connected');
+	}
+	
 })
 
 var Message = mongoose.model(
@@ -36,9 +44,18 @@ var User = mongoose.model(
 	}
 )
 
-io.on('connection', () =>{
-	console.log('a user is connected')
+
+io.on('connection', (socket) =>{
+	userson++
+	console.log(`user connected (All users: ${userson})`)
+
+	socket.on('disconnect', function() {
+		userson--
+		console.log(`user disconnected (All users: ${userson})`);
+		
+	});
 })
+
 
 app.get('/messages', (req, res) => {
 	Message.find({},(err, messages)=> {
