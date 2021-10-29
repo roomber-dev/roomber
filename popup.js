@@ -23,7 +23,7 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
     blur = document.querySelector(`#${id} .popup-blur`);
     content.style = "animation: 0.5s popup-before;";
     blur.style = "animation: 0.5s popup-blur-before;";
-    animEnd = (e) => {
+    let animEnd = (e) => {
         if(e.animationName == "popup-after") {
             elem.remove();
         }

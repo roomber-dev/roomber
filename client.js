@@ -11,21 +11,9 @@ $(() => {
 	getMessages()
 })
 
-function animate(element, anim, duration, end) {
-	element.addEventListener("animationend", (e) => {
-		console.log("END");
-		if(e.animationName == anim) {
-			end();
-		}
-	});
-	element.style = `animation: ${duration} ${anim}`;
-}
-
 $(document).ready(function() {
-	let loading = $("#loading-back")[0];
-	animate(loading, "fade-out", "1s", () => {
-		loading.remove();
-		console.log("REMOVE");
+	$("#loading-back").fadeOut(1000, "swing", function() {
+		$("#loading-back").remove();
 	});
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
