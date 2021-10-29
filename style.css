@@ -13,7 +13,7 @@ body {
     font-family: 'Noto Sans';
     color: white;
     overflow: hidden;
-    background: url("assets/test-bg.jpg");
+    background: url("assets/bggradient.png");
     background-size: cover;
 }
 
