@@ -69,3 +69,7 @@ popup("Welcome to Roomber!", `
 		}
 	}
 ]);
+
+window.addEventListener('contextmenu', (event) => {
+	event.preventDefault()
+  })
