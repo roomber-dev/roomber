@@ -52,6 +52,8 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
             </button>
         `;
     });
+
+    return popups;
 };
 
 function alert(msg) {
