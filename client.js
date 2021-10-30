@@ -88,6 +88,34 @@ socket.on('disconnect', function () {
 	);
 });
 
+socket.on('connect_failed', function() {
+	console.log(
+		"%cFailed to connect to server",
+		"color:#8b0000;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+ })
+
+ socket.on('reconnect_failed', function() {
+	console.log(
+		"%cFailed to reconnect to server",
+		"color:#8b0000;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+ })
+
+ socket.on('reconnecting', function() {
+	console.log(
+		"%cReconnecting...",
+		"color:yellow;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+ })
+
+ socket.on('error', function() {
+	console.log(
+		"%cError",
+		"color:red;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+ })
+
 socket.on('connect', function () {
 	console.log(
 		"%cConnected.",
