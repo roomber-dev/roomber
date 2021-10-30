@@ -1,15 +1,5 @@
-$(document).ready(function () {
-	$("#loading-back").fadeOut(1000, "swing", function () {
-		$("#loading-back").remove();
-	});
-	document.getElementById("send").addEventListener("click", () => {
-		sendMessage({
-			name: "someever for now",
-			message: $("#message").val(),
-			timestamp: new Date().getTime()
-		});
-	});
-	getMessages()
+$(document).ready(() => {
+	$("#loading-back").remove();
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
@@ -30,6 +20,15 @@ $(document).ready(function () {
 			}
 		}
 	]);
+	
+	$("#send").click(() => {
+		sendMessage({
+			name: "someever for now",
+			message: $("#message").val(),
+			timestamp: new Date().getTime()
+		});
+	})
+	getMessages();
 });
 
 let newMessage = (message) => {
