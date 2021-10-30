@@ -1,6 +1,7 @@
-
-
-$(() => {
+$(document).ready(function () {
+	$("#loading-back").fadeOut(1000, "swing", function () {
+		$("#loading-back").remove();
+	});
 	$("#send").click(() => {
 		sendMessage({
 			name: "someever for now",
@@ -9,12 +10,6 @@ $(() => {
 		});
 	})
 	getMessages()
-})
-
-$(document).ready(function () {
-	$("#loading-back").fadeOut(1000, "swing", function () {
-		$("#loading-back").remove();
-	});
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
