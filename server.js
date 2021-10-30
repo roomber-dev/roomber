@@ -5,7 +5,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
-var config = require('./config/config.js');
+var config = require('./config.js');
 
 //app.set('view engine', 'html')
 //app.use(express.static('public'))
@@ -68,9 +68,10 @@ app.get('/messages', (req, res) => {
 
 app.post('/messages', (req, res) => {
 	var message = new Message(req.body);
+	console.log(req.body.message)
 	message.save((err) =>{
 		if(err)
-			sendStatus(500);
+			res.sendStatus(500);
 		io.emit('message', req.body);
 		res.sendStatus(200);
 	})
