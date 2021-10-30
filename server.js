@@ -6,6 +6,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 var config = require('./config.js');
+var chalk = require('chalk');
 
 //app.set('view engine', 'html')
 //app.use(express.static('public'))
@@ -50,11 +51,11 @@ var User = mongoose.model(
 
 io.on('connection', (socket) =>{
 	userson++
-	console.log(`user connected (All users: ${userson})`)
+	console.log(chalk.greenBright(`user connected (All users: ${userson})`))
 
 	socket.on('disconnect', function() {
 		userson--
-		console.log(`user disconnected (All users: ${userson})`);
+		console.log(chalk.redBright(`user disconnected (All users: ${userson})`));
 		
 	});
 })

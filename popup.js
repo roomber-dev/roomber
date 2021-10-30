@@ -4,9 +4,16 @@ var btns = {};
 function removePopup(id) {
     if(id) {
         let popupelement = document.querySelector(`#popup-${id}`);
+        content = document.querySelector(`#popup-${id} .popup-content`);
+        blur = document.querySelector(`#popup-${id} .popup-blur`);
 
         if(popupelement) {
-            popupelement.remove();
+            content.style = "animation: 0.5s popup-after;";
+            blur.style = "animation: 0.5s popup-blur-after;";
+            /*setInterval(() => {
+                popupelement.remove();  
+            }, 0.5);*/
+
             popups--
         } else {
             throw Error("Invalid popup ID");
@@ -22,7 +29,7 @@ function removePopup(id) {
 }
 
 function popup(title, text, buttons = [{label: "OK", click: popup => popup.close()}], blink = false) {
-    popups += 1;
+    popups++
     id = `popup-${popups}`;
     html = `<div class="popup" id="${id}">
     <div class="popup-content">
