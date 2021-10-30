@@ -44,9 +44,10 @@ let newMessage = (message) => {
 		        <div class="flex-down msg-flex">
 		            <div class="username">${message.name}</div>
 		            <div class="msgln">
-		                ${message.message.trim()}
+		                ${message.message}
 		            </div>
 		        </div>
+				<div class="copyMessage"><button onclick="copyMessage('${message._id}');">Copy</button></div>
 		        <div class="timestamp">${ts}</div>
 		    </div>
 		</div>
@@ -127,3 +128,15 @@ socket.on('connect', function () {
 		"color:lime;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
 });
+
+function copyMessage(id) {
+		var copyText = document.querySelector(`#msg${id} .msgln`);
+		var range = document.createRange();
+		range.selectNode(copyText); //changed here
+		window.getSelection().removeAllRanges(); 
+		window.getSelection().addRange(range); 
+		document.execCommand("copy", false, copyText.innerHTML.replace(/ /g, ''));
+		window.getSelection().removeAllRanges();
+		console.log('copied', copyText.innerHTML)
+		
+}
