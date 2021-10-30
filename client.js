@@ -2,13 +2,13 @@ $(document).ready(function () {
 	$("#loading-back").fadeOut(1000, "swing", function () {
 		$("#loading-back").remove();
 	});
-	$("#send").click(() => {
+	document.getElementById("send").addEventListener("click", () => {
 		sendMessage({
 			name: "someever for now",
 			message: $("#message").val(),
 			timestamp: new Date().getTime()
 		});
-	})
+	});
 	getMessages()
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
