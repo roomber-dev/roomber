@@ -7,6 +7,9 @@ var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 var config = require('./config/config.js');
 
+//app.set('view engine', 'html')
+//app.use(express.static('public'))
+
 let userson = 0;
 
 app.use(bodyParser.json());
