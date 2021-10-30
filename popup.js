@@ -1,6 +1,26 @@
 let popups = 0;
 var btns = {};
 
+function removePopup(id) {
+    if(id) {
+        let popupelement = document.querySelector(`#popup-${id}`);
+
+        if(popupelement) {
+            popupelement.remove();
+            popups--
+        } else {
+            throw Error("Invalid popup ID");
+        }
+    } else {
+    repeat(function(times) {
+        if(times > 0) {
+            document.querySelector(`#popup-${times}`).remove();
+            popups--
+        }
+    }, popups)
+}
+}
+
 function popup(title, text, buttons = [{label: "OK", click: popup => popup.close()}], blink = false) {
     popups += 1;
     id = `popup-${popups}`;
@@ -44,6 +64,7 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
             button.click({close: () => {
                 content.style = "animation: 0.5s popup-after;";
                 blur.style = "animation: 0.5s popup-blur-after;";
+                popups--
             }});
         };
         footer.innerHTML += `
@@ -58,4 +79,10 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
 
 function alert(msg) {
     popup("Alert", msg);
+}
+
+
+function repeat(func, times) {
+    func(times);
+    times && --times && repeat(func, times);
 }

@@ -76,10 +76,21 @@ window.addEventListener('contextmenu', (event) => {
 })
 
 socket.on('disconnect', function () {
+	let errorpopupid = popup("<p style='color: red; font-weight: bold;'>Error</p>", "The connection has been lost. Reconnecting..", [], true);
 	console.log(
 		"%cConnection lost.",
 		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
+	var audio = new Audio('assets/okinmessagesound.wav');
+	audio.play();
+
+	socket.on('connect', function () {
+		console.log(
+			"%cReconnected.",
+			"color:dark_green;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
+		);
+		removePopup(errorpopupid);
+	});
 });
 
 socket.on('connect_failed', function() {
