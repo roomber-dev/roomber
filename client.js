@@ -44,7 +44,7 @@ let newMessage = (message) => {
 		        <div class="flex-down msg-flex">
 		            <div class="username">${message.name}</div>
 		            <div class="msgln">
-		                ${message.message}
+		                ${message.message.trim()}
 		            </div>
 		        </div>
 				<div class="copyMessage"><button onclick="copyMessage('${message._id}');">Copy</button></div>
