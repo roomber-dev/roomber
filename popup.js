@@ -20,6 +20,7 @@ function removePopup(id) {
         }
     } else {
         $(".popup").remove();
+        popups = 0;
     }
 }
 
