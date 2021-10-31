@@ -76,6 +76,8 @@ window.addEventListener('contextmenu', (event) => {
 	event.preventDefault()
 })
 
+disconnected = false;
+
 socket.on('disconnect', function () {
 	disconnected = true;
 	errorpopupid = popup("<p style='color: red; font-weight: bold;'>Error</p>", "The connection has been lost. Reconnecting..", [], true);
