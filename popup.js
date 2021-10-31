@@ -2,6 +2,7 @@ let popups = 0;
 var btns = [];
 
 function removePopup(id) {
+    if(id > popups) return;
     if(id) {
         let popupelement = document.querySelector(`#popup-${id}`);
         content = document.querySelector(`#popup-${id} .popup-content`);

@@ -83,6 +83,7 @@ socket.on('disconnect', function () {
 		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
 	var audio = new Audio('assets/okinmessagesound.wav');
+	audio.volume = 0.5;
 	audio.play();
 
 	socket.on('connect', function () {
