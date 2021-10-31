@@ -1,0 +1,26 @@
+.horizontalMenu {
+	z-index: 4;
+	background: #1B1B1B;
+	display: flex;
+	border-radius: 4px;
+	backdrop-filter: blur(30px);
+	opacity: 0;
+    transition: 0.25s opacity;
+}
+
+.horizontalMenuItem {
+	width: 24px;
+	height: 24px;
+	background: red;
+	margin: 4px;
+	background: #1B1B1B;
+	border-radius: 4px;
+	border: 1px solid rgba(255,255,255,0.1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.horizontalMenuItem i {
+	transform: scale(80%);
+}

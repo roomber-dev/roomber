@@ -257,6 +257,16 @@ body {
     word-break: break-all;
 }
 
+.message .horizontalMenu {
+    justify-self: flex-end;
+    align-self: flex-start;
+    margin: 6px;
+}
+
+.message:hover .horizontalMenu {
+    opacity: 0.75;
+}
+
 .textbox {
     background: rgb(32, 32, 32);
     color: #C7C7C7;

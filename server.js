@@ -7,6 +7,15 @@ var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 var config = require('./config.js');
 var chalk = require('chalk');
+const ngrok = require('ngrok');
+
+(async function() {
+	const url = await ngrok.connect({
+		authtoken: config.ngrokAuthtoken,
+		addr: 3000
+	});
+	console.log("ngrok yay ", url);
+})();
 
 //app.set('view engine', 'html')
 //app.use(express.static('public'))
@@ -73,7 +82,7 @@ app.post('/messages', (req, res) => {
 	message.save((err) =>{
 		if(err)
 			res.sendStatus(500);
-		io.emit('message', req.body);
+		io.emit('message', message);
 		res.sendStatus(200);
 	})
 })
