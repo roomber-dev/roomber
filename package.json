@@ -14,6 +14,7 @@
     "express": "^4.17.1",
     "http": "^0.0.1-security",
     "mongoose": "^6.0.12",
+    "ngrok": "^4.2.2",
     "socket.io": "^4.3.1"
   }
 }

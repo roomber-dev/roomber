@@ -1,5 +1,22 @@
 $(document).ready(() => {
-	$("#loading-back").remove();
+	getMessages();
+});
+
+function copyMessage(id) {
+	var copyText = document.querySelector(`#${id} .msgln`);
+	console.log(copyText);
+	var range = document.createRange();
+	range.selectNodeContents(copyText);
+	window.getSelection().removeAllRanges(); 
+	window.getSelection().addRange(range); 
+	document.execCommand("copy", false, copyText.innerHTML);
+	window.getSelection().removeAllRanges();
+}
+
+function loaded() {
+	$("#loading-back").fadeOut(1000, () => {
+		$("#loading-back").remove();
+	});
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
@@ -28,8 +45,7 @@ $(document).ready(() => {
 			timestamp: new Date().getTime()
 		});
 	})
-	getMessages();
-});
+}
 
 let newMessage = (message) => {
 	$("#message").val("");
@@ -45,7 +61,14 @@ let newMessage = (message) => {
 		            <div class="username">${message.name}</div>
 		            <div class="msgln">${message.message.trim()}</div>
 		        </div>
-				<div class="copyMessage"><button onclick="copyMessage('${message._id}');">Copy</button></div>
+				${HorizontalMenu([{
+					icon: "content_copy",
+					click: menuItem => {
+						console.log(menuItem.getMenu());
+						console.log(menuItem);
+						copyMessage(menuItem.getMessage().attr("id"));
+					}
+				}])}
 		        <div class="timestamp">${ts}</div>
 		    </div>
 		</div>
@@ -57,14 +80,15 @@ function addMessages(message) {
 }
 
 function getMessages() {
-	$.get('http://localhost:3000/messages',
+	$.get('/messages',
 		(data) => {
 			data.forEach(addMessages);
+			loaded();
 		})
 }
 
 function sendMessage(message) {
-	$.post('http://localhost:3000/messages', message)
+	$.post('/messages', message)
 }
 
 var socket = io();
@@ -133,13 +157,3 @@ socket.on('connect', function () {
 		"color:lime;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
 });
-
-function copyMessage(id) {
-	var copyText = document.querySelector(`#msg${id} .msgln`);
-	var range = document.createRange();
-	range.selectNodeContents(copyText);
-	window.getSelection().removeAllRanges(); 
-	window.getSelection().addRange(range); 
-	document.execCommand("copy", false, copyText.innerHTML);
-	window.getSelection().removeAllRanges();
-}
