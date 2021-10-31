@@ -13,6 +13,10 @@ function copyMessage(id) {
 	window.getSelection().removeAllRanges();
 }
 
+function chatScrollDown() {
+	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+}
+
 function loaded() {
 	$("#loading-back").fadeOut(1000, () => {
 		$("#loading-back").remove();
@@ -77,6 +81,7 @@ let newMessage = (message) => {
 
 function addMessages(message) {
 	$("#messages").append(newMessage(message));
+	chatScrollDown();
 }
 
 function getMessages() {
@@ -89,6 +94,7 @@ function getMessages() {
 
 function sendMessage(message) {
 	$.post('/messages', message)
+	chatScrollDown();
 }
 
 var socket = io();
