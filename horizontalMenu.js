@@ -3,15 +3,15 @@ let currMsg = null;
 let menus = 0;
 
 const HorizontalMenu = buttons => {
-	let icons = [];
+	let icons = "";
 	menus++;
 	buttons.forEach(button => {
-		btn = button;
-		btn["menuID"] = menus;
-		btn = {
-			...btn,
-			getMenu: () => $("#horizontalMenu" + menus),
-			getMessage: () => $("#horizontalMenu" + menus).parent().parent().parent(),
+		let m = menus;
+		let btn = {
+			...button,
+			menuID: m,
+			getMenu: () => $("#horizontalMenu" + m),
+			getMessage: () => $("#horizontalMenu" + m).parent().parent().parent(),
 			getMessageLine: () => $("#horizontalMenu" + menus).parent().find(".msg-flex .msgln")
 		};
 		hmbtns.push(btn);
