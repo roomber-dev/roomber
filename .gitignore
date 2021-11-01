@@ -1,4 +1,4 @@
 node_modules/
 config/
-/config.js
+config.js
 push.bat
