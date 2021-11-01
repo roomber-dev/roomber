@@ -1,6 +1,30 @@
+usernames = {};
+
 $(document).ready(() => {
 	getMessages();
 });
+
+function logOut() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+
+    window.location.reload();
+}
+
+function logIn() {
+	$("#login").text("");
+	$("#login").append("Logged in: " + currentUser.username);
+	$("#login").append('</br><button id="logout" class="popup-button">Log out</button>');
+	$("#logout").click(() => {
+		logOut();
+	});
+}
 
 function copyMessage(id) {
 	var copyText = document.querySelector(`#${id} .msgln`);
@@ -12,14 +36,34 @@ function copyMessage(id) {
 	window.getSelection().removeAllRanges();
 }
 
+function setCookie(cname, cvalue) {
+	const d = new Date();
+	d.setTime(d.getTime() + (365*24*60*60*1000));
+	let expires = "expires="+ d.toUTCString();
+	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+	let name = cname + "=";
+	let decodedCookie = decodeURIComponent(document.cookie);
+	let ca = decodedCookie.split(';');
+	for(let i = 0; i <ca.length; i++) {
+		let c = ca[i];
+		while (c.charAt(0) == ' ') {
+			c = c.substring(1);
+		}
+		if (c.indexOf(name) == 0) {
+			return c.substring(name.length, c.length);
+		}
+	}
+	return "";
+}
+
 function chatScrollDown() {
 	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
 }
 
-function loaded() {
-	$("#loading-back").fadeOut(1000, () => {
-		$("#loading-back").remove();
-	});
+function reg() {
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
@@ -27,43 +71,127 @@ function loaded() {
 	`, [
 		{
 			label: "Register",
-			click: popup => {
-				console.log("register");
-				popup.close()
+			click: p => {
+				let fail = false;
+				$.post('/register', {
+					username: $("#reg-username").val(),
+					password: $("#reg-password").val(),
+					email: "[no email]"
+				}, data => {
+					setCookie("username", data.username);
+					setCookie("password", data.password);
+					setCookie("email", data.email);
+					setCookie("userid", data._id);
+					currentUser = data;
+					logIn();
+				}).fail(() => {fail = true});
+				p.close()
+				setTimeout(() => {
+					if(fail) {
+						popup("Error", "This username is already taken", [{
+							label: "OK",
+							click: popup => {
+								popup.close();
+								setTimeout(reg, 500);
+							}
+						}], false, "red");
+					}
+				}, 500);
 			}
 		},
 		{
 			label: "Log in",
-			click: popup => {
-				console.log("login");
-				popup.close()
+			click: p => {
+				let fail = false;
+				$.post("/login", {
+					username: $("reg-username").val(),
+					password: $("reg-password").val()
+				}, data => {
+					setCookie("username", data.username);
+					setCookie("password", data.password);
+					setCookie("email", data.email);
+					setCookie("userid", data._id);
+					currentUser = data;
+					logIn();
+				}).fail(() => {fail = true});
+				console.log(fail);
+
+				p.close();
+				if(fail) {
+					setTimeout(() => {
+						popup("Error", "Invalid username or password", [{
+							label: "OK", 
+							click: popup => {
+								popup.close();
+								setTimeout(reg, 500);
+							}
+						}], false, "red");
+					}, 500);
+				}
 			}
 		}
 	]);
+}
+
+function loaded() {
+	$("#loading-back").fadeOut(1000, () => {
+		$("#loading-back").remove();
+	});
+
+	let id = getCookie("userid");
+	if(id == "") {
+		reg();
+	} else {
+		currentUser = {
+			_id: id,
+			username: getCookie("username"),
+			password: getCookie("password"),
+			email: getCookie("email")
+		};
+		logIn();
+	}
 	
 	$("#send").click(() => {
 		sendMessage({
-			name: "someever for now",
-			message: $("#message").val(),
-			timestamp: new Date().getTime()
+			password: currentUser.password,
+			username: currentUser.username,
+			msg: {
+				author: currentUser._id,
+				message: $("#message").val(),
+				timestamp: new Date().getTime()
+			}
 		});
 	})
 
 	chatScrollDown();
 }
 
-let newMessage = (message) => {
+async function getUsername(id) {
+	if(usernames[id]) {
+		return usernames[id];
+	}
+	let username = "Unknown";
+	await $.post('/username', {_id: id}, data => {
+		username = data;
+	});
+	usernames[id] = username;
+	return username;
+}
+
+let newMessage = async (message) => {
 	$("#message").val("");
 
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();
+
+	let username = await getUsername(message.author);
 
 	return `<div class="message glass" id="${message._id}">
 		<div class="flex">
 		    <img src="avatars/default.png" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
-		            <div class="username">${message.name}</div>
+		            <div class="username">${username}</div>
 		            <div class="msgln">${message.message.trim()}</div>
 		        </div>
 				${HorizontalMenu([
@@ -97,11 +225,18 @@ let newMessage = (message) => {
 };
 
 function addMessages(message) {
+<<<<<<< HEAD
 	$("#messages").append(newMessage(message));
 	chatScrollDown();
 	var audio = new Audio('assets/message.mp3');
 	audio.volume = 0.5;
 	audio.play();
+=======
+	(async () => {
+		$("#messages").append(await newMessage(message));
+		chatScrollDown();
+	})()
+>>>>>>> be2904ce65b1e0b3b0f10bc4fa15006d0e469770
 }
 
 function getMessages() {
@@ -134,7 +269,7 @@ disconnected = false;
 
 socket.on('disconnect', function () {
 	disconnected = true;
-	errorpopupid = popup("<p style='color: red; font-weight: bold;'>Error</p>", "The connection has been lost. Reconnecting..", [], true);
+	errorpopupid = popup("Error", "The connection has been lost. Reconnecting..", [], true, "red");
 	console.log(
 		"%cConnection lost.",
 		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"

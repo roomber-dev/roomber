@@ -49,24 +49,27 @@ mongoose.connect(dbUrl, (err) => {
 	
 })
 
-var Message = mongoose.model(
-	'Message',
-	{
-		author : Number, 
-		message : String, 
-		timestamp : Number 
-	}
-)
+let msgModel = {
+	author : String, 
+	message : String, 
+	timestamp : Number 
+}
 
+var Message = mongoose.model('Message', msgModel)
 var User = mongoose.model(
 	'User',
 	{
-		author : Number, 
-		message : String, 
-		timestamp : Number 
+		username : String,
+		password : String,
+		email : String
 	}
 )
 
+function auth(username, password, success) {
+	User.find({username: username, password: password}, (err, user) => {
+		if(user.length) success();
+	});
+}
 
 io.on('connection', (socket) =>{
 	userson++
@@ -86,14 +89,36 @@ app.get('/messages', (req, res) => {
 	})
 })
 
+app.post('/userid', (req, res) => {
+	User.find(req.body, (err, user) => {
+		res.send(user[0]._id);
+	});
+})
+
+app.post('/username', (req, res) => {
+	User.find(req.body, (err, user) => {
+		if(user.length) {
+			res.send(user[0].username);
+		} else {
+			res.send("Unknown");
+		}
+	});
+})
+
 app.post('/messages', (req, res) => {
-	var message = new Message(req.body);
-	message.save((err) =>{
-		if(err)
-			res.sendStatus(500);
-		io.emit('message', message);
-		res.sendStatus(200);
-	})
+	let msg = {}
+	Object.keys(msgModel).forEach(k => {
+		msg[k] = req.body['msg[' + k + ']'];
+	});
+	auth(req.body.username, req.body.password, () => {
+		var message = new Message(msg);
+		message.save((err) =>{
+			if(err)
+				res.sendStatus(500);
+			io.emit('message', message);
+			res.sendStatus(200);
+		})
+	});
 })
 
 app.post('/edit', (req, res) => {
@@ -116,12 +141,36 @@ app.post('/edit', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-	var user = new User(req.body);
-	user.save(err => {
-		if(err)
-			sendStatus(500);
-		res.sendStatus(200);
-	})
+	User.find({username: req.body.username}, (err, doc) => {
+		if(doc.length) {
+			res.sendStatus(409);
+		} else {
+			var user = new User(req.body);
+			user.save(err_ => {
+				if(err_) {
+					console.log(err_);
+					res.sendStatus(500);
+				}
+				else {
+					res.send(user);
+				}
+			})
+		}
+	});
+})
+
+app.post('/login', (req, res) => {
+	console.log(req);
+	console.log(req.body);
+	User.find({username: req.body.username, password: req.body.password}, (err, doc) => {
+		console.log(doc.length);
+		console.log(doc[0]);
+		if(doc.length) {
+			res.send(doc);
+		} else {
+			res.sendStatus(401);
+		}
+	});
 })
 
 var server = http.listen(3000, () => {
