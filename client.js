@@ -225,18 +225,17 @@ let newMessage = async (message) => {
 };
 
 function addMessages(message) {
-<<<<<<< HEAD
+/*
 	$("#messages").append(newMessage(message));
 	chatScrollDown();
 	var audio = new Audio('assets/message.mp3');
 	audio.volume = 0.5;
-	audio.play();
-=======
+	audio.play();*/
+
 	(async () => {
 		$("#messages").append(await newMessage(message));
 		chatScrollDown();
 	})()
->>>>>>> be2904ce65b1e0b3b0f10bc4fa15006d0e469770
 }
 
 function getMessages() {
