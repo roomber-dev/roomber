@@ -82,6 +82,9 @@ let newMessage = (message) => {
 function addMessages(message) {
 	$("#messages").append(newMessage(message));
 	chatScrollDown();
+	var audio = new Audio('assets/message.mp3');
+	audio.volume = 0.5;
+	audio.play();
 }
 
 function getMessages() {
