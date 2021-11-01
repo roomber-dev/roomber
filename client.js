@@ -4,7 +4,6 @@ $(document).ready(() => {
 
 function copyMessage(id) {
 	var copyText = document.querySelector(`#${id} .msgln`);
-	console.log(copyText);
 	var range = document.createRange();
 	range.selectNodeContents(copyText);
 	window.getSelection().removeAllRanges(); 
@@ -65,14 +64,20 @@ let newMessage = (message) => {
 		            <div class="username">${message.name}</div>
 		            <div class="msgln">${message.message.trim()}</div>
 		        </div>
-				${HorizontalMenu([{
-					icon: "content_copy",
-					click: menuItem => {
-						console.log(menuItem.getMenu());
-						console.log(menuItem);
-						copyMessage(menuItem.getMessage().attr("id"));
+				${HorizontalMenu([
+					{
+						icon: "content_copy",
+						click: menuItem => {
+							copyMessage(menuItem.getMessage().attr("id"));
+						}
+					},
+					{
+						icon: "create",
+						click: menuItem => {
+							console.log("edit message");
+						}
 					}
-				}])}
+				])}
 		        <div class="timestamp">${ts}</div>
 		    </div>
 		</div>

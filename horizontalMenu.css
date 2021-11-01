@@ -1,11 +1,9 @@
 .horizontalMenu {
 	z-index: 4;
-	background: #1B1B1B;
-	display: flex;
+	background: rgba(27,27,27,0.5);
 	border-radius: 4px;
 	backdrop-filter: blur(30px);
-	opacity: 0;
-    transition: 0.25s opacity;
+	display: flex;
 }
 
 .horizontalMenuItem {
@@ -13,12 +11,20 @@
 	height: 24px;
 	background: red;
 	margin: 4px;
-	background: #1B1B1B;
+	background: rgba(27,27,27,0.7);
 	border-radius: 4px;
 	border: 1px solid rgba(255,255,255,0.1);
-	display: flex;
 	align-items: center;
 	justify-content: center;
+	transition: 0.25s background;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.horizontalMenuItem:hover {
+	background: rgba(38,38,38,0.7);
 }
 
 .horizontalMenuItem i {
