@@ -48,6 +48,8 @@ function loaded() {
 			timestamp: new Date().getTime()
 		});
 	})
+
+	chatScrollDown();
 }
 
 let newMessage = (message) => {
@@ -56,7 +58,7 @@ let newMessage = (message) => {
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();
 
-	return `<div class="message glass" id="msg${message._id}">
+	return `<div class="message glass" id="${message._id}">
 		<div class="flex">
 		    <img src="avatars/default.png" class="avatar">
 		    <div class="flex msg">
@@ -74,7 +76,17 @@ let newMessage = (message) => {
 					{
 						icon: "create",
 						click: menuItem => {
-							console.log("edit message");
+							popup("Edit message", `
+								<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
+							`, [{
+								label: "OK",
+								click: popup => {
+									let id = menuItem.getMessage().attr("id");
+									let newMsg = $("#editMessage").val();
+									editMessage(id, newMsg);
+									popup.close();
+								}
+							}]);
 						}
 					}
 				])}
@@ -99,11 +111,17 @@ function getMessages() {
 
 function sendMessage(message) {
 	$.post('/messages', message)
-	chatScrollDown();
+}
+
+function editMessage(message, newMessage) {
+	$.post('/edit', {msg: message, newMsg: newMessage});
 }
 
 var socket = io();
 socket.on('message', addMessages);
+socket.on('edit', e => {
+	$(`#${e.msg} .msgln`).text(e.newMsg);
+});
 
 window.addEventListener('contextmenu', (event) => {
 	event.preventDefault()
