@@ -96,6 +96,25 @@ app.post('/messages', (req, res) => {
 	})
 })
 
+app.post('/edit', (req, res) => {
+	Message.findById(req.body.msg, (err, doc) => {
+		if(err) {
+			console.log(err);
+			res.sendStatus(500);
+		}
+		else {
+			doc.save((err_) =>{
+				if(err_) {
+					console.log(err_);
+					res.sendStatus(500);
+				}
+				io.emit('edit', req.body);
+				res.sendStatus(200);
+			})
+		}
+	});
+})
+
 app.post('/register', (req, res) => {
 	var user = new User(req.body);
 	user.save(err => {
