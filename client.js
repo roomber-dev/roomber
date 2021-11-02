@@ -133,6 +133,10 @@ function loaded() {
 	}
 	
 	$("#send").click(() => {
+		if($("#message").val().trim() == "") {
+			$("#message").val("");
+			return;
+		};
 		sendMessage({
 			password: currentUser.password,
 			username: currentUser.username,
