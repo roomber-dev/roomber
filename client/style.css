@@ -250,14 +250,19 @@ body {
 	z-index: 10;
 }
 
+#loading-image img {
+	width: 120px;
+	height: 120px;
+	animation: spin 4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+}
+
 #loading-image {
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	width: 120px;
-	height: 120px;
 	margin:-60px 0 0 -60px;
-	animation: spin 4s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+	mask-image: url("assets/roomber-outline.png");
+	background: linear-gradient(to top, rgba(0,149,186,1) 0%, rgba(155,52,186,1) 70%);
 }
 
 @keyframes spin { 
