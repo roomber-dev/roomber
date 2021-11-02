@@ -12,6 +12,8 @@ async function getUsername(id) {
 
 async function addMessage(message, scroll = true) {
 	$("#messages").append(await newMessage(message));
+	$(`#${message._id} .msgln`).text(message.message);
+
 	scroll && chatScrollDown();
 }
 

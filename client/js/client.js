@@ -94,7 +94,7 @@ async function newMessage(message) {
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
 		            <div class="username">${username}</div>
-		            <div class="msgln">${message.message.trim()}</div>
+		            <div class="msgln"></div>
 		        </div>
 				${HorizontalMenu([
 					{
