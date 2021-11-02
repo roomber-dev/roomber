@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>roomber v4</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>roomber v4</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
-	<link rel="stylesheet" href="style.css">
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="components/popup.css">
-	<link rel="stylesheet" href="components/horizontalMenu.css">
+    <link rel="stylesheet" href="components/horizontalMenu.css">
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <link rel="stylesheet" href="twemoji-awesome.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <script src="js/random.js"></script>
     <script src="js/fun.js"></script>
 </head>
+
 <body>
     <div id="loading-back">
         <img alt="" src="assets/roomber-logo.png" id="loading-image">
         <div id="fun-fact-container">
-            <p>Fun fact:</p>
+            <p id="fun-fact-title">Did you know</p>
             <p id="fun-fact"></p>
         </div>
     </div>
@@ -26,7 +33,7 @@
     <!--<div id="disconnected">
         Disconnected.
     </div>-->
-	<div class="topbar-main flex-down">
+    <div class="topbar-main flex-down">
         <div id="topbar" class="glass">
             <div id="topbar-content">
                 <img id="roomber-logo" src="assets/roomber-logo.png">
@@ -61,11 +68,11 @@
 
     <script src="components/popup.js"></script>
     <script src="components/horizontalMenu.js"></script>
-    <script src="js/random.js"></script>
     <script src="js/cookies.js"></script>
     <script src="js/login.js"></script>
     <script src="js/client.js"></script>
-	<script src="js/communication.js"></script>
+    <script src="js/communication.js"></script>
     <script src="js/connectionEvents.js"></script>
 </body>
+
 </html>

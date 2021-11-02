@@ -1,8 +1,8 @@
 usernames = {};
 
-getFunFact(function(fact) {
+/*getFunFact(function(fact) {
 	$("#fun-fact").append(fact);
-});
+});*/
 
 $(document).ready(function() {
 	loginInit();
