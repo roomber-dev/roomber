@@ -19,12 +19,15 @@ const ngrokenabled = false;
 
 if(ngrokenabled) {
 (async function() {
+	console.log("ngrok starting...");
 	const url = await ngrok.connect({
 		authtoken: config.ngrokAuthtoken,
 		addr: 3000
 	});
 	console.log("ngrok yay", url);
 })();
+} else {
+	console.log("ngrok disabled");
 }
 
 //app.set('view engine', 'html')
