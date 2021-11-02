@@ -11,7 +11,7 @@ function removePopup(id) {
         if(popupelement) {
             content.style = "animation: 0.5s popup-after;";
             blur.style = "animation: 0.5s popup-blur-after;";
-            setTimeout(() => {
+            setTimeout(function() {
                 popupelement.remove();  
             }, 500);
 
@@ -25,7 +25,7 @@ function removePopup(id) {
     }
 }
 
-function popup(title, text, buttons = [{label: "OK", click: popup => popup.close()}], blink = false, color = "") {
+function popup(title, text, buttons = [{label: "OK", click: function(popup) { popup.close()}}], blink = false, color = "") {
     popups++
     id = `popup-${popups}`;
     let t = title;
@@ -54,7 +54,7 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
     blur = document.querySelector(`#${id} .popup-blur`);
     content.style = "animation: 0.5s popup-before;";
     blur.style = "animation: 0.5s popup-blur-before;";
-    setTimeout(() => {
+    setTimeout(function() {
         content.style.animation = "";
         blur.style.animation = "";
     },500);
@@ -64,15 +64,15 @@ function popup(title, text, buttons = [{label: "OK", click: popup => popup.close
     }
     footer = document.querySelector(`#${id} .popup-footer`);
     btns[popups] = {};
-    buttons.forEach(button => {
+    buttons.forEach(function(button) {
         btns[popups][button.label] = button;
         btns[popups][button.label]["popup_id"] = id;
-        btns[popups][button.label]["on_click"] = (btn) => {
-            btn.click({close: () => {
+        btns[popups][button.label]["on_click"] = function(btn) {
+            btn.click({close: function() {
                 let iid = btn["popup_id"];
                 $(`#${iid} .popup-content`).css("animation","0.5s popup-after");
                 $(`#${iid} .popup-blur`).css("animation","0.5s popup-blur-after");
-                setTimeout(() => {
+                setTimeout(function() {
                     $(`#${iid}`).remove();
                 }, 500);
                 popups--

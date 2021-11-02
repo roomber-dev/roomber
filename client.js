@@ -1,6 +1,6 @@
 usernames = {};
 
-$(document).ready(() => {
+$(document).ready(function() {
 	getMessages();
 });
 
@@ -21,13 +21,13 @@ function logIn() {
 	$("#login").text("");
 	$("#login").append("Logged in: " + currentUser.username);
 	$("#login").append('</br><button id="logout" class="popup-button">Log out</button>');
-	$("#logout").click(() => {
+	$("#logout").click(function() {
 		logOut();
 	});
 }
 
 function copyMessage(id) {
-	var copyText = document.querySelector(`#${id} .msgln`);
+	var copyText = $(`#${id} .msgln`)[0];
 	var range = document.createRange();
 	range.selectNodeContents(copyText);
 	window.getSelection().removeAllRanges(); 
@@ -65,10 +65,10 @@ function chatScrollDown() {
 
 function reg_err(p, msg) {
 	p.close()
-	setTimeout(() => {
+	setTimeout(function() {
 		popup("Error", msg, [{
 			label: "OK",
-			click: popup => {
+			click: function(popup) {
 				popup.close();
 				setTimeout(reg, 500);
 			}
@@ -78,7 +78,7 @@ function reg_err(p, msg) {
 
 function reg_callback(p, url, d, msg) {
 	// pretty fancy right?
-	if([$("#reg-username").val(), $("#reg-password").val()].map(i => i.trim()).includes("")) {
+	if([$("#reg-username").val(), $("#reg-password").val()].map(function(i) { return i.trim(); } ).includes("")) {
 		reg_err(p, "Username or password are empty");
 		return;
 	}
@@ -86,7 +86,7 @@ function reg_callback(p, url, d, msg) {
 		...d,
 		username: $("#reg-username").val(),
 		password: $("#reg-password").val()
-	}, data => {
+	}, function(data) {
 		setCookie("username", data.username);
 		setCookie("password", data.password);
 		setCookie("email", data.email);
@@ -94,7 +94,7 @@ function reg_callback(p, url, d, msg) {
 		currentUser = data;
 		logIn();
 		p.close();
-	}).fail(() => reg_err(p, msg));
+	}).fail(function() {reg_err(p, msg)});
 }
 
 function reg() {
@@ -105,17 +105,17 @@ function reg() {
 	`, [
 		{
 			label: "Register",
-			click: popup => reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken")
+			click: function(popup) { reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken") }
 		},
 		{
 			label: "Log in",
-			click: popup => reg_callback(popup, '/login', {}, "Wrong username or password")
+			click: function(popup) { reg_callback(popup, '/login', {}, "Wrong username or password") }
 		}
 	]);
 }
 
 function loaded() {
-	$("#loading-back").fadeOut(1000, () => {
+	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
 	});
 
@@ -132,7 +132,7 @@ function loaded() {
 		logIn();
 	}
 	
-	$("#send").click(() => {
+	$("#send").click(function() {
 		if($("#message").val().trim() == "") {
 			$("#message").val("");
 			return;
@@ -148,7 +148,7 @@ function loaded() {
 		});
 	})
 
-	$("#message").keypress(e => {
+	$("#message").keypress(function(e) {
 		var key = e.which;
 		if(key == 13) {
 			$("#send").click();
@@ -164,14 +164,14 @@ async function getUsername(id) {
 		return usernames[id];
 	}
 	let username = "Unknown";
-	await $.post('/username', {_id: id}, data => {
+	await $.post('/username', {_id: id}, function(data) {
 		username = data;
 	});
 	usernames[id] = username;
 	return username;
 }
 
-let newMessage = async (message) => {
+let newMessage = async function(message) {
 	$("#message").val("");
 
 	const d = new Date(Number.parseInt(message.timestamp));
@@ -190,18 +190,18 @@ let newMessage = async (message) => {
 				${HorizontalMenu([
 					{
 						icon: "content_copy",
-						click: menuItem => {
+						click: function(menuItem) {
 							copyMessage(menuItem.getMessage().attr("id"));
 						}
 					},
 					{
 						icon: "create",
-						click: menuItem => {
+						click: function(menuItem) {
 							popup("Edit message", `
 								<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
 							`, [{
 								label: "OK",
-								click: popup => {
+								click: function(popup) {
 									let id = menuItem.getMessage().attr("id");
 									let newMsg = $("#editMessage").val();
 									editMessage(id, newMsg);
@@ -224,9 +224,9 @@ async function addMessages(message, scroll = true) {
 
 function getMessages() {
 	$.get('/messages',
-		(data) => {
-			var forEach = new Promise(async (resolve, reject) => {
-				data.forEach(async (msg, index, array) => {
+		function(data) {
+			var forEach = new Promise(async function(resolve, reject) {
+				data.forEach(async function(msg, index, array) {
 					await addMessages(msg, false);
 					if (index === array.length -1) resolve();
 				});
@@ -246,8 +246,8 @@ function editMessage(message, newMessage) {
 		password: currentUser.password, 
 		msg: message, 
 		newMsg: newMessage
-	}).fail(() => {
-		setTimeout(() => {
+	}).fail(function() {
+		setTimeout(function() {
 			popup("Error", "You can only edit your own messages!", undefined, false, "red");
 		}, 500);
 	});
@@ -255,17 +255,17 @@ function editMessage(message, newMessage) {
 
 var socket = io();
 socket.on('message', addMessages);
-socket.on('edit', e => {
+socket.on('edit', function(e) {
 	$(`#${e.msg} .msgln`).text(e.newMsg);
 });
 
-window.addEventListener('contextmenu', (event) => {
-	event.preventDefault()
+window.addEventListener('contextmenu', function(e) {
+	e.preventDefault()
 })
 
 disconnected = false;
 
-socket.on('disconnect', function () {
+socket.on('disconnect', function() {
 	disconnected = true;
 	errorpopupid = popup("Error", "The connection has been lost. Reconnecting..", [], true, "red");
 	console.log(
@@ -277,7 +277,7 @@ socket.on('disconnect', function () {
 	audio.play();
 });
 
-socket.on('connect', function () {
+socket.on('connect', function() {
 	if(disconnected) {
 		console.log(
 			"%cReconnected.",
@@ -316,7 +316,7 @@ socket.on('connect_failed', function() {
 	);
  })
 
-socket.on('connect', function () {
+socket.on('connect', function() {
 	console.log(
 		"%cConnected.",
 		"color:lime;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
