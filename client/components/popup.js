@@ -79,7 +79,7 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
             }});
         };
         footer.innerHTML += `
-            <button class="popup-button" onclick="popupButtons[${popups}]['${button.label}']['on_click'](popupButtons[${popups}]['${button.label}'])">
+            <button class="button" onclick="popupButtons[${popups}]['${button.label}']['on_click'](popupButtons[${popups}]['${button.label}'])">
                 ${button.label}
             </button>
         `;

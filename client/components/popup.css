@@ -88,21 +88,9 @@
     border: 1px solid rgba(255,255,255,0.1);
 }
 
-.popup-footer .popup-button {
+.popup-footer .button {
     width: 80px;
     margin: 6px;
-}
-
-.popup-button {
-    background: #1B1B1B;
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 4px;
-    transition: 0.5s background;
-    color: white;
-}
-
-.popup-button:hover {
-    background: #2F2F2F;
 }
 
 .popup-blur {

@@ -26,7 +26,3 @@
 .horizontalMenuItem:hover {
 	background: rgba(38,38,38,0.7);
 }
-
-.horizontalMenuItem i {
-	transform: scale(80%);
-}

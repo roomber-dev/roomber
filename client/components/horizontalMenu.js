@@ -14,7 +14,7 @@ const HorizontalMenu = function(buttons) {
 			getMessageLine: function() { return $("#horizontalMenu" + menus).parent().find(".msg-flex .msgln") }
 		};
 		horizontalMenuButtons.push(button);
-		buttonsHTML += `<div class="horizontalMenuItem" onclick="horizontalMenuButtons[${horizontalMenuButtons.length - 1}]['click'](horizontalMenuButtons[${horizontalMenuButtons.length - 1}])"><i class="material-icons">${button.icon}</i></div>\n`;
+		buttonsHTML += `<div class="horizontalMenuItem" onclick="horizontalMenuButtons[${horizontalMenuButtons.length - 1}]['click'](horizontalMenuButtons[${horizontalMenuButtons.length - 1}])"><i class="megasmall material-icons">${button.icon}</i></div>\n`;
 	});
 	return `
 		<div class="horizontalMenu" id="horizontalMenu${menus}">
