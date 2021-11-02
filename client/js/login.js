@@ -14,7 +14,7 @@ function logOut() {
 function logIn() {
 	$("#login").text("");
 	$("#login").append('<img src="avatars/default.png" alt="">');
-	$("#login").append('<p>' + currentUser.username + '</p>');
+	$("#login").append('<p class="username">' + currentUser.username + '</p>');
 	$("#login").append('<button id="logout" class="button"><i class="material-icons">exit_to_app</i></button>');
 	$("#logout").click(function() {
 		logOut();
