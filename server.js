@@ -161,12 +161,9 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
 	//console.log(req);
-	console.log(req.body);
 	User.find({username: req.body.username, password: req.body.password}, (err, doc) => {
-		console.log(doc.length);
-		console.log(doc[0]);
 		if(doc.length) {
-			res.send(doc);
+			res.send(doc[0]);
 		} else {
 			res.sendStatus(401);
 		}

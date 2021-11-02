@@ -63,6 +63,40 @@ function chatScrollDown() {
 	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
 }
 
+function reg_err(p, msg) {
+	p.close()
+	setTimeout(() => {
+		popup("Error", msg, [{
+			label: "OK",
+			click: popup => {
+				popup.close();
+				setTimeout(reg, 500);
+			}
+		}], false, "red");
+	}, 500);
+}
+
+function reg_callback(p, url, d, msg) {
+	// pretty fancy right?
+	if([$("#reg-username").val(), $("#reg-password").val()].map(i => i.trim()).includes("")) {
+		reg_err(p, "Username or password are empty");
+		return;
+	}
+	$.post(url, {
+		...d,
+		username: $("#reg-username").val(),
+		password: $("#reg-password").val()
+	}, data => {
+		setCookie("username", data.username);
+		setCookie("password", data.password);
+		setCookie("email", data.email);
+		setCookie("userid", data._id);
+		currentUser = data;
+		logIn();
+		p.close();
+	}).fail(() => reg_err(p, msg));
+}
+
 function reg() {
 	popup("Welcome to Roomber!", `
 		<input id="reg-username" class="textbox" placeholder="Username"/>
@@ -71,64 +105,11 @@ function reg() {
 	`, [
 		{
 			label: "Register",
-			click: p => {
-				let fail = false;
-				$.post('/register', {
-					username: $("#reg-username").val(),
-					password: $("#reg-password").val(),
-					email: "[no email]"
-				}, data => {
-					setCookie("username", data.username);
-					setCookie("password", data.password);
-					setCookie("email", data.email);
-					setCookie("userid", data._id);
-					currentUser = data;
-					logIn();
-				}).fail(() => {fail = true});
-				p.close()
-				setTimeout(() => {
-					if(fail) {
-						popup("Error", "This username is already taken", [{
-							label: "OK",
-							click: popup => {
-								popup.close();
-								setTimeout(reg, 500);
-							}
-						}], false, "red");
-					}
-				}, 500);
-			}
+			click: popup => reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken")
 		},
 		{
 			label: "Log in",
-			click: p => {
-				let fail = false;
-				$.post("/login", {
-					username: $("reg-username").val(),
-					password: $("reg-password").val()
-				}, data => {
-					setCookie("username", data.username);
-					setCookie("password", data.password);
-					setCookie("email", data.email);
-					setCookie("userid", data._id);
-					currentUser = data;
-					logIn();
-				}).fail(() => {fail = true});
-				console.log(fail);
-
-				p.close();
-				if(fail) {
-					setTimeout(() => {
-						popup("Error", "Invalid username or password", [{
-							label: "OK", 
-							click: popup => {
-								popup.close();
-								setTimeout(reg, 500);
-							}
-						}], false, "red");
-					}, 500);
-				}
-			}
+			click: popup => reg_callback(popup, '/login', {}, "Wrong username or password")
 		}
 	]);
 }
