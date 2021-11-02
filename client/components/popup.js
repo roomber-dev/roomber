@@ -27,12 +27,12 @@ function removePopup(id) {
 
 function popup(title, text, buttons = [{label: "OK", click: function(popup) { popup.close()}}], blink = false, color = "") {
     popups++
-    id = `popup-${popups}`;
+    let id = `popup-${popups}`;
     let t = title;
     if(color != "") {
         t = `<p style='color: ${color}; font-weight: bold;'>${title}</p>`;
     }
-    html = `<div class="popup" id="${id}">
+    let html = `<div class="popup" id="${id}">
     <div class="popup-content">
         <div class="popup-main">
             <h4>${t}</h4>
@@ -62,7 +62,7 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
     if(blink) {
         popupText.style = '    -moz-transition:all 0.5s ease-in-out; -webkit-transition:all 0.5s ease-in-out; -o-transition:all 0.5s ease-in-out; -ms-transition:all 0.5s ease-in-out; transition:all 0.5s ease-in-out;  -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
     }
-    footer = document.querySelector(`#${id} .popup-footer`);
+    let footer = document.querySelector(`#${id} .popup-footer`);
     popupButtons[popups] = {};
     buttons.forEach(function(button) {
         popupButtons[popups][button.label] = button;
