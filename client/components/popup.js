@@ -1,18 +1,18 @@
 let popups = 0;
-var btns = [];
+var popupButtons = [];
 
 function removePopup(id) {
     if(id > popups) return;
     if(id) {
-        let popupelement = document.querySelector(`#popup-${id}`);
-        content = document.querySelector(`#popup-${id} .popup-content`);
-        blur = document.querySelector(`#popup-${id} .popup-blur`);
+        let popupElement = document.querySelector(`#popup-${id}`);
+        let content = document.querySelector(`#popup-${id} .popup-content`);
+        let blur = document.querySelector(`#popup-${id} .popup-blur`);
 
-        if(popupelement) {
+        if(popupElement) {
             content.style = "animation: 0.5s popup-after;";
             blur.style = "animation: 0.5s popup-blur-after;";
             setTimeout(function() {
-                popupelement.remove();  
+                popupElement.remove();  
             }, 500);
 
             popups--
@@ -48,10 +48,10 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
         </div>
     </div>`;
     $("body").append(html);
-    elem = document.getElementById(id);
-    popuptext = document.querySelector(`#${id} .popup-text`);
-    content = document.querySelector(`#${id} .popup-content`);
-    blur = document.querySelector(`#${id} .popup-blur`);
+    let popupElement = document.getElementById(id);
+    let popupText = document.querySelector(`#${id} .popup-text`);
+    let content = document.querySelector(`#${id} .popup-content`);
+    let blur = document.querySelector(`#${id} .popup-blur`);
     content.style = "animation: 0.5s popup-before;";
     blur.style = "animation: 0.5s popup-blur-before;";
     setTimeout(function() {
@@ -60,26 +60,26 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
     },500);
 
     if(blink) {
-        popuptext.style = '    -moz-transition:all 0.5s ease-in-out; -webkit-transition:all 0.5s ease-in-out; -o-transition:all 0.5s ease-in-out; -ms-transition:all 0.5s ease-in-out; transition:all 0.5s ease-in-out;  -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
+        popupText.style = '    -moz-transition:all 0.5s ease-in-out; -webkit-transition:all 0.5s ease-in-out; -o-transition:all 0.5s ease-in-out; -ms-transition:all 0.5s ease-in-out; transition:all 0.5s ease-in-out;  -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
     }
     footer = document.querySelector(`#${id} .popup-footer`);
-    btns[popups] = {};
+    popupButtons[popups] = {};
     buttons.forEach(function(button) {
-        btns[popups][button.label] = button;
-        btns[popups][button.label]["popup_id"] = id;
-        btns[popups][button.label]["on_click"] = function(btn) {
-            btn.click({close: function() {
-                let iid = btn["popup_id"];
-                $(`#${iid} .popup-content`).css("animation","0.5s popup-after");
-                $(`#${iid} .popup-blur`).css("animation","0.5s popup-blur-after");
+        popupButtons[popups][button.label] = button;
+        popupButtons[popups][button.label]["popup_id"] = id;
+        popupButtons[popups][button.label]["on_click"] = function(button_) {
+            button_.click({close: function() {
+                let id_ = button_["popup_id"];
+                $(`#${id_} .popup-content`).css("animation","0.5s popup-after");
+                $(`#${id_} .popup-blur`).css("animation","0.5s popup-blur-after");
                 setTimeout(function() {
-                    $(`#${iid}`).remove();
+                    $(`#${id_}`).remove();
                 }, 500);
                 popups--
             }});
         };
         footer.innerHTML += `
-            <button class="popup-button" onclick="btns[${popups}]['${button.label}']['on_click'](btns[${popups}]['${button.label}'])">
+            <button class="popup-button" onclick="popupButtons[${popups}]['${button.label}']['on_click'](popupButtons[${popups}]['${button.label}'])">
                 ${button.label}
             </button>
         `;
@@ -88,12 +88,8 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
     return popups;
 };
 
-function alert(msg) {
-    popup("Alert", msg);
+function alert(message) {
+    popup("Alert", message);
 }
 
-
-function repeat(func, times) {
-    func(times);
-    times && --times && repeat(func, times);
-}
+// goodbye repeat() you know for loops exist right?

@@ -23,7 +23,7 @@ function loaded() {
 		$("#loading-back").remove();
 	});
 
-	login_init();
+	loginInit();
 	
 	$("#send").click(function() {
 		if($("#message").val().trim() == "") {
@@ -52,7 +52,7 @@ function loaded() {
 	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"))
 }
 
-let newMessage = async function(message) {
+async function newMessage(message) {
 	$("#message").val("");
 
 	const d = new Date(Number.parseInt(message.timestamp));
@@ -84,8 +84,8 @@ let newMessage = async function(message) {
 								label: "OK",
 								click: function(popup) {
 									let id = menuItem.getMessage().attr("id");
-									let newMsg = $("#editMessage").val();
-									editMessage(id, newMsg);
+									let newMessage = $("#editMessage").val();
+									editMessage(id, newMessage);
 									popup.close();
 								}
 							}]);
@@ -96,7 +96,7 @@ let newMessage = async function(message) {
 		    </div>
 		</div>
 	</div>`;
-};
+}
 
 window.addEventListener('contextmenu', function(e) {
 	e.preventDefault()

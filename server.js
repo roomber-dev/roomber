@@ -126,10 +126,10 @@ app.post('/messages', (req, res) => {
 
 app.post('/edit', (req, res) => {
 	auth(req.body.username, req.body.password, () => {
-		Message.find({author: req.body.editor, _id: req.body.msg}, (err, msg) => {
-			if(msg.length) {
-				var message = msg[0];
-				message.message = req.body.newMsg;
+		Message.find({author: req.body.editor, _id: req.body.message}, (err, message) => {
+			if(message.length) {
+				var message = message[0];
+				message.message = req.body.newMessage;
 				message.save(err_ => {
 					if(err_) {
 						console.log(err_);
@@ -137,8 +137,8 @@ app.post('/edit', (req, res) => {
 						return;
 					}
 					io.emit('edit', {
-						msg: req.body.msg,
-						newMsg: req.body.newMsg
+						message: req.body.message,
+						newMessage: req.body.newMessage
 					});
 					res.sendStatus(200);
 				});

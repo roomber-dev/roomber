@@ -10,7 +10,7 @@ async function getUsername(id) {
 	return username;
 }
 
-async function addMessages(message, scroll = true) {
+async function addMessage(message, scroll = true) {
 	$("#messages").append(await newMessage(message));
 	scroll && chatScrollDown();
 }
@@ -19,8 +19,8 @@ function getMessages() {
 	$.get('/messages',
 		function(data) {
 			var forEach = new Promise(async function(resolve, reject) {
-				data.forEach(async function(msg, index, array) {
-					await addMessages(msg, false);
+				data.forEach(async function(message, index, array) {
+					await addMessage(message, false);
 					if (index === array.length -1) resolve();
 				});
 			});
@@ -37,8 +37,8 @@ function editMessage(message, newMessage) {
 		editor: currentUser._id, 
 		username: currentUser.username, 
 		password: currentUser.password, 
-		msg: message, 
-		newMsg: newMessage
+		message: message, 
+		newMessage: newMessage
 	}).fail(function() {
 		setTimeout(function() {
 			popup("Error", "You can only edit your own messages!", undefined, false, "red");
@@ -47,7 +47,7 @@ function editMessage(message, newMessage) {
 }
 
 var socket = io();
-socket.on('message', addMessages);
+socket.on('message', addMessage);
 socket.on('edit', function(e) {
-	$(`#${e.msg} .msgln`).text(e.newMsg);
+	$(`#${e.message} .msgln`).text(e.newMessage);
 });

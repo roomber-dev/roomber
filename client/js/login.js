@@ -71,7 +71,7 @@ function reg() {
 	]);
 }
 
-function login_init() {
+function loginInit() {
 	let id = getCookie("userid");
 	if(id == "") {
 		reg();
