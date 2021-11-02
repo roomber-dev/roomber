@@ -59,7 +59,7 @@ function loaded() {
 	$("#send").click(function() {
 		if($("#message").val().trim() == "") {
 			return;
-		};
+		}
 
 		sendMessage({
 			password: currentUser.password,
