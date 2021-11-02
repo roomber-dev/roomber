@@ -1,11 +1,10 @@
 let horizontalMenuButtons = [];
 let menus = 0;
 
-const HorizontalMenu = function(buttons) {
+function horizontalMenuAddButtons(menu, buttons, a = true) {
 	let buttonsHTML = "";
-	menus++;
 	buttons.forEach(function(button) {
-		let m = menus;
+		let m = menu;
 		button = {
 			...button,
 			menuID: m,
@@ -16,8 +15,19 @@ const HorizontalMenu = function(buttons) {
 		horizontalMenuButtons.push(button);
 		buttonsHTML += `<div class="horizontalMenuItem" onclick="horizontalMenuButtons[${horizontalMenuButtons.length - 1}]['click'](horizontalMenuButtons[${horizontalMenuButtons.length - 1}])"><i class="megasmall material-icons">${button.icon}</i></div>\n`;
 	});
+	if(a) {
+		$("#horizontalMenu" + menu).append(buttonsHTML);
+	}
+	else {
+		return buttonsHTML;
+	}
+}
+
+const HorizontalMenu = function(buttons) {
+	menus++;
+	let buttonsHTML = horizontalMenuAddButtons(menus, buttons, false);
 	return `
-		<div class="horizontalMenu" id="horizontalMenu${menus}">
+		<div class="horizontalMenu" id="horizontalMenu${menus}" data-id="${menus}">
 			${buttonsHTML}
 		</div>
 	`;

@@ -23,6 +23,34 @@ function chatScrollDown() {
 	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
 }
 
+function getMessageManagementButtons() {
+	return [
+		{
+			icon: "create",
+			click: function(menuItem) {
+				popup("Edit message", `
+					<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
+				`, [{
+					label: "OK",
+					click: function(popup) {
+						let id = menuItem.getMessage().attr("id");
+						let newMessage = $("#editMessage").val();
+						editMessage(id, newMessage);
+						popup.close();
+					}
+				}]);
+			}
+		},
+		{
+			icon: "delete_forever",
+			click: function(menuItem) {
+				let id = menuItem.getMessage().attr("id");
+				deleteMessage(id);
+			}
+		}
+	];
+}
+
 function loaded() {
 	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
@@ -52,6 +80,12 @@ function loaded() {
 		}
 	});
 
+	$(".message").hover(function() {
+		if($(this).find(".horizontalMenu").children().length == 1 && $(this).find(".username").text() == currentUser.username) {
+			horizontalMenuAddButtons($(this).find(".horizontalMenu").data("id"), getMessageManagementButtons());
+		}
+	});
+
 	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"))
 }
 
@@ -65,31 +99,7 @@ async function newMessage(message) {
 
 	let extra = [];
 	if(currentUser != {} && message.author == currentUser._id) {
-		extra = [
-			{
-				icon: "create",
-				click: function(menuItem) {
-					popup("Edit message", `
-						<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
-					`, [{
-						label: "OK",
-						click: function(popup) {
-							let id = menuItem.getMessage().attr("id");
-							let newMessage = $("#editMessage").val();
-							editMessage(id, newMessage);
-							popup.close();
-						}
-					}]);
-				}
-			},
-			{
-				icon: "delete_forever",
-				click: function(menuItem) {
-					let id = menuItem.getMessage().attr("id");
-					deleteMessage(id);
-				}
-			}
-		];
+		extra = getMessageManagementButtons();
 	}
 
 	return `<div class="message glass" id="${message._id}">
