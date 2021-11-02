@@ -163,7 +163,15 @@ function loaded() {
 		});
 	})
 
-	chatScrollDown();
+	$("#message").keypress(e => {
+		var key = e.which;
+		if(key == 13) {
+			$("#send").click();
+			return false;
+		}
+	});
+
+	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"))
 }
 
 async function getUsername(id) {
@@ -224,25 +232,21 @@ let newMessage = async (message) => {
 	</div>`;
 };
 
-function addMessages(message) {
-/*
-	$("#messages").append(newMessage(message));
-	chatScrollDown();
-	var audio = new Audio('assets/message.mp3');
-	audio.volume = 0.5;
-	audio.play();*/
-
-	(async () => {
-		$("#messages").append(await newMessage(message));
-		chatScrollDown();
-	})()
+async function addMessages(message, scroll = true) {
+	$("#messages").append(await newMessage(message));
+	scroll && chatScrollDown();
 }
 
 function getMessages() {
 	$.get('/messages',
 		(data) => {
-			data.forEach(addMessages);
-			loaded();
+			var forEach = new Promise(async (resolve, reject) => {
+				data.forEach(async (msg, index, array) => {
+					await addMessages(msg, false);
+					if (index === array.length -1) resolve();
+				});
+			});
+			forEach.then(loaded);
 		})
 }
 
