@@ -13,6 +13,9 @@ async function getUsername(id) {
 async function addMessage(message, scroll = true) {
 	$("#messages").append(await newMessage(message));
 	$(`#${message._id} .msgln`).text(message.message);
+	$(`#${message._id} .msgln`)[0].innerHTML = $(`#${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z]+:/g, function(emoji, a) {
+    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
+	});
 
 	scroll && chatScrollDown();
 }
