@@ -1,5 +1,9 @@
 usernames = {};
 
+getFunFact(function(fact) {
+	$("#fun-fact").append(fact);
+});
+
 $(document).ready(function() {
 	loginInit();
 	getMessages();

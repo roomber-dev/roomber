@@ -277,6 +277,21 @@ body {
 	}
 }
 
+#fun-fact-container {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 120px;
+	font-size: 32px;
+}
+
+#fun-fact {
+	font-size: 16px;
+	opacity: 0.9;
+}
+
 #messages::-webkit-scrollbar {
 	width: 1em;
 }
