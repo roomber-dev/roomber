@@ -16,6 +16,7 @@ async function addMessage(message, scroll = true) {
 	$(`#${message._id} .msgln`)[0].innerHTML = $(`#${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z]+:/g, function(emoji, a) {
     	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
 	});
+	$(`#${message._id} .msgln`)[0].innerHTML = parseUrls($(`#${message._id} .msgln`)[0].innerHTML);
 
 	scroll && chatScrollDown();
 }
