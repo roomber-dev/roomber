@@ -58,9 +58,9 @@ function loaded() {
 	
 	$("#send").click(function() {
 		if($("#message").val().trim() == "") {
-			$("#message").val("");
 			return;
 		};
+
 		sendMessage({
 			password: currentUser.password,
 			username: currentUser.username,
@@ -70,6 +70,7 @@ function loaded() {
 				timestamp: new Date().getTime()
 			}
 		});
+		$("#message").val("");
 	})
 
 	$("#message").keypress(function(e) {
@@ -90,7 +91,6 @@ function loaded() {
 }
 
 async function newMessage(message) {
-	$("#message").val("");
 
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();

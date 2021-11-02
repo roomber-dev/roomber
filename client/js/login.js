@@ -57,9 +57,9 @@ function reg_callback(p, url, d, msg) {
 
 function reg() {
 	popup("Welcome to Roomber!", `
-		<input id="reg-username" class="textbox" placeholder="Username"/>
+		<input type="text" id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
-		<input id="reg-password" class="textbox" placeholder="Password"/>
+		<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
 	`, [
 		{
 			label: "Register",
