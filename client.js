@@ -240,7 +240,17 @@ function sendMessage(message) {
 }
 
 function editMessage(message, newMessage) {
-	$.post('/edit', {msg: message, newMsg: newMessage});
+	$.post('/edit', {
+		editor: currentUser._id, 
+		username: currentUser.username, 
+		password: currentUser.password, 
+		msg: message, 
+		newMsg: newMessage
+	}).fail(() => {
+		setTimeout(() => {
+			popup("Error", "You can only edit your own messages!", undefined, false, "red");
+		}, 500);
+	});
 }
 
 var socket = io();

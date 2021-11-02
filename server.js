@@ -99,9 +99,9 @@ app.post('/username', (req, res) => {
 	User.find(req.body, (err, user) => {
 		if(user.length) {
 			res.send(user[0].username);
-		} else {
-			res.send("Unknown");
+			return;
 		}
+		res.send("Unknown");
 	});
 })
 
@@ -113,8 +113,11 @@ app.post('/messages', (req, res) => {
 	auth(req.body.username, req.body.password, () => {
 		var message = new Message(msg);
 		message.save((err) =>{
-			if(err)
+			if(err) {
+				console.log(err)
 				res.sendStatus(500);
+				return;
+			}
 			io.emit('message', message);
 			res.sendStatus(200);
 		})
@@ -122,21 +125,27 @@ app.post('/messages', (req, res) => {
 })
 
 app.post('/edit', (req, res) => {
-	Message.findById(req.body.msg, (err, doc) => {
-		if(err) {
-			console.log(err);
-			res.sendStatus(500);
-		}
-		else {
-			doc.save((err_) =>{
-				if(err_) {
-					console.log(err_);
-					res.sendStatus(500);
-				}
-				io.emit('edit', req.body);
-				res.sendStatus(200);
-			})
-		}
+	auth(req.body.username, req.body.password, () => {
+		Message.find({author: req.body.editor, _id: req.body.msg}, (err, msg) => {
+			if(msg.length) {
+				var message = msg[0];
+				message.message = req.body.newMsg;
+				message.save(err_ => {
+					if(err_) {
+						console.log(err_);
+						res.sendStatus(500);
+						return;
+					}
+					io.emit('edit', {
+						msg: req.body.msg,
+						newMsg: req.body.newMsg
+					});
+					res.sendStatus(200);
+				});
+			} else {
+				res.sendStatus(401);
+			}
+		});
 	});
 })
 
