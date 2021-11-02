@@ -125,6 +125,6 @@ async function newMessage(message) {
 	</div>`;
 }
 
-window.addEventListener('contextmenu', function(e) {
+/*window.addEventListener('contextmenu', function(e) {
 	e.preventDefault()
-})
+})*/
