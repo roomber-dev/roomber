@@ -1,6 +1,7 @@
 usernames = {};
 
 $(document).ready(function() {
+	loginInit();
 	getMessages();
 });
 
@@ -22,8 +23,6 @@ function loaded() {
 	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
 	});
-
-	loginInit();
 	
 	$("#send").click(function() {
 		if($("#message").val().trim() == "") {
@@ -60,6 +59,35 @@ async function newMessage(message) {
 
 	let username = await getUsername(message.author);
 
+	let extra = [];
+	if(message.author == currentUser._id) {
+		extra = [
+			{
+				icon: "create",
+				click: function(menuItem) {
+					popup("Edit message", `
+						<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
+					`, [{
+						label: "OK",
+						click: function(popup) {
+							let id = menuItem.getMessage().attr("id");
+							let newMessage = $("#editMessage").val();
+							editMessage(id, newMessage);
+							popup.close();
+						}
+					}]);
+				}
+			},
+			{
+				icon: "delete_forever",
+				click: function(menuItem) {
+					let id = menuItem.getMessage().attr("id");
+					deleteMessage(id);
+				}
+			}
+		];
+	}
+
 	return `<div class="message glass" id="${message._id}">
 		<div class="flex">
 		    <img src="avatars/default.png" class="avatar">
@@ -75,22 +103,7 @@ async function newMessage(message) {
 							copyMessage(menuItem.getMessage().attr("id"));
 						}
 					},
-					{
-						icon: "create",
-						click: function(menuItem) {
-							popup("Edit message", `
-								<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
-							`, [{
-								label: "OK",
-								click: function(popup) {
-									let id = menuItem.getMessage().attr("id");
-									let newMessage = $("#editMessage").val();
-									editMessage(id, newMessage);
-									popup.close();
-								}
-							}]);
-						}
-					}
+					...extra
 				])}
 		        <div class="timestamp">${ts}</div>
 		    </div>

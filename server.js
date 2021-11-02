@@ -124,28 +124,50 @@ app.post('/messages', (req, res) => {
 	});
 })
 
-app.post('/edit', (req, res) => {
-	auth(req.body.username, req.body.password, () => {
-		Message.find({author: req.body.editor, _id: req.body.message}, (err, message) => {
-			if(message.length) {
-				var message = message[0];
-				message.message = req.body.newMessage;
-				message.save(err_ => {
-					if(err_) {
-						console.log(err_);
-						res.sendStatus(500);
-						return;
-					}
-					io.emit('edit', {
-						message: req.body.message,
-						newMessage: req.body.newMessage
+app.post('/editMessage', (req, res) => {
+	User.find({username: req.body.username, password: req.body.password}, (err, user) => {
+		if(user.length) {
+			Message.find({author: user[0]._id, _id: req.body.message}, (err, message) => {
+				if(message.length) {
+					var message = message[0];
+					message.message = req.body.newMessage;
+					message.save(err_ => {
+						if(err_) {
+							console.log(err_);
+							res.sendStatus(500);
+							return;
+						}
+						io.emit('edit', {
+							message: req.body.message,
+							newMessage: req.body.newMessage
+						});
+						res.sendStatus(200);
+					});
+				} else {
+					res.sendStatus(401);
+				}
+			});
+		}
+	});
+})
+
+app.post('/deleteMessage', (req, res) => {
+	User.find({username: req.body.username, password: req.body.password}, (err_, user) => {
+		if(user.length) {
+			Message.deleteOne({_id: req.body.message, author: user[0]._id}, err => {
+				if(err_) {
+					console.log(err_);
+					res.sendStatus(500);
+				} else {
+					io.emit('delete', {
+						message: req.body.message
 					});
 					res.sendStatus(200);
-				});
-			} else {
-				res.sendStatus(401);
-			}
-		});
+				}
+			});
+		} else {
+			res.sendStatus(401);
+		}
 	});
 })
 

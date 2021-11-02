@@ -33,8 +33,7 @@ function sendMessage(message) {
 }
 
 function editMessage(message, newMessage) {
-	$.post('/edit', {
-		editor: currentUser._id, 
+	$.post('/editMessage', {
 		username: currentUser.username, 
 		password: currentUser.password, 
 		message: message, 
@@ -46,8 +45,23 @@ function editMessage(message, newMessage) {
 	});
 }
 
+function deleteMessage(message) {
+	$.post('/deleteMessage', {
+		username: currentUser.username, 
+		password: currentUser.password, 
+		message: message
+	}).fail(function() {
+		setTimeout(function() {
+			popup("Error", "You can only delete your own messages!", undefined, false, "red");
+		}, 500);
+	});
+}
+
 var socket = io();
 socket.on('message', addMessage);
 socket.on('edit', function(e) {
 	$(`#${e.message} .msgln`).text(e.newMessage);
+});
+socket.on('delete', function(e) {
+	$(`#${e.message}`).remove();
 });
