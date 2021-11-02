@@ -60,7 +60,7 @@ async function newMessage(message) {
 	let username = await getUsername(message.author);
 
 	let extra = [];
-	if(message.author == currentUser._id) {
+	if(currentUser != {} && message.author == currentUser._id) {
 		extra = [
 			{
 				icon: "create",
