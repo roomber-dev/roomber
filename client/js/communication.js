@@ -26,6 +26,7 @@ function getMessages() {
 		function(data) {
 			var forEach = new Promise(async function(resolve, reject) {
 				data.forEach(async function(message, index, array) {
+					console.log(index, message.message)
 					await addMessage(message, false);
 					if (index === array.length -1) resolve();
 				});

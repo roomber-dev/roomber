@@ -52,6 +52,7 @@ function getMessageManagementButtons() {
 }
 
 function loaded() {
+	console.log("loaded")
 	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
 	});
