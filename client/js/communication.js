@@ -24,7 +24,7 @@ async function addMessage(message, scroll = true) {
 async function adAppend(scroll = true) {
 	const id = uuidv4();
 	$("#messages").append(await newAdMessage(id));
-	$(`#${id} .msgln`).text("BUY ROOMBER XTRA RIGHT NOW!!");
+	$(`#${id} .msgln`).html("Buy Roomber Xtra for an ad-free experience and lots of cool perks to make you stand out and have more fun! <i class='twa twa-sunglasses'></i>");
 	$(`#${id} .msgln`)[0].innerHTML = $(`#${id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z]+:/g, function(emoji, a) {
     	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
 	});

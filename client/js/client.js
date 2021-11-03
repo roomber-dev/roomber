@@ -140,7 +140,7 @@ async function newAdMessage(id) {
 
 	return `<div class="message glass" id="${randomID}">
 		<div class="flex">
-		    <img src="avatars/default.png" class="avatar">
+		    <img src="assets/roombercircle2.png" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
 		            <div class="username">${username}</div>
