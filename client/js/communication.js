@@ -21,6 +21,19 @@ async function addMessage(message, scroll = true) {
 	scroll && chatScrollDown();
 }
 
+async function adAppend(scroll = true) {
+	const id = uuidv4();
+	$("#messages").append(await newAdMessage(id));
+	$(`#${id} .msgln`).text("BUY ROOMBER XTRA RIGHT NOW!!");
+	$(`#${id} .msgln`)[0].innerHTML = $(`#${id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z]+:/g, function(emoji, a) {
+    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
+	});
+	$(`#${id} .msgln`)[0].innerHTML = parseUrls($(`#${id} .msgln`)[0].innerHTML);
+
+	scroll && chatScrollDown();
+}
+
+
 function getMessages() {
 	$.get('/messages',
 		function(data) {
@@ -72,3 +85,4 @@ socket.on('edit', function(e) {
 socket.on('delete', function(e) {
 	$(`#${e.message}`).remove();
 });
+socket.on('ad', adAppend);
