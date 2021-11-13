@@ -76,7 +76,8 @@ function loginInit() {
 	let id = getCookie("userid");
 	if(id == "") {
 		currentUser = {};
-		reg();
+		setup();
+		//reg();
 	} else {
 		currentUser = {
 			_id: id,
