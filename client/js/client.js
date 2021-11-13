@@ -52,6 +52,7 @@ function getMessageManagementButtons() {
 }
 
 function loaded() {
+	console.log("loaded")
 	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
 	});
@@ -125,6 +126,41 @@ async function newMessage(message) {
 	</div>`;
 }
 
-window.addEventListener('contextmenu', function(e) {
+async function newAdMessage(id) {
+	const d = new Date();
+	const ts = d.toLocaleString();
+
+	let username = "AD"
+
+	let extra = [];
+	/*if(currentUser != {} && message.author == currentUser._id) {
+		extra = getMessageManagementButtons();
+	}*/
+	var randomID = id;
+
+	return `<div class="message glass" id="${randomID}">
+		<div class="flex">
+		    <img src="assets/roombercircle2.png" class="avatar">
+		    <div class="flex msg">
+		        <div class="flex-down msg-flex">
+		            <div class="username">${username}</div>
+		            <div class="msgln"></div>
+		        </div>
+				${HorizontalMenu([
+					{
+						icon: "content_copy",
+						click: function(menuItem) {
+							copyMessage(menuItem.getMessage().attr("id"));
+						}
+					},
+					...extra
+				])}
+		        <div class="timestamp">${ts}</div>
+		    </div>
+		</div>
+	</div>`;
+}
+
+/*window.addEventListener('contextmenu', function(e) {
 	e.preventDefault()
-})
+})*/

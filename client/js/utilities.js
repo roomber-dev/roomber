@@ -3,7 +3,7 @@ function parseUrls(text) {
 
 	words.forEach(function (item, index) {
 		if(item.startsWith("https://") || item.startsWith("http://")) {
-			words[index] = `<a href="${item}">${item}</a>`;
+			words[index] = `<a href="${item}" class="msgUrl">${item}</a>`;
 		}
 	});
 
