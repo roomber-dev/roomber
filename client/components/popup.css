@@ -64,7 +64,7 @@
     min-width: 250px;
     height: fit-content;
     flex-direction: column;
-    z-index: 2;
+    z-index: 1002;
 }
 
 .popup-main {
@@ -101,5 +101,5 @@
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 1;
+    z-index: 1001;
 }

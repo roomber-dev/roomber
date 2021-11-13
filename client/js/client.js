@@ -6,7 +6,6 @@ usernames = {};
 
 $(document).ready(function() {
 	loginInit();
-	getMessages();
 });
 
 function copyMessage(id) {
@@ -49,6 +48,10 @@ function getMessageManagementButtons() {
 			}
 		}
 	];
+}
+
+function onSetupFinished() {
+	getMessages();
 }
 
 function loaded() {

@@ -34,7 +34,7 @@ function reg_err(p, msg) {
 	}, 500);
 }
 
-function reg_callback(p, url, d, msg) {
+function reg_callback(p, url, d, msg, finish) {
 	// pretty fancy right?
 	if([$("#reg-username").val(), $("#reg-password").val()].map(function(i) { return i.trim(); } ).includes("")) {
 		reg_err(p, "Username or password are empty");
@@ -49,13 +49,15 @@ function reg_callback(p, url, d, msg) {
 		setCookie("password", data.password);
 		setCookie("email", data.email);
 		setCookie("userid", data._id);
+		setCookie("setup", "true");
 		currentUser = data;
 		logIn();
 		p.close();
+		finish();
 	}).fail(function() {reg_err(p, msg)});
 }
 
-function reg() {
+function reg(finish) {
 	popup("Welcome to Roomber!", `
 		<input type="text" id="reg-username" class="textbox" placeholder="Username"/>
 		<br>
@@ -63,21 +65,28 @@ function reg() {
 	`, [
 		{
 			label: "Register",
-			click: function(popup) { reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken") }
+			click: function(popup) { reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken", finish) }
 		},
 		{
 			label: "Log in",
-			click: function(popup) { reg_callback(popup, '/login', {}, "Wrong username or password") }
+			click: function(popup) { reg_callback(popup, '/login', {}, "Wrong username or password", finish) }
 		}
 	]);
+}
+
+function checkSetup() {
+	if(getCookie("setup") == "true") {
+		setup();
+	} else {
+		onSetupFinished();
+	}
 }
 
 function loginInit() {
 	let id = getCookie("userid");
 	if(id == "") {
 		currentUser = {};
-		setup();
-		//reg();
+		reg(checkSetup);
 	} else {
 		currentUser = {
 			_id: id,
@@ -86,5 +95,6 @@ function loginInit() {
 			email: getCookie("email")
 		};
 		logIn();
+		checkSetup();
 	}
 }
