@@ -11,6 +11,7 @@
     <meta content="../assets/roomber-logo.png" property="og:image" />
     <meta content="#9b34ba" data-react-helmet="true" name="theme-color" />
 
+    <script src="js/utilities.js"></script> <!-- THIS HAS TO BE BEFORE EVERY SCRIPT!! -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <link rel="stylesheet" href="style.css">
@@ -23,8 +24,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
         rel="stylesheet">
-    <script src="js/uuid.js"></script>
-    <script src="js/random.js"></script>
     <script src="js/fun.js"></script>
 </head>
 
@@ -73,10 +72,9 @@
         </div>
     </div>
 
-    <script src="js/utilities.js"></script>
+
     <script src="components/popup.js"></script>
     <script src="components/horizontalMenu.js"></script>
-    <script src="js/cookies.js"></script>
     <script src="js/login.js"></script>
     <script src="js/client.js"></script>
     <script src="js/communication.js"></script>
