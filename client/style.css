@@ -179,6 +179,18 @@ body {
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
+/*.username-bg {
+	font-weight: bold;
+	color: white;
+	padding: 2px 4px;
+	font-size: 120%;
+	border-radius: 4px;
+	margin: 0 5px 0 0;
+	background-color: rgba(0, 0, 0, 0.2);
+}*/
+
+
+
 .avatar {
 	border-radius: 50%;
 	width: 60px;
