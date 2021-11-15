@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>roomber a4</title>
+    <meta content="Roomber" property="og:title" />
+    <meta content="Roomber is a messaging webapp that is currently in a lot of development and this is one of it's early, unreleased versions!" property="og:description" />
+    <!--<meta content="" property="og:url" />-->
+    <meta content="../assets/roomber-logo.png" property="og:image" />
+    <meta content="#9b34ba" data-react-helmet="true" name="theme-color" />
+
+    <script src="js/utilities.js"></script> <!-- THIS HAS TO BE BEFORE EVERY SCRIPT!! -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="components/setup.css">
+    <link rel="stylesheet" href="components/popup.css">
+    <link rel="stylesheet" href="components/horizontalMenu.css">
+    <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
+    <link rel="stylesheet" href="twemoji-awesome.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <script src="js/fun.js"></script>
+</head>
+
+<body>
+    <div id="loading-back">
+        <img alt="" src="assets/roomber-logo.png" id="loading-image">
+        <div id="fun-fact-container">
+            <p id="fun-fact-title">Did you know</p>
+            <p id="fun-fact"></p>
+        </div>
+        </div>
+
+    <!--<div id="disconnected">
+        Disconnected.
+    </div>-->
+    <div class="topbar-main flex-down">
+        <div id="topbar" class="glass">
+            <div id="topbar-content">
+                <img id="roomber-logo" src="assets/roomber-logo.png">
+                <!-- lets go we finally have other stuff -->
+                <div id="login">
+                    <img src="avatars/default.png" alt="">
+                    <p class="username">User</p>
+                    <button id="logout" class="button"><i class="material-icons">exit_to_app</i></button>
+                </div>
+            </div>
+        </div>
+        <div class="flex">
+            <div id="channels" class="glass">
+                <ul>
+                    <li>#breakingnews</li>
+                    <li>#talkie</li>
+                    <li>#memes</li>
+                </ul>
+            </div>
+            <div id="chat-area">
+                <div id="messages">
+                    <!-- initially empty -->
+                    <!--<i class="twa twa-flushed"></i>-->
+                </div>
+                <div id="message-box" class="glass">
+                    <div class="message-input">
+                        <input id="message" class="glass" placeholder="Message" autocomplete="off" />
+                        <button id="send" class="button"><i class="megasmall material-icons">send</i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="setup-container"></div>
+
+    <script src="js/client.js"></script>
+</body>
+
+</html>
