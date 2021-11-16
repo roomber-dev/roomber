@@ -1,9 +1,3 @@
-usernames = {};
-
-/*getFunFact(function(fact) {
-	$("#fun-fact").append(fact);
-});*/
-
 $(document).ready(function() {
 	loginInit();
 });
@@ -67,7 +61,7 @@ function loaded() {
 
 		sendMessage({
 			password: currentUser.password,
-			username: currentUser.username,
+			email: currentUser.email,
 			msg: {
 				author: currentUser._id,
 				message: $("#message").val(),
@@ -134,11 +128,6 @@ async function newAdMessage(id) {
 	const ts = d.toLocaleString();
 
 	let username = "AD"
-
-	let extra = [];
-	/*if(currentUser != {} && message.author == currentUser._id) {
-		extra = getMessageManagementButtons();
-	}*/
 	var randomID = id;
 
 	return `<div class="message glass" id="${randomID}">
@@ -155,8 +144,7 @@ async function newAdMessage(id) {
 						click: function(menuItem) {
 							copyMessage(menuItem.getMessage().attr("id"));
 						}
-					},
-					...extra
+					}
 				])}
 		        <div class="timestamp">${ts}</div>
 		    </div>

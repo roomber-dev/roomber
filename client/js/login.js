@@ -34,17 +34,25 @@ function reg_err(p, msg) {
 	}, 500);
 }
 
-function reg_callback(p, url, d, msg, finish) {
+function reg_callback(p, url, msg, finish, has_username = true) {
 	// pretty fancy right?
-	if([$("#reg-username").val(), $("#reg-password").val()].map(function(i) { return i.trim(); } ).includes("")) {
-		reg_err(p, "Username or password are empty");
+	let username = "a";
+	let usernameInput = $("#reg-username").val();
+	if(usernameInput) username = usernameInput;
+	if([username, $("#reg-email").val(), $("#reg-password").val()].map(function(i) { return i.trim(); } ).includes("")) {
+		reg_err(p, "Username, password or email are empty");
 		return;
 	}
+	let u = {};
+	if(has_username) {
+		u = $("#reg-username").val();
+	}
 	$.post(url, {
-		...d,
-		username: $("#reg-username").val(),
+		...u,
+		email: $("#reg-email").val(),
 		password: $("#reg-password").val()
 	}, function(data) {
+		setCookie("email", data.email);
 		setCookie("username", data.username);
 		setCookie("password", data.password);
 		setCookie("email", data.email);
@@ -58,18 +66,44 @@ function reg_callback(p, url, d, msg, finish) {
 }
 
 function reg(finish) {
-	popup("Welcome to Roomber!", `
-		<input type="text" id="reg-username" class="textbox" placeholder="Username"/>
-		<br>
-		<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
-	`, [
+	popup("Welcome to Roomber!", "Pick an option", [
 		{
 			label: "Register",
-			click: function(popup) { reg_callback(popup, '/register', {email: "[no email]"}, "This username is already taken", finish) }
+			click: function(p) { 
+				p.close(); 
+				setTimeout(function() {
+					popup("Register", `
+						<input type="text" id="reg-email" class="textbox" placeholder="E-mail"/>
+						<br>
+						<input type="text" id="reg-username" class="textbox" placeholder="Username"/>
+						<br>
+						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
+					`, [{
+						label: "OK",
+						click: function(p_) {
+							reg_callback(p_, "/register", "This username is already taken", finish);
+						}
+					}]);
+				}, 500);
+			}
 		},
 		{
 			label: "Log in",
-			click: function(popup) { reg_callback(popup, '/login', {}, "Wrong username or password", finish) }
+			click: function(p) {
+				p.close(); 
+				setTimeout(function() {
+					popup("Log in", `
+						<input type="text" id="reg-email" class="textbox" placeholder="E-mail"/>
+						<br>
+						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
+					`, [{
+						label: "OK",
+						click: function(p_) {
+							reg_callback(p_, "/login", "Invalid e-mail or password", finish, false);
+						}
+					}]);
+				}, 500);
+			}
 		}
 	]);
 }

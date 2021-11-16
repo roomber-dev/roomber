@@ -1,3 +1,6 @@
+usernames = {};
+emails = {};
+
 async function getUsername(id) {
 	if(usernames[id]) {
 		return usernames[id];
@@ -8,6 +11,18 @@ async function getUsername(id) {
 	});
 	usernames[id] = username;
 	return username;
+}
+
+async function getEmail(id) {
+	if(emails[id]) {
+		return emails[id];
+	}
+	let email = "Unknown";
+	await $.post('/email', {_id: id}, function(data) {
+		email = data;
+	});
+	emails[id] = email;
+	return email;
 }
 
 async function addMessage(message, scroll = true) {
@@ -38,10 +53,10 @@ function getMessages() {
 	$.get('/messages',
 		function(data) {
 			var forEach = new Promise(async function(resolve, reject) {
+				if(data.length == 0) resolve();
 				data.forEach(async function(message, index, array) {
-					console.log(index, message.message)
 					await addMessage(message, false);
-					if (index === array.length -1) resolve();
+					if (index === array.length - 1) resolve();
 				});
 			});
 			forEach.then(loaded);
@@ -54,7 +69,7 @@ function sendMessage(message) {
 
 function editMessage(message, newMessage) {
 	$.post('/editMessage', {
-		username: currentUser.username, 
+		email: currentUser.email, 
 		password: currentUser.password, 
 		message: message, 
 		newMessage: newMessage
@@ -67,7 +82,7 @@ function editMessage(message, newMessage) {
 
 function deleteMessage(message) {
 	$.post('/deleteMessage', {
-		username: currentUser.username, 
+		email: currentUser.email, 
 		password: currentUser.password, 
 		message: message
 	}).fail(function() {
@@ -86,3 +101,7 @@ socket.on('delete', function(e) {
 	$(`#${e.message}`).remove();
 });
 socket.on('ad', adAppend);
+socket.on('messagesCleared', function() {
+	$("#messages").html("");
+	popup("All of the messages were cleared.");
+});

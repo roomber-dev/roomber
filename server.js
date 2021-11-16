@@ -12,7 +12,7 @@ const ngrok = require('ngrok');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const ngrokenabled = true;
+const ngrokenabled = true; // THIS IS NGROK ENABLEMENT
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -85,13 +85,59 @@ var User = mongoose.model(
 		username : String,
 		password : String,
 		email : String,
-		xtra : Boolean
+		xtra : Boolean,
+		permission : String
+	}
+)
+var Permission = mongoose.model(
+	'Permission', 
+	{
+		name : String, 
+		permissions : Array
 	}
 )
 
-function auth(username, password, success) {
-	User.find({username: username, password: password}, (err, user) => {
+var models = {
+	"Permission": Permission,
+	"Message": Message,
+	"User": User
+};
+
+function auth(email, password, success) {
+	User.find({email: email, password: password}, (err, user) => {
 		if(user.length) success();
+	});
+}
+
+function hasPermission(user, permission, callback) {
+	User.find({_id: user}, (err, user) => {
+		if(user.length) {
+			Permission.find({name: user[0].permission}, (err, perm) => {
+				if(perm.length) {
+					if(perm[0].permissions.includes(permission)) {
+						callback(true);
+						return;
+					}
+					callback(false);
+				} else {
+					callback(false);
+				}
+			});
+		}
+	});
+}
+
+function hasPermissionAuth(req, permission, callback) {
+	User.find({_id: req.user, email: req.email, password: req.password}, (err, user) => {
+		if(user.length) {
+			Permission.find({name: user[0].permission}, (err, perm) => {
+				if(perm.length) {
+					if(perm[0].permissions.includes(permission)) {
+						callback();
+					}
+				}
+			});
+		}
 	});
 }
 
@@ -119,10 +165,48 @@ app.post('/userid', (req, res) => {
 	});
 })
 
+app.post('/can', (req, res) => {
+	hasPermission(req.body.user, req.body.permission, result => {
+		res.send(result);
+	});
+})
+
+app.post('/hasGroup', (req, res) => {
+	User.find({_id: req.body.user, permission: req.body.group}, (err, user) => {
+		if(user.length) {
+			res.send(true);
+			return
+		}
+		res.send(false);
+	});
+})
+
 app.post('/username', (req, res) => {
 	User.find(req.body, (err, user) => {
 		if(user.length) {
 			res.send(user[0].username);
+			return;
+		}
+		res.send("Unknown");
+	});
+})
+
+app.post('/modifyDb', (req, res) => {
+	hasPermissionAuth(req.body, "db.manage", () => {
+		switch(req.body.command) {
+			case "clear_collection": {
+				models[req.body.collection].deleteMany({}, () => {});
+				io.emit('messagesCleared');
+				break;
+			}
+		}
+	});
+})
+
+app.post('/email', (req, res) => {
+	User.find(req.body, (err, user) => {
+		if(user.length) {
+			res.send(user[0].email);
 			return;
 		}
 		res.send("Unknown");
@@ -134,9 +218,9 @@ app.post('/messages', (req, res) => {
 	Object.keys(msgModel).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	});
-	auth(req.body.username, req.body.password, () => {
+	auth(req.body.email, req.body.password, () => {
 		var message = new Message(msg);
-		message.save((err) =>{
+		message.save(err =>{
 			if(err) {
 				console.log(err)
 				res.sendStatus(500);
@@ -149,7 +233,7 @@ app.post('/messages', (req, res) => {
 })
 
 app.post('/editMessage', (req, res) => {
-	User.find({username: req.body.username, password: req.body.password}, (err, user) => {
+	User.find({email: req.body.email, password: req.body.password}, (err, user) => {
 		if(user.length) {
 			Message.find({author: user[0]._id, _id: req.body.message}, (err, message) => {
 				if(message.length) {
@@ -176,7 +260,7 @@ app.post('/editMessage', (req, res) => {
 })
 
 app.post('/deleteMessage', (req, res) => {
-	User.find({username: req.body.username, password: req.body.password}, (err_, user) => {
+	User.find({email: req.body.email, password: req.body.password}, (err_, user) => {
 		if(user.length) {
 			Message.deleteOne({_id: req.body.message, author: user[0]._id}, err => {
 				if(err_) {
@@ -216,7 +300,7 @@ app.post('/register', (req, res) => {
 
 app.post('/login', (req, res) => {
 	//console.log(req);
-	User.find({username: req.body.username, password: req.body.password}, (err, doc) => {
+	User.find({email: req.body.email, password: req.body.password}, (err, doc) => {
 		if(doc.length) {
 			res.send(doc[0]);
 		} else {
