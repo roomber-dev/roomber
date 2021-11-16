@@ -350,3 +350,19 @@ body {
 .msgUrl {
 	color: rgb(32, 147, 255);
 }
+
+.xtraBadge {
+	top: 7px;
+	position: absolute;
+	display: inline-block;
+}
+
+.xtraBadge span {
+	text-transform: capitalize;
+	color: black;
+	font-weight: bolder;
+	border-radius: 4px;
+	padding: 4px;
+	font-size: 0.7rem;
+	background: linear-gradient(to right, orange, yellow);
+}

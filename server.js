@@ -84,7 +84,8 @@ var User = mongoose.model(
 	{
 		username : String,
 		password : String,
-		email : String
+		email : String,
+		xtra : Boolean
 	}
 )
 
