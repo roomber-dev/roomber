@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>roomber a4</title>
     <meta content="Roomber" property="og:title" />
-    <meta content="Roomber is a messaging webapp that is currently in a lot of development and this is one of it's early, unreleased versions!" property="og:description" />
+    <meta
+        content="Roomber is a messaging webapp that is currently in a lot of development and this is one of it's early, unreleased versions!"
+        property="og:description" />
     <!--<meta content="" property="og:url" />-->
     <meta content="../assets/roomber-logo.png" property="og:image" />
     <meta content="#9b34ba" data-react-helmet="true" name="theme-color" />
@@ -18,6 +20,7 @@
     <link rel="stylesheet" href="components/setup.css">
     <link rel="stylesheet" href="components/popup.css">
     <link rel="stylesheet" href="components/horizontalMenu.css">
+    <link rel="stylesheet" href="components/minAdminPanel.css">
     <script src="//twemoji.maxcdn.com/twemoji.min.js"></script>
     <link rel="stylesheet" href="twemoji-awesome.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -35,7 +38,7 @@
             <p id="fun-fact-title">Did you know</p>
             <p id="fun-fact"></p>
         </div>
-        </div>
+    </div>
 
     <!--<div id="disconnected">
         Disconnected.
@@ -59,6 +62,15 @@
                 </ul>
             </div>
             <div id="chat-area">
+
+                <div id="minAdminPanel">
+                    <span class="close">
+                        <i class="megasmall material-icons">close</i>
+                    </span>
+                    <br>
+                    <button>Remove All Messages</button>
+                </div>
+                <script src="components/minAdminPanel.js"></script>
                 <div id="messages">
                     <!-- initially empty -->
                     <!--<i class="twa twa-flushed"></i>-->
