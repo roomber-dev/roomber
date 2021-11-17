@@ -12,7 +12,7 @@ const ngrok = require('ngrok');
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const ngrokenabled = false; // THIS IS NGROK ENABLEMENT | YES
+const ngrokenabled = true; // THIS IS NGROK ENABLEMENT | YES
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,8 +73,9 @@ mongoose.connect(dbUrl, (err) => {
 })
 
 let msgModel = {
-	author : String, 
-	message : String, 
+	author : String,
+	author_name : String,
+	message : String,
 	timestamp : Number 
 }
 
@@ -196,7 +197,9 @@ app.post('/modifyDb', (req, res) => {
 		switch(req.body.command) {
 			case "clear_collection": {
 				models[req.body.collection].deleteMany({}, () => {});
-				io.emit('messagesCleared');
+				if(req.body.collection == "Message") {
+					io.emit('messagesCleared', req.body.user);
+				}
 				break;
 			}
 		}

@@ -96,10 +96,12 @@
             console.log(distance)
 
             if(distance >= 300) {
-            $(".dragger").css("position", "")
-            //$(".dragger").css("right", "")
-            $(".dragger").css("background-position", "left")
-            $(".dragger").css("animation", "expand 0.4s ease-in-out")
+            
+            $(".dragger").css({
+                position: "",
+                background-position: "left",
+                animation: "expand 0.4s ease-in-out"
+            });
 
             } else {
             $(".dragger").css("position", "absolute")

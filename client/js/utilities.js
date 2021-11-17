@@ -1,3 +1,5 @@
+loadedEvents = [];
+
 function parseUrls(text) {
 	var words = text.split(" ");
 
@@ -9,6 +11,41 @@ function parseUrls(text) {
 
 	return words.join(" ");
 }
+
+function makeDrag(element) {
+	var dragElement = element;
+	if(element.firstElementChild.dataset["dragger"] == "true") {
+		dragElement = element.firstElementChild;
+	}
+
+	var startPosX = 0;
+	var startPosY = 0;
+	var newPosX = 0;
+	var newPosY = 0;
+
+	let mouseMove = function(e) {
+		newPosX = startPosX - e.clientX;
+		newPosY = startPosY - e.clientY;
+
+		startPosX = e.clientX;
+		startPosY = e.clientY;
+
+		element.style.top = (element.offsetTop - newPosY) + "px";
+		element.style.left = (element.offsetLeft - newPosX) + "px";
+	};
+
+	dragElement.onmousedown = function(e) {
+		e.preventDefault();
+
+		startPosX = e.clientX;
+		startPosY = e.clientY;
+		document.onmousemove = mouseMove;
+
+		document.onmouseup = function() {
+			document.onmousemove = null;
+		};
+	};
+};
 
 /**
  * Returns a random number between min (inclusive) and max (exclusive)
@@ -59,8 +96,18 @@ function getCookie(cname) {
 	return "";
 }
 
+function loaded(cb) {
+	loadedEvents.push(cb);
+}
+
+function fireLoaded() {
+	loadedEvents.forEach(function(event) {
+		event();
+	});
+}
+
 function decodeSaveCustomizationCode(code = String, setCustomization = false, debug = false) {
-	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME";cbp-[X,Y,W,H]
+	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME";cbp-X,Y,W,H
 
 	let cells = code.split(";");
 	if (debug) console.log("length: ", cells.length);

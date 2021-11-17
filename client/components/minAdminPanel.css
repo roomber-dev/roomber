@@ -1,25 +1,38 @@
 #minAdminPanel {
-  transform: translateY(-50%);
-  top: 50%;
-  right: 0;
-  position: absolute;
-  height: 500px;
-  width: 200px;
-  background-color: rgba(255,255,255,0.4);
+  background-color: rgba(0,0,0,0.4);
   z-index: 5;
   border-radius: 10px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  text-align: center;
+  border: 1px solid rgba(255,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  backdrop-filter: blur(10px);
+  padding: 4px;
+  padding-right: 8px;
 }
 
-#minAdminPanel:hover {
-  background-color: rgba(255,255,255,1);
+#minAdminPanel button {
+  width: 80%;
 }
 
 #minAdminPanel .close {
-  top: 5px;
-  left: 5px;
-  color: black;
-  font-size: 1rem;
+  cursor: pointer;
+}
+
+#minAdminPanel:hover {
+  background-color: rgba(0,0,0,0.5);
+}
+
+#minAdminPanel .titlebar {
+  margin: 10px;
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255,255,255,0.4);
+  cursor: move;
+}
+
+#minAdminPanel .title {
+  display: flex;
 }

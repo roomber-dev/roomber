@@ -48,8 +48,7 @@ function onSetupFinished() {
 	getMessages();
 }
 
-function loaded() {
-	console.log("loaded")
+loaded(function() {
 	$("#loading-back").fadeOut(1000, function() {
 		$("#loading-back").remove();
 	});
@@ -64,6 +63,7 @@ function loaded() {
 			email: currentUser.email,
 			msg: {
 				author: currentUser._id,
+				author_name: currentUser.username,
 				message: $("#message").val(),
 				timestamp: new Date().getTime()
 			}
@@ -85,15 +85,14 @@ function loaded() {
 		}
 	});
 
-	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"))
-}
+	makeDrag($("#minAdminPanel")[0]);
 
-async function newMessage(message) {
+	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
+})
 
+function newMessage(message) {
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();
-
-	let username = await getUsername(message.author);
 
 	let extra = [];
 	if(currentUser != {} && message.author == currentUser._id) {
@@ -105,7 +104,7 @@ async function newMessage(message) {
 		    <img src="avatars/default.png" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
-		            <div class="username">${username}</div>
+		            <div class="username">${message.author_name}</div>
 		            <div class="msgln"></div>
 		        </div>
 				${HorizontalMenu([
@@ -123,7 +122,7 @@ async function newMessage(message) {
 	</div>`;
 }
 
-async function newAdMessage(id) {
+function newAdMessage(id) {
 	const d = new Date();
 	const ts = d.toLocaleString();
 

@@ -25,8 +25,19 @@ async function getEmail(id) {
 	return email;
 }
 
-async function addMessage(message, scroll = true) {
-	$("#messages").append(await newMessage(message));
+function ifPermission(permission, ifTrue) {
+	$.post('/can', {
+		user: currentUser._id,
+		permission: permission	
+	}, function(data) {
+		if(data == true) {
+			ifTrue();
+		}
+	})
+}
+
+function addMessage(message, scroll = true) {
+	$("#messages").append(newMessage(message));
 	$(`#${message._id} .msgln`).text(message.message);
 	$(`#${message._id} .msgln`)[0].innerHTML = $(`#${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z]+:/g, function(emoji, a) {
     	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
@@ -52,14 +63,14 @@ async function adAppend(scroll = true) {
 function getMessages() {
 	$.get('/messages',
 		function(data) {
-			var forEach = new Promise(async function(resolve, reject) {
+			var forEach = new Promise(function(resolve, reject) {
 				if(data.length == 0) resolve();
-				data.forEach(async function(message, index, array) {
-					await addMessage(message, false);
+				data.forEach(function(message, index, array) {
+					addMessage(message, false);
 					if (index === array.length - 1) resolve();
 				});
 			});
-			forEach.then(loaded);
+			forEach.then(fireLoaded);
 		})
 }
 
@@ -101,7 +112,9 @@ socket.on('delete', function(e) {
 	$(`#${e.message}`).remove();
 });
 socket.on('ad', adAppend);
-socket.on('messagesCleared', function() {
+socket.on('messagesCleared', function(user) {
 	$("#messages").html("");
-	popup("All of the messages were cleared.");
+	getUsername(user).then(function(username) {
+		alert('All of the messages were cleared by <p class="username">' + username + "</p>");
+	});
 });

@@ -43,10 +43,23 @@
     <!--<div id="disconnected">
         Disconnected.
     </div>-->
+
+    <div id="minAdminPanel">
+        <div class="titlebar" data-dragger="true">
+            <div class="title"><i class="megasmall material-icons">security</i>Admin Panel</div>
+            <div class="close">
+                <i class="megasmall material-icons">close</i>
+            </div>
+        </div>
+        <button class="button" id="remove-all-messages"><i class="megasmall material-icons">clear_all</i>Remove All Messages</button>
+    </div>
+
     <div class="topbar-main flex-down">
         <div id="topbar" class="glass">
             <div id="topbar-content">
-                <img id="roomber-logo" src="assets/roomber-logo.png">
+                <div id="by-the-logo">
+                    <img id="roomber-logo" src="assets/roomber-logo.png">
+                </div>
                 <!-- lets go we finally have other stuff -->
                 <div id="login">
                     Not logged in
@@ -62,14 +75,6 @@
                 </ul>
             </div>
             <div id="chat-area">
-
-                <div id="minAdminPanel">
-                    <span class="close">
-                        <i class="megasmall material-icons">close</i>
-                    </span>
-                    <br>
-                    <button>Remove All Messages</button>
-                </div>
                 <script src="components/minAdminPanel.js"></script>
                 <div id="messages">
                     <!-- initially empty -->
