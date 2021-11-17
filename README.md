@@ -1,6 +1,6 @@
 ![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
 ==
-Roomber is a messaging app.
+Roomber is a messaging webapp that is currently in a lot of development and this is one of it's early, unreleased versions!
 
 ### Screenshot
 
