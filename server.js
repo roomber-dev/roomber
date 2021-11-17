@@ -143,11 +143,11 @@ function hasPermissionAuth(req, permission, callback) {
 
 io.on('connection', socket => {
 	usersOnline++;
-	console.log(`A user connected (${userson} users)`);
+	console.log(`A user connected (${usersOnline} users)`);
 
 	socket.on('disconnect', () => {
 		usersOnline--;
-		console.log(`A user disconnected (${userson} users)`);
+		console.log(`A user disconnected (${usersOnline} users)`);
 	})
 })
 
