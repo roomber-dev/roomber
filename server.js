@@ -9,51 +9,32 @@ var config = require('./config.js');
 var chalk = require('chalk');
 const ngrok = require('ngrok');
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+const enableNgrok = true;
 
-const ngrokenabled = true; // THIS IS NGROK ENABLEMENT | YES
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Returns a random number between min (inclusive) and max (exclusive)
- */
- function getRandomArbitrary(min, max) {
+function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
 }
 
-/**
- * Returns a random integer between min (inclusive) and max (inclusive).
- * The value is no lower than min (or the next integer greater than min
- * if min isn't an integer) and no greater than max (or the next integer
- * lower than max if max isn't an integer).
- * Using Math.round() will give you a non-uniform distribution!
- */
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-if(ngrokenabled) {
+if(enableNgrok) {
 (async function() {
-	console.log("ngrok starting...");
+	console.log(chalk.greenBright("ngrok is enabled, starting"));
 	const url = await ngrok.connect({
 		authtoken: config.ngrokAuthtoken,
 		addr: 3000
 	});
-	console.log("ngrok yay", url);
+	console.log(chalk.greenBright(`The ngrok url is ${url}`));
 })();
 } else {
-	console.log("ngrok disabled");
+	console.log(chalk.redBright("ngrok is disabled"));
 }
 
-//app.set('view engine', 'html')
-//app.use(express.static('public'))
-
-let userson = 0;
+let usersOnline = 0;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded(
@@ -65,9 +46,9 @@ var dbUrl = config.dbUrl;
 
 mongoose.connect(dbUrl, (err) => { 
 	if(err) {
-		console.log('failed to connect to mongodb: ',err);
+		console.log(chalk.redBright(`Failed to connect to MongoDB: ${err}`));
 	} else {
-		console.log('mongodb connected');
+		console.log('MongoDB connected');
 	}
 	
 })
@@ -107,7 +88,7 @@ var models = {
 function auth(email, password, success) {
 	User.find({email: email, password: password}, (err, user) => {
 		if(user.length) success();
-	});
+	})
 }
 
 function hasPermission(user, permission, callback) {
@@ -123,9 +104,9 @@ function hasPermission(user, permission, callback) {
 				} else {
 					callback(false);
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
 function hasPermissions(user, permissions, callback) {
@@ -141,9 +122,9 @@ function hasPermissions(user, permissions, callback) {
 				} else {
 					callback(false);
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
 function hasPermissionAuth(req, permission, callback) {
@@ -155,20 +136,19 @@ function hasPermissionAuth(req, permission, callback) {
 						callback();
 					}
 				}
-			});
+			})
 		}
-	});
+	})
 }
 
-io.on('connection', (socket) =>{
-	userson++
-	console.log(chalk.greenBright(`user connected (All users: ${userson})`))
+io.on('connection', socket => {
+	usersOnline++;
+	console.log(`A user connected (${userson} users)`);
 
-	socket.on('disconnect', function() {
-		userson--
-		console.log(chalk.redBright(`user disconnected (All users: ${userson})`));
-		
-	});
+	socket.on('disconnect', () => {
+		usersOnline--;
+		console.log(`A user disconnected (${userson} users)`);
+	})
 })
 
 
@@ -181,25 +161,25 @@ app.get('/messages', (req, res) => {
 app.post('/userid', (req, res) => {
 	User.find(req.body, (err, user) => {
 		res.send(user[0]._id);
-	});
+	})
 })
 
 app.post('/can', (req, res) => {
 	hasPermission(req.body.user, req.body.permission, result => {
 		res.send(result);
-	});
+	})
 })
 
 app.post('/hasPermissions', (req, res) => {
 	hasPermissions(req.body.user, req.body["permissions[]"], result => {
 		res.send(result);
-	});
+	})
 })
 
 app.post('/broadcast', (req, res) => {
 	hasPermissionAuth(req.body, "broadcast", () => {
 		io.emit('broadcast', req.body.message);
-	});
+	})
 })
 
 app.post('/hasGroup', (req, res) => {
@@ -209,7 +189,7 @@ app.post('/hasGroup', (req, res) => {
 			return
 		}
 		res.send(false);
-	});
+	})
 })
 
 app.post('/username', (req, res) => {
@@ -219,7 +199,7 @@ app.post('/username', (req, res) => {
 			return;
 		}
 		res.send("Unknown");
-	});
+	})
 })
 
 app.post('/modifyDb', (req, res) => {
@@ -233,7 +213,7 @@ app.post('/modifyDb', (req, res) => {
 				break;
 			}
 		}
-	});
+	})
 })
 
 app.post('/email', (req, res) => {
@@ -243,26 +223,26 @@ app.post('/email', (req, res) => {
 			return;
 		}
 		res.send("Unknown");
-	});
+	})
 })
 
 app.post('/messages', (req, res) => {
 	let msg = {}
 	Object.keys(msgModel).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
-	});
+	})
 	auth(req.body.email, req.body.password, () => {
 		var message = new Message(msg);
 		message.save(err =>{
 			if(err) {
-				console.log(err)
+				console.log(chalk.redBright(err))
 				res.sendStatus(500);
 				return;
 			}
 			io.emit('message', message);
 			res.sendStatus(200);
 		})
-	});
+	})
 })
 
 app.post('/editMessage', (req, res) => {
@@ -289,14 +269,14 @@ app.post('/editMessage', (req, res) => {
 								newMessage: req.body.newMessage
 							});
 							res.sendStatus(200);
-						});
+						})
 					} else {
 						res.sendStatus(401);
 					}
-				});
-			});
+				})
+			})
 		}
-	});
+	})
 })
 
 app.post('/deleteMessage', (req, res) => {
@@ -318,12 +298,12 @@ app.post('/deleteMessage', (req, res) => {
 						});
 						res.sendStatus(200);
 					}
-				});
-			});
+				})
+			})
 		} else {
 			res.sendStatus(401);
 		}
-	});
+	})
 })
 
 app.post('/register', (req, res) => {
@@ -342,28 +322,21 @@ app.post('/register', (req, res) => {
 				}
 			})
 		}
-	});
+	})
 })
 
 app.post('/login', (req, res) => {
-	//console.log(req);
 	User.find({email: req.body.email, password: req.body.password}, (err, doc) => {
 		if(doc.length) {
 			res.send(doc[0]);
 		} else {
 			res.sendStatus(401);
 		}
-	});
+	})
 })
 
 var server = http.listen(3000, () => {
-	console.log('server is running on port', server.address().port);
+	console.log(chalk.greenBright(`Server running on port ${server.address().port}`));
 })
 
-
-// ======================================== AD CODE ===================================================
-setInterval(() => {
-	if(getRandomInt(0,15) == 5) {
-		io.emit('ad');
-	}
-}, 120000);
+// Ad code will be moved over to the client side for simplicity's sake
