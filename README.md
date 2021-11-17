@@ -1,8 +1,15 @@
-# Roomber
+![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
+==
 Roomber is a messaging app.
 
-Version: 4.2.0 (nice funny number hahahahahaahahahahahahaah)
-![image](https://cdn.discordapp.com/attachments/881974256949395517/905074213977743360/unknown.png)
+### Screenshot
 
-someever please make a commit there hasn't been commits in a week please someever please please please please please please someever please please someever someever please
-![image](https://cdn.discordapp.com/attachments/881974256949395517/907327756143042612/unknown.png)
+![image](https://media.discordapp.net/attachments/882659049399787591/910638358928187422/image3.png)
+
+### Roadmap
+
+- Voice and video calls
+- Screensharing
+- Roomber Xtra (paid subscription)
+- Desktop App
+- Mobile App
