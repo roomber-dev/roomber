@@ -128,6 +128,24 @@ function hasPermission(user, permission, callback) {
 	});
 }
 
+function hasPermissions(user, permissions, callback) {
+	User.find({_id: user}, (err, user) => {
+		if(user.length) {
+			Permission.find({name: user[0].permission}, (err, perm) => {
+				if(perm.length) {
+					var includes = true;
+					permissions.forEach(p => {
+						includes = includes && perm[0].permissions.includes(p);
+					});
+					callback(includes);
+				} else {
+					callback(false);
+				}
+			});
+		}
+	});
+}
+
 function hasPermissionAuth(req, permission, callback) {
 	User.find({_id: req.user, email: req.email, password: req.password}, (err, user) => {
 		if(user.length) {
@@ -169,6 +187,18 @@ app.post('/userid', (req, res) => {
 app.post('/can', (req, res) => {
 	hasPermission(req.body.user, req.body.permission, result => {
 		res.send(result);
+	});
+})
+
+app.post('/hasPermissions', (req, res) => {
+	hasPermissions(req.body.user, req.body["permissions[]"], result => {
+		res.send(result);
+	});
+})
+
+app.post('/broadcast', (req, res) => {
+	hasPermissionAuth(req.body, "broadcast", () => {
+		io.emit('broadcast', req.body.message);
 	});
 })
 
@@ -238,25 +268,32 @@ app.post('/messages', (req, res) => {
 app.post('/editMessage', (req, res) => {
 	User.find({email: req.body.email, password: req.body.password}, (err, user) => {
 		if(user.length) {
-			Message.find({author: user[0]._id, _id: req.body.message}, (err, message) => {
-				if(message.length) {
-					var message = message[0];
-					message.message = req.body.newMessage;
-					message.save(err_ => {
-						if(err_) {
-							console.log(err_);
-							res.sendStatus(500);
-							return;
-						}
-						io.emit('edit', {
-							message: req.body.message,
-							newMessage: req.body.newMessage
-						});
-						res.sendStatus(200);
-					});
-				} else {
-					res.sendStatus(401);
+			const a = {};
+			hasPermission(user[0]._id, "messages.edit_any", result => {
+				if(result == false) {
+					a = {author: user[0]._id};
 				}
+
+				Message.find({...a, _id: req.body.message}, (err, message) => {
+					if(message.length) {
+						var message = message[0];
+						message.message = req.body.newMessage;
+						message.save(err_ => {
+							if(err_) {
+								console.log(err_);
+								res.sendStatus(500);
+								return;
+							}
+							io.emit('edit', {
+								message: req.body.message,
+								newMessage: req.body.newMessage
+							});
+							res.sendStatus(200);
+						});
+					} else {
+						res.sendStatus(401);
+					}
+				});
 			});
 		}
 	});
@@ -265,16 +302,23 @@ app.post('/editMessage', (req, res) => {
 app.post('/deleteMessage', (req, res) => {
 	User.find({email: req.body.email, password: req.body.password}, (err_, user) => {
 		if(user.length) {
-			Message.deleteOne({_id: req.body.message, author: user[0]._id}, err => {
-				if(err_) {
-					console.log(err_);
-					res.sendStatus(500);
-				} else {
-					io.emit('delete', {
-						message: req.body.message
-					});
-					res.sendStatus(200);
+			const a = {};
+			hasPermission(user[0]._id, "messages.delete_any", result => {
+				if(result == false) {
+					a = {author: user[0]._id};
 				}
+
+				Message.deleteOne({...a, _id: req.body.message}, err => {
+					if(err_) {
+						console.log(err_);
+						res.sendStatus(500);
+					} else {
+						io.emit('delete', {
+							message: req.body.message
+						});
+						res.sendStatus(200);
+					}
+				});
 			});
 		} else {
 			res.sendStatus(401);

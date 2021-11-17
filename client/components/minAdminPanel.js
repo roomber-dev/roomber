@@ -8,13 +8,45 @@ $().ready(function() {
     adminPanel.css("top", window.innerHeight - adminPanel.height() - adminPanel.css("padding-bottom").replace("px","") * 2);
 
     $("#remove-all-messages").click(function() {
-        $.post('/modifyDb', {
-            email: currentUser.email,
-            password: currentUser.password,
-            user: currentUser._id,
-            command: "clear_collection",
-            collection: "Message"
-        });
+        popup("Remove all messages","Are you sure?",[{
+            label: "Yes",
+            click: function(p) {
+                p.close();
+                $.post('/modifyDb', {
+                    email: currentUser.email,
+                    password: currentUser.password,
+                    user: currentUser._id,
+                    command: "clear_collection",
+                    collection: "Message"
+                });
+            }
+        }, {
+            label: "No",
+            click: function(p) {
+                p.close();
+            }
+        }])
+    });
+
+    $("#broadcast").click(function() {
+        popup("Broadcast", `
+            Enter the broadcast message<br>
+            <input type="text" id="broadcast-msg"></input>
+        `, [{
+            label: "OK",
+            click: function(p) {
+                const msg = $("#broadcast-msg").val();
+                p.close();
+                setTimeout(function() {
+                    $.post('/broadcast', {
+                        email: currentUser.email,
+                        password: currentUser.password,
+                        user: currentUser._id,
+                        message: msg
+                    });
+                },500);
+            }
+        }])
     });
 
     $("#by-the-logo").append('<button id="security" class="button"><i class="megasmall material-icons">security</i></button>')

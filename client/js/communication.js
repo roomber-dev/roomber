@@ -36,6 +36,17 @@ function ifPermission(permission, ifTrue) {
 	})
 }
 
+function ifPermissions(permissions, ifTrue) {
+	$.post('/hasPermissions', {
+		user: currentUser._id,
+		permissions: permissions
+	}, function(data) {
+		if(data == true) {
+			ifTrue();
+		}
+	})
+}
+
 function addMessage(message, scroll = true) {
 	$("#messages").append(newMessage(message));
 	$(`#${message._id} .msgln`).text(message.message);
@@ -117,4 +128,7 @@ socket.on('messagesCleared', function(user) {
 	getUsername(user).then(function(username) {
 		alert('All of the messages were cleared by <p class="username">' + username + "</p>");
 	});
+});
+socket.on('broadcast', function(message) {
+	popup("Broadcast", message);
 });

@@ -2,6 +2,8 @@ $(document).ready(function() {
 	loginInit();
 });
 
+canEditAndDeleteAny = false;
+
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
 	var range = document.createRange();
@@ -45,6 +47,9 @@ function getMessageManagementButtons() {
 }
 
 function onSetupFinished() {
+	ifPermissions(["messages.delete_any", "messages.edit_any"], function() {
+		canEditAndDeleteAny = true;
+	});
 	getMessages();
 }
 
@@ -95,7 +100,8 @@ function newMessage(message) {
 	const ts = d.toLocaleString();
 
 	let extra = [];
-	if(currentUser != {} && message.author == currentUser._id) {
+	if((currentUser != {} && message.author == currentUser._id)
+		|| canEditAndDeleteAny) {
 		extra = getMessageManagementButtons();
 	}
 
