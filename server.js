@@ -8,28 +8,30 @@ var mongoose = require('mongoose');
 var config = require('./config.js');
 var chalk = require('chalk');
 const ngrok = require('ngrok');
+const open = require('open');
 
-const enableNgrok = true;
+const enableNgrok = false;
 
 function getRandomArbitrary(min, max) {
-    return Math.random() * (max - min) + min;
+	return Math.random() * (max - min) + min;
 }
 
 function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-if(enableNgrok) {
-(async function() {
-	console.log(chalk.greenBright("ngrok is enabled, starting"));
-	const url = await ngrok.connect({
-		authtoken: config.ngrokAuthtoken,
-		addr: 3000
-	});
-	console.log(chalk.greenBright(`The ngrok url is ${url}`));
-})();
+if (enableNgrok) {
+	(async function () {
+		console.log(chalk.greenBright("ngrok is enabled, starting"));
+		const url = await ngrok.connect({
+			authtoken: config.ngrokAuthtoken,
+			addr: 3000
+		});
+		open(`${url}`);
+		console.log(chalk.greenBright(`The ngrok url is ${url}`));
+	})();
 } else {
 	console.log(chalk.redBright("ngrok is disabled"));
 }
@@ -38,44 +40,45 @@ let usersOnline = 0;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded(
-	{extended: false}
+	{ extended: false }
 ));
 app.use(express.static(__dirname + '/client'));
 
 var dbUrl = config.dbUrl;
 
-mongoose.connect(dbUrl, (err) => { 
-	if(err) {
+mongoose.connect(dbUrl, (err) => {
+	if (err) {
 		console.log(chalk.redBright(`Failed to connect to MongoDB: ${err}`));
 	} else {
 		console.log(chalk.greenBright('MongoDB connected'));
 	}
-	
+
 })
 
 let msgModel = {
-	author : String,
-	author_name : String,
-	message : String,
-	timestamp : Number 
+	author: String,
+	author_name: String,
+	message: String,
+	timestamp: Number,
+	flagged: Boolean
 }
 
 var Message = mongoose.model('Message', msgModel)
 var User = mongoose.model(
 	'User',
 	{
-		username : String,
-		password : String,
-		email : String,
-		xtra : Boolean,
-		permission : String
+		username: String,
+		password: String,
+		email: String,
+		xtra: Boolean,
+		permission: String
 	}
 )
 var Permission = mongoose.model(
-	'Permission', 
+	'Permission',
 	{
-		name : String, 
-		permissions : Array
+		name: String,
+		permissions: Array
 	}
 )
 
@@ -86,17 +89,17 @@ var models = {
 };
 
 function auth(email, password, success) {
-	User.find({email: email, password: password}, (err, user) => {
-		if(user.length) success();
+	User.find({ email: email, password: password }, (err, user) => {
+		if (user.length) success();
 	})
 }
 
 function hasPermission(user, permission, callback) {
-	User.find({_id: user}, (err, user) => {
-		if(user.length) {
-			Permission.find({name: user[0].permission}, (err, perm) => {
-				if(perm.length) {
-					if(perm[0].permissions.includes(permission)) {
+	User.find({ _id: user }, (err, user) => {
+		if (user.length) {
+			Permission.find({ name: user[0].permission }, (err, perm) => {
+				if (perm.length) {
+					if (perm[0].permissions.includes(permission)) {
 						callback(true);
 						return;
 					}
@@ -110,10 +113,10 @@ function hasPermission(user, permission, callback) {
 }
 
 function hasPermissions(user, permissions, callback) {
-	User.find({_id: user}, (err, user) => {
-		if(user.length) {
-			Permission.find({name: user[0].permission}, (err, perm) => {
-				if(perm.length) {
+	User.find({ _id: user }, (err, user) => {
+		if (user.length) {
+			Permission.find({ name: user[0].permission }, (err, perm) => {
+				if (perm.length) {
 					var includes = true;
 					permissions.forEach(p => {
 						includes = includes && perm[0].permissions.includes(p);
@@ -128,11 +131,11 @@ function hasPermissions(user, permissions, callback) {
 }
 
 function hasPermissionAuth(req, permission, callback) {
-	User.find({_id: req.user, email: req.email, password: req.password}, (err, user) => {
-		if(user.length) {
-			Permission.find({name: user[0].permission}, (err, perm) => {
-				if(perm.length) {
-					if(perm[0].permissions.includes(permission)) {
+	User.find({ _id: req.user, email: req.email, password: req.password }, (err, user) => {
+		if (user.length) {
+			Permission.find({ name: user[0].permission }, (err, perm) => {
+				if (perm.length) {
+					if (perm[0].permissions.includes(permission)) {
 						callback();
 					}
 				}
@@ -141,6 +144,18 @@ function hasPermissionAuth(req, permission, callback) {
 	})
 }
 
+function filterMessage(text) {
+	for (const word of [
+		"nigger",
+		"nigga",
+		"pussy",
+		"ass",
+		"fuck"
+	]) {
+		if (text.includes(word)) return true;
+	}
+	return false;
+}
 io.on('connection', socket => {
 	usersOnline++;
 	console.log(`A user connected (${usersOnline} users)`);
@@ -153,7 +168,7 @@ io.on('connection', socket => {
 
 
 app.get('/messages', (req, res) => {
-	Message.find({},(err, messages)=> {
+	Message.find({}, (err, messages) => {
 		res.send(messages);
 	})
 })
@@ -176,6 +191,17 @@ app.post('/hasPermissions', (req, res) => {
 	})
 })
 
+
+app.post('/flaggedMsgs', (req, res) => {
+	hasPermissionAuth(req.body, "messages.moderate", () => {
+		Message.find({flagged: true}, (err,msgs) => {
+			res.send(msgs);
+		
+		})
+	})
+
+})
+
 app.post('/broadcast', (req, res) => {
 	hasPermissionAuth(req.body, "broadcast", () => {
 		io.emit('broadcast', req.body.message);
@@ -183,8 +209,8 @@ app.post('/broadcast', (req, res) => {
 })
 
 app.post('/hasGroup', (req, res) => {
-	User.find({_id: req.body.user, permission: req.body.group}, (err, user) => {
-		if(user.length) {
+	User.find({ _id: req.body.user, permission: req.body.group }, (err, user) => {
+		if (user.length) {
 			res.send(true);
 			return
 		}
@@ -194,7 +220,7 @@ app.post('/hasGroup', (req, res) => {
 
 app.post('/username', (req, res) => {
 	User.find(req.body, (err, user) => {
-		if(user.length) {
+		if (user.length) {
 			res.send(user[0].username);
 			return;
 		}
@@ -204,10 +230,10 @@ app.post('/username', (req, res) => {
 
 app.post('/modifyDb', (req, res) => {
 	hasPermissionAuth(req.body, "db.manage", () => {
-		switch(req.body.command) {
+		switch (req.body.command) {
 			case "clear_collection": {
-				models[req.body.collection].deleteMany({}, () => {});
-				if(req.body.collection == "Message") {
+				models[req.body.collection].deleteMany({}, () => { });
+				if (req.body.collection == "Message") {
 					io.emit('messagesCleared', req.body.user);
 				}
 				break;
@@ -218,7 +244,7 @@ app.post('/modifyDb', (req, res) => {
 
 app.post('/email', (req, res) => {
 	User.find(req.body, (err, user) => {
-		if(user.length) {
+		if (user.length) {
 			res.send(user[0].email);
 			return;
 		}
@@ -226,15 +252,18 @@ app.post('/email', (req, res) => {
 	})
 })
 
-app.post('/messages', (req, res) => {
+app.post('/messages', (req, res) => { // MESSAGE.. THING!!
 	let msg = {}
 	Object.keys(msgModel).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	})
+	msg.flagged = false;
+	if (filterMessage(msg.message)) msg.flagged = true;
+	console.table(msg);
 	auth(req.body.email, req.body.password, () => {
 		var message = new Message(msg);
-		message.save(err =>{
-			if(err) {
+		message.save(err => {
+			if (err) {
 				console.log(chalk.redBright(err))
 				res.sendStatus(500);
 				return;
@@ -246,20 +275,20 @@ app.post('/messages', (req, res) => {
 })
 
 app.post('/editMessage', (req, res) => {
-	User.find({email: req.body.email, password: req.body.password}, (err, user) => {
-		if(user.length) {
+	User.find({ email: req.body.email, password: req.body.password }, (err, user) => {
+		if (user.length) {
 			const a = {};
 			hasPermission(user[0]._id, "messages.edit_any", result => {
-				if(result == false) {
-					a = {author: user[0]._id};
+				if (result == false) {
+					a = { author: user[0]._id };
 				}
 
-				Message.find({...a, _id: req.body.message}, (err, message) => {
-					if(message.length) {
+				Message.find({ ...a, _id: req.body.message }, (err, message) => {
+					if (message.length) {
 						var message = message[0];
 						message.message = req.body.newMessage;
 						message.save(err_ => {
-							if(err_) {
+							if (err_) {
 								console.log(err_);
 								res.sendStatus(500);
 								return;
@@ -280,16 +309,16 @@ app.post('/editMessage', (req, res) => {
 })
 
 app.post('/deleteMessage', (req, res) => {
-	User.find({email: req.body.email, password: req.body.password}, (err_, user) => {
-		if(user.length) {
+	User.find({ email: req.body.email, password: req.body.password }, (err_, user) => {
+		if (user.length) {
 			var a = {};
 			hasPermission(user[0]._id, "messages.delete_any", result => {
-				if(result == false) {
-					a = {author: user[0]._id};
+				if (result == false) {
+					a = { author: user[0]._id };
 				}
 
-				Message.deleteOne({...a, _id: req.body.message}, err => {
-					if(err_) {
+				Message.deleteOne({ ...a, _id: req.body.message }, err => {
+					if (err_) {
 						console.log(err_);
 						res.sendStatus(500);
 					} else {
@@ -307,13 +336,13 @@ app.post('/deleteMessage', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-	User.find({username: req.body.username}, (err, doc) => {
-		if(doc.length) {
+	User.find({ username: req.body.username }, (err, doc) => {
+		if (doc.length) {
 			res.sendStatus(409);
 		} else {
 			var user = new User(req.body);
 			user.save(err_ => {
-				if(err_) {
+				if (err_) {
 					console.log(err_);
 					res.sendStatus(500);
 				}
@@ -326,8 +355,8 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-	User.find({email: req.body.email, password: req.body.password}, (err, doc) => {
-		if(doc.length) {
+	User.find({ email: req.body.email, password: req.body.password }, (err, doc) => {
+		if (doc.length) {
 			res.send(doc[0]);
 		} else {
 			res.sendStatus(401);
