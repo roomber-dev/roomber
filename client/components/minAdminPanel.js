@@ -12,13 +12,16 @@ $().ready(function() {
             label: "Yes",
             click: function(p) {
                 p.close();
-                $.post('/modifyDb', {
-                    email: currentUser.email,
-                    password: currentUser.password,
-                    user: currentUser._id,
-                    command: "clear_collection",
-                    collection: "Message"
-                });
+                setTimeout(function() {
+                    $.post('/modifyDb', {
+                        email: currentUser.email,
+                        password: currentUser.password,
+                        user: currentUser._id,
+                        command: "clear_collection",
+                        collection: "Message"
+                    }); 
+                }, 500);
+
             }
         }, {
             label: "No",
@@ -31,7 +34,7 @@ $().ready(function() {
     $("#broadcast").click(function() {
         popup("Broadcast", `
             Enter the broadcast message<br>
-            <input type="text" id="broadcast-msg"></input>
+            <input type="text" class="textbox" id="broadcast-msg"></input>
         `, [{
             label: "OK",
             click: function(p) {

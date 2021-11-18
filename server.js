@@ -48,7 +48,7 @@ mongoose.connect(dbUrl, (err) => {
 	if(err) {
 		console.log(chalk.redBright(`Failed to connect to MongoDB: ${err}`));
 	} else {
-		console.log('MongoDB connected');
+		console.log(chalk.greenBright('MongoDB connected'));
 	}
 	
 })
