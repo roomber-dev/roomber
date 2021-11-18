@@ -44,8 +44,8 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		return;
 	}
 	let u = {};
-	if(has_username) {
-		u = $("#reg-username").val();
+	if(has_username == true) {
+		u = {username: $("#reg-username").val()};
 	}
 	$.post(url, {
 		...u,
@@ -55,7 +55,6 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		setCookie("email", data.email);
 		setCookie("username", data.username);
 		setCookie("password", data.password);
-		setCookie("email", data.email);
 		setCookie("userid", data._id);
 		setCookie("setup", "true");
 		currentUser = data;

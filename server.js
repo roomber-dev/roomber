@@ -282,7 +282,7 @@ app.post('/editMessage', (req, res) => {
 app.post('/deleteMessage', (req, res) => {
 	User.find({email: req.body.email, password: req.body.password}, (err_, user) => {
 		if(user.length) {
-			const a = {};
+			var a = {};
 			hasPermission(user[0]._id, "messages.delete_any", result => {
 				if(result == false) {
 					a = {author: user[0]._id};

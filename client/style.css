@@ -52,10 +52,10 @@ body {
 
 #messages {
 	position: absolute;
-	top: 10%;
+	top: 56px;
 	left: 200px;
 	right: 0;
-	bottom: 8%;
+	bottom: 50px;
 	overflow-y: scroll;
 }
 
@@ -120,7 +120,7 @@ body {
 	bottom: 0;
 	right: 0;
 	left: 202px;
-	max-height: 7%;
+	height: 40px;
 }
 
 #message-box .message-input {
@@ -382,4 +382,14 @@ body {
 	padding: 4px;
 	font-size: 0.7rem;
 	background: linear-gradient(to right, orange, yellow);
+}
+
+@media screen and (max-width: 600px) {
+	#channels {
+		display: none;
+	}
+
+	#messages, #message-box {
+		left: 0;
+	}
 }
