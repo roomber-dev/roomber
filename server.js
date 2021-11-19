@@ -10,7 +10,7 @@ var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 
-const enableNgrok = false;
+const enableNgrok = true;
 
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
@@ -277,7 +277,7 @@ app.post('/messages', (req, res) => { // MESSAGE.. THING!!
 app.post('/editMessage', (req, res) => {
 	User.find({ email: req.body.email, password: req.body.password }, (err, user) => {
 		if (user.length) {
-			const a = {};
+			let a = {};
 			hasPermission(user[0]._id, "messages.edit_any", result => {
 				if (result == false) {
 					a = { author: user[0]._id };
