@@ -98,6 +98,7 @@ loaded(function() {
 function newMessage(message) {
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();
+	let flagHtml = "";
 
 	let extra = [];
 	if((currentUser != {} && message.author == currentUser._id)
@@ -105,12 +106,16 @@ function newMessage(message) {
 		extra = getMessageManagementButtons();
 	}
 
+	if(message.flagged) {
+		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
+	}
+
 	return `<div class="message glass" id="${message._id}">
 		<div class="flex">
 		    <img src="avatars/default.png" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
-		            <div class="username">${message.author_name}</div>
+		            <div class="username">${message.author_name}</div>${flagHtml}
 		            <div class="msgln"></div>
 		        </div>
 				${HorizontalMenu([

@@ -10,7 +10,7 @@ var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 
-const enableNgrok = true;
+const enableNgrok = false;
 
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
@@ -150,7 +150,8 @@ function filterMessage(text) {
 		"nigga",
 		"pussy",
 		"ass",
-		"fuck"
+		"fuck",
+		"bitch"
 	]) {
 		if (text.includes(word)) return true;
 	}

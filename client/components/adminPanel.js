@@ -4,6 +4,7 @@ class AdminPanel {
         function addFlaggedMessage(message, scroll = true) {
             $("#msgcontainer").append(newMessage(message));
             $(`#msgcontainer #${message._id} .msgln`).text(message.message);
+            $(`#msgcontainer #${message._id} .msgln`).append(' <i class="megasmall material-icons" style="display: inline-block;">warning</i>');
             $(`#msgcontainer #${message._id} .msgln`)[0].innerHTML = $(`#msgcontainer #${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
                 return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
             });
@@ -29,7 +30,7 @@ class AdminPanel {
         </div>
         `)
         $(".admin-panel .close").click(function () {
-            $(".admin-panel").remove();
+            AdminPanel.close();
         })
 
         $.post('/flaggedMsgs', {
@@ -47,5 +48,8 @@ class AdminPanel {
             forEach.then(console.log("loaded flagged msgs"));
         });
 
+    }
+    static close() {
+        $(".admin-panel").remove();
     }
 }
