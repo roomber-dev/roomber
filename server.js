@@ -305,7 +305,11 @@ app.post('/deleteMessage', (req, res) => {
 		if (user.length) {
 			hasPermission(user[0]._id, "messages.delete_any", result => {
 				if (result == true) {
-					Message.deleteOne({_id: req.body.message}, ()=>{});
+					Message.deleteOne({_id: req.body.message}, () => {
+						io.emit('delete', {
+							message: req.body.message
+						});
+					})
 					res.sendStatus(200);
 					return;
 				}
