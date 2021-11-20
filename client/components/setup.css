@@ -10,17 +10,17 @@
 	align-items: center;
 }
 
-#setup-bg-gradient {
+.setup-bg.gradient {
 	background: url('../assets/bggradient.png');
 	background-size: cover;
 }
 
-#setup-bg-landscape {
+.setup-bg.landscape {
 	background: url('../assets/test-bg.jpg');
 	background-size: cover;
 }
 
-#setup-bg-dark {
+.setup-bg.dark {
 	background: url('../assets/bgdark.png');
 	background-size: cover;
 }

@@ -1,55 +1,43 @@
-class AdminPanel {
-    static open() {
-
-        function addFlaggedMessage(message, scroll = true) {
-            $("#msgcontainer").append(newMessage(message));
-            $(`#msgcontainer #${message._id} .msgln`).text(message.message);
-            $(`#msgcontainer #${message._id} .msgln`).append(' <i class="megasmall material-icons" style="display: inline-block;">warning</i>');
-            $(`#msgcontainer #${message._id} .msgln`)[0].innerHTML = $(`#msgcontainer #${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
-                return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
-            });
-            $(`#msgcontainer #${message._id} .msgln`)[0].innerHTML = parseUrls($(`#msgcontainer #${message._id} .msgln`)[0].innerHTML);
-        
-            scroll && chatScrollDown();
-        }
-
-        
-
+AdminPanel = {
+    addFlaggedMessage: function(message) {
+        this.messages.append(newMessage(message));
+        composeMessageContent(this.messages.find(`#${message._id} .msgln`), message.message);
+    },
+    editFlaggedMessage: function(message, newMessage) {
+        const line = this.messages.find(`#${message} .msgln`);
+        line.html("");
+        composeMessageContent(line, newMessage);
+    },
+    open: function() {
         $('body').append(`
-            <div id="setup-bg-gradient" class="setup-bg admin-panel">
+            <div id="admin-panel" class="setup-bg gradient">
                 <div id="setup-page">
-                <div class="close">
-                    <i class="material-icons" style="cursor: pointer">close</i>
+                    <div class="titlebar">
+                        <div>Admin Panel</div>
+                        <div class="close">
+                            <i class="material-icons">close</i>
+                        </div>
+                    </div>
+
+                    <div id="messages"></div>
                 </div>
-
-                <div id="msgcontainer">
-
-                </div>
-
             </div>
-        </div>
         `)
-        $(".admin-panel .close").click(function () {
+
+        this.messages = $("#admin-panel #messages");
+
+        $("#admin-panel .close").click(function () {
             AdminPanel.close();
         })
 
-        $.post('/flaggedMsgs', {
-            email: currentUser.email,
-            password: currentUser.password,
-            user: currentUser._id
-        }, function(data) {
-            var forEach = new Promise(function(resolve, reject) {
-				if(data.length == 0) resolve();
-				data.forEach(function(message, index, array) {
-					addFlaggedMessage(message, false);
-					if (index === array.length - 1) resolve();
-				});
-			});
-            forEach.then(console.log("loaded flagged msgs"));
+        let that = this;
+        $.post('/getMessages', {flagged: true}, function(data) {
+            data.forEach(function(message) {
+                that.addFlaggedMessage(message);
+            });
         });
-
+    },
+    close: function() {
+        $("#admin-panel").remove();
     }
-    static close() {
-        $(".admin-panel").remove();
-    }
-}
+};

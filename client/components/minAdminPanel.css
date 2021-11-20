@@ -14,6 +14,7 @@
 
 #minAdminPanel button {
   width: 80%;
+  margin-bottom: 10px;
 }
 
 #minAdminPanel .close {

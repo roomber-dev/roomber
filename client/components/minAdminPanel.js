@@ -52,6 +52,10 @@ $().ready(function() {
         }])
     });
 
+    $("#full-panel").click(function() {
+        AdminPanel.open();
+    });
+
     $("#by-the-logo").append('<button id="security" class="button"><i class="megasmall material-icons">security</i></button>')
     const panelButton = $("#security").click(function() {
         if(adminPanel.css("display") == "flex") {

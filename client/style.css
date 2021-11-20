@@ -50,7 +50,7 @@ body {
 	background: rgba(0, 0, 0, 0.6);
 }
 
-#messages {
+#chat-area #messages {
 	position: absolute;
 	top: 56px;
 	left: 200px;

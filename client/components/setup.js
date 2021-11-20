@@ -1,5 +1,5 @@
 let setupCurrentPage = 0;
-let setupTheme = "setup-bg-gradient";
+let setupTheme = "gradient";
 
 function setupNext() {
 	setupCurrentPage += 1;
@@ -11,15 +11,15 @@ function setupNotImplemented() {
 }
 
 function setupSetTheme(theme) {
-	$(".setup-bg").attr("id",theme);
+	setupTheme = theme;
+	$("#setup-container").html(setupPage(currentUser.username));
 }
 
 function setupPage(username) {
-	// when there's no switch expression
 	return {
 		1: function() {
 			return `
-				<div id="${setupTheme}" class="setup-bg">
+				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-icon"><i class="material-icons">build</i></div>
@@ -31,7 +31,7 @@ function setupPage(username) {
 		},
 		2: function() {
 			return `
-				<div id="${setupTheme}" class="setup-bg">
+				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-text">Pick a nice profile picture!</div>
@@ -44,21 +44,21 @@ function setupPage(username) {
 		},
 		3: function() {
 			return `
-				<div id="${setupTheme}" class="setup-bg">
+				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-text">Pick a theme you like!</div>
 						<div id="setup-themes">
 							<div class="setup-theme">
-								<img src="../assets/landscape-preview.png" onclick="setupSetTheme('setup-bg-landscape')">
+								<img src="../assets/landscape-preview.png" onclick="setupSetTheme('landscape')">
 								<p>Landscape</p>
 							</div>
 							<div class="setup-theme">
-								<img src="../assets/gradient-preview.png" onclick="setupSetTheme('setup-bg-gradient')">
+								<img src="../assets/gradient-preview.png" onclick="setupSetTheme('gradient')">
 								<p>Gradient</p>
 							</div>
 							<div class="setup-theme">
-								<img src="../assets/dark-preview.png" onclick="setupSetTheme('setup-bg-dark')">
+								<img src="../assets/dark-preview.png" onclick="setupSetTheme('dark')">
 								<p>Dark</p>
 							</div>
 						</div>
@@ -69,7 +69,7 @@ function setupPage(username) {
 		},
 		4: function() {
 			return `
-				<div id="${setupTheme}" class="setup-bg">
+				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-icon"><img src="../assets/roomber-logo.png"></div>

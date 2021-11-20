@@ -10,7 +10,7 @@ var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 
-const enableNgrok = false;
+const enableNgrok = config.enableNgrok;
 
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
@@ -29,7 +29,7 @@ if (enableNgrok) {
 			authtoken: config.ngrokAuthtoken,
 			addr: 3000
 		});
-		open(`${url}`);
+		if(config.openNgrokURL) open(url);
 		console.log(chalk.greenBright(`The ngrok url is ${url}`));
 	})();
 } else {
@@ -60,7 +60,8 @@ let msgModel = {
 	author_name: String,
 	message: String,
 	timestamp: Number,
-	flagged: Boolean
+	flagged: Boolean,
+	removed: Boolean
 }
 
 var Message = mongoose.model('Message', msgModel)
@@ -157,6 +158,7 @@ function filterMessage(text) {
 	}
 	return false;
 }
+
 io.on('connection', socket => {
 	usersOnline++;
 	console.log(`A user connected (${usersOnline} users)`);
@@ -167,9 +169,14 @@ io.on('connection', socket => {
 	})
 })
 
-
-app.get('/messages', (req, res) => {
-	Message.find({}, (err, messages) => {
+app.post('/getMessages', (req, res) => {
+	if(req.body.flagged) {
+		Message.find({flagged: true}, (err, messages) => {
+			res.send(messages);
+		})
+		return;
+	}
+	Message.find({removed: false}, (err, messages) => {
 		res.send(messages);
 	})
 })
@@ -190,17 +197,6 @@ app.post('/hasPermissions', (req, res) => {
 	hasPermissions(req.body.user, req.body["permissions[]"], result => {
 		res.send(result);
 	})
-})
-
-
-app.post('/flaggedMsgs', (req, res) => {
-	hasPermissionAuth(req.body, "messages.moderate", () => {
-		Message.find({flagged: true}, (err,msgs) => {
-			res.send(msgs);
-		
-		})
-	})
-
 })
 
 app.post('/broadcast', (req, res) => {
@@ -240,27 +236,18 @@ app.post('/modifyDb', (req, res) => {
 				break;
 			}
 		}
+		res.sendStatus(200);
 	})
 })
 
-app.post('/email', (req, res) => {
-	User.find(req.body, (err, user) => {
-		if (user.length) {
-			res.send(user[0].email);
-			return;
-		}
-		res.send("Unknown");
-	})
-})
-
-app.post('/messages', (req, res) => { // MESSAGE.. THING!!
+app.post('/messages', (req, res) => {
 	let msg = {}
 	Object.keys(msgModel).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	})
 	msg.flagged = false;
+	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
-	console.table(msg);
 	auth(req.body.email, req.body.password, () => {
 		var message = new Message(msg);
 		message.save(err => {
@@ -312,17 +299,24 @@ app.post('/editMessage', (req, res) => {
 app.post('/deleteMessage', (req, res) => {
 	User.find({ email: req.body.email, password: req.body.password }, (err_, user) => {
 		if (user.length) {
-			var a = {};
 			hasPermission(user[0]._id, "messages.delete_any", result => {
-				if (result == false) {
-					a = { author: user[0]._id };
+				if (result == true) {
+					Message.deleteOne({_id: req.body.message}, ()=>{});
+					res.sendStatus(200);
+					return;
 				}
 
-				Message.deleteOne({ ...a, _id: req.body.message }, err => {
-					if (err_) {
-						console.log(err_);
-						res.sendStatus(500);
-					} else {
+				Message.find({author: user[0]._id, _id: req.body.message}, (err, msg) => {
+					if(msg.length) {
+						var message = msg[0];
+						message.removed = true;
+						message.save(err_ => {
+							if(err_) {
+								console.log(err_);
+								res.sendStatus(500);
+								return;
+							}
+						})
 						io.emit('delete', {
 							message: req.body.message
 						});

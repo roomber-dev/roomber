@@ -18,6 +18,14 @@ function chatScrollDown() {
 	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
 }
 
+function composeMessageContent(message, messageText) {
+	message.text(messageText);
+	message[0].innerHTML = message[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
+    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
+	});
+	message[0].innerHTML = parseUrls(message[0].innerHTML);
+}
+
 function getMessageManagementButtons() {
 	return [
 		{
@@ -31,6 +39,11 @@ function getMessageManagementButtons() {
 						let id = menuItem.getMessage().attr("id");
 						let newMessage = $("#editMessage").val();
 						editMessage(id, newMessage);
+						popup.close();
+					}
+				}, {
+					label: "Cancel",
+					click: function(popup) {
 						popup.close();
 					}
 				}]);
@@ -161,7 +174,3 @@ function newAdMessage(id) {
 		</div>
 	</div>`;
 }
-
-/*window.addEventListener('contextmenu', function(e) {
-	e.preventDefault()
-})*/

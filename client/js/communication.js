@@ -1,5 +1,4 @@
 usernames = {};
-emails = {};
 
 async function getUsername(id) {
 	if(usernames[id]) {
@@ -11,18 +10,6 @@ async function getUsername(id) {
 	});
 	usernames[id] = username;
 	return username;
-}
-
-async function getEmail(id) {
-	if(emails[id]) {
-		return emails[id];
-	}
-	let email = "Unknown";
-	await $.post('/email', {_id: id}, function(data) {
-		email = data;
-	});
-	emails[id] = email;
-	return email;
 }
 
 function ifPermission(permission, ifTrue) {
@@ -49,11 +36,7 @@ function ifPermissions(permissions, ifTrue) {
 
 function addMessage(message, scroll = true) {
 	$("#messages").append(newMessage(message));
-	$(`#${message._id} .msgln`).text(message.message);
-	$(`#${message._id} .msgln`)[0].innerHTML = $(`#${message._id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
-    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
-	});
-	$(`#${message._id} .msgln`)[0].innerHTML = parseUrls($(`#${message._id} .msgln`)[0].innerHTML);
+	composeMessageContent($(`#${message._id} .msgln`), message.message);
 
 	scroll && chatScrollDown();
 }
@@ -61,18 +44,14 @@ function addMessage(message, scroll = true) {
 async function adAppend(scroll = true) {
 	const id = uuidv4();
 	$("#messages").append(await newAdMessage(id));
-	$(`#${id} .msgln`).html("Buy Roomber Xtra for an ad-free experience and lots of cool perks to make you stand out and have more fun! :sunglasses:");
-	$(`#${id} .msgln`)[0].innerHTML = $(`#${id} .msgln`)[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
-    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
-	});
-	$(`#${id} .msgln`)[0].innerHTML = parseUrls($(`#${id} .msgln`)[0].innerHTML);
+	composeMessageContent($(`#${id} .msgln`), "Buy Roomber Xtra for an ad-free experience and lots of cool perks to make you stand out and have more fun! :sunglasses:");
 
 	scroll && chatScrollDown();
 }
 
 
 function getMessages() {
-	$.get('/messages',
+	$.post('/getMessages', {},
 		function(data) {
 			var forEach = new Promise(function(resolve, reject) {
 				if(data.length == 0) resolve();
@@ -117,7 +96,13 @@ function deleteMessage(message) {
 var socket = io();
 socket.on('message', addMessage);
 socket.on('edit', function(e) {
-	$(`#${e.message} .msgln`).text(e.newMessage);
+	const line = $(`#${e.message} .msgln`);
+	line.html("");
+	composeMessageContent(line, e.newMessage);
+	const adminPanelMessage = $("#admin-panel #"+e.message);
+	if(adminPanelMessage.length) {
+		AdminPanel.editFlaggedMessage(e.message, e.newMessage);
+	}
 });
 socket.on('delete', function(e) {
 	$(`#${e.message}`).remove();
