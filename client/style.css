@@ -389,7 +389,7 @@ body {
 		display: none;
 	}
 
-	#messages, #message-box {
+	#chat-area #messages, #message-box {
 		left: 0;
 	}
 }
