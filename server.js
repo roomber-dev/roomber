@@ -152,7 +152,11 @@ function filterMessage(text) {
 		"pussy",
 		"ass",
 		"fuck",
-		"bitch"
+		"bitch",
+		"cum",
+		"your ip",
+		"you're ip",
+		"ur ip"
 	]) {
 		if (text.includes(word)) return true;
 	}
