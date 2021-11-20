@@ -52,6 +52,10 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		email: $("#reg-email").val(),
 		password: $("#reg-password").val()
 	}, function(data) {
+		if(data.error) {
+			reg_err(p, data.error);
+			return;
+		}
 		setCookie("email", data.email);
 		setCookie("username", data.username);
 		setCookie("password", data.password);

@@ -46,6 +46,10 @@ $().ready(function() {
                         password: currentUser.password,
                         user: currentUser._id,
                         message: msg
+                    }, function(data) {
+                        if(data.error) {
+                            popup("Error", data.error, undefined, false, "red");
+                        }
                     });
                 },500);
             }

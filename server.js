@@ -12,6 +12,19 @@ const open = require('open');
 
 const enableNgrok = config.enableNgrok;
 
+const characterLimits = {
+	"message": [1,1000],
+	"broadcast": [1,500],
+	"username": [1,20],
+	"password": [7,50],
+	"email": [1,320]
+};
+
+function matchCharacterLimit(limit, text) {
+	return (text.length >= characterLimits[limit][0] &&
+			text.length <= characterLimits[limit][1]);
+}
+
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 }
@@ -204,6 +217,10 @@ app.post('/hasPermissions', (req, res) => {
 })
 
 app.post('/broadcast', (req, res) => {
+	if(!matchCharacterLimit("broadcast", req.body.message)) {
+		res.send({error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters."});
+		return;
+	}
 	hasPermissionAuth(req.body, "broadcast", () => {
 		io.emit('broadcast', req.body.message);
 	})
@@ -249,6 +266,10 @@ app.post('/messages', (req, res) => {
 	Object.keys(msgModel).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	})
+	if(!matchCharacterLimit("message", msg.message)) {
+		res.send({error: "Your message is past the limit of " + characterLimits["message"][1] + " characters."});
+		return;
+	}
 	msg.flagged = false;
 	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
@@ -267,6 +288,10 @@ app.post('/messages', (req, res) => {
 })
 
 app.post('/editMessage', (req, res) => {
+	if(!matchCharacterLimit("message", req.body.newMessage)) {
+		res.send({error: "Your message is past the limit of " + characterLimits["message"][1] + " characters."});
+		return;
+	}
 	User.find({ email: req.body.email, password: req.body.password }, (err, user) => {
 		if (user.length) {
 			let a = {};
@@ -339,6 +364,18 @@ app.post('/deleteMessage', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
+	if(!matchCharacterLimit("username", req.body.username)) {
+		res.send({error: "Your username is past the limit of " + characterLimits["username"][1] + " characters."});
+		return;
+	}
+	if(!matchCharacterLimit("email", req.body.email)) {
+		res.send({error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters."});
+		return;
+	}
+	if(!matchCharacterLimit("password", req.body.password)) {
+		res.send({error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters."});
+		return;
+	}
 	User.find({ username: req.body.username }, (err, doc) => {
 		if (doc.length) {
 			res.sendStatus(409);
@@ -358,6 +395,14 @@ app.post('/register', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
+	if(!matchCharacterLimit("email", req.body.email)) {
+		res.send({error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters."});
+		return;
+	}
+	if(!matchCharacterLimit("password", req.body.password)) {
+		res.send({error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters."});
+		return;
+	}
 	User.find({ email: req.body.email, password: req.body.password }, (err, doc) => {
 		if (doc.length) {
 			res.send(doc[0]);

@@ -65,7 +65,11 @@ function getMessages() {
 }
 
 function sendMessage(message) {
-	$.post('/messages', message)
+	$.post('/messages', message, function(data) {
+		if(data.error) {
+			popup("Error", data.error, undefined, false, "red");
+		}
+	})
 }
 
 function editMessage(message, newMessage) {
@@ -74,6 +78,12 @@ function editMessage(message, newMessage) {
 		password: currentUser.password, 
 		message: message, 
 		newMessage: newMessage
+	}, function(data) {
+		if(data.error) {
+			setTimeout(function() {
+				popup("Error", data.error, undefined, false, "red");
+			}, 500);
+		}
 	}).fail(function() {
 		setTimeout(function() {
 			popup("Error", "You can only edit your own messages!", undefined, false, "red");
