@@ -8,13 +8,18 @@ function logOut() {
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 
+    $.post("/logout", {
+    	user: session.user,
+    	session: session.session
+    })
+
     window.location.reload();
 }
 
 function logIn() {
 	$("#login").text("");
 	$("#login").append('<img src="avatars/default.png" alt="">');
-	$("#login").append('<p class="username">' + currentUser.username + '</p>');
+	$("#login").append('<p class="username">' + session.username + '</p>');
 	$("#login").append('<button id="logout" class="button"><i class="material-icons">exit_to_app</i></button>');
 	$("#logout").click(function() {
 		logOut();
@@ -56,12 +61,11 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 			reg_err(p, data.error);
 			return;
 		}
-		setCookie("email", data.email);
 		setCookie("username", data.username);
-		setCookie("password", data.password);
-		setCookie("userid", data._id);
+		setCookie("userid", data.user);
+		setCookie("session", data.session);
 		setCookie("setup", "true");
-		currentUser = data;
+		session = data;
 		logIn();
 		p.close();
 		finish();
@@ -120,16 +124,15 @@ function checkSetup() {
 }
 
 function loginInit() {
-	let id = getCookie("userid");
+	let id = getCookie("session");
 	if(id == "") {
-		currentUser = {};
+		session = {};
 		reg(checkSetup);
 	} else {
-		currentUser = {
-			_id: id,
+		session = {
+			session: id,
 			username: getCookie("username"),
-			password: getCookie("password"),
-			email: getCookie("email")
+			id: getCookie("userid")
 		};
 		logIn();
 		checkSetup();

@@ -77,11 +77,9 @@ loaded(function() {
 		}
 
 		sendMessage({
-			password: currentUser.password,
-			email: currentUser.email,
+			session: session.session,
 			msg: {
-				author: currentUser._id,
-				author_name: currentUser.username,
+				author: session.user,
 				message: $("#message").val(),
 				timestamp: new Date().getTime()
 			}
@@ -98,7 +96,7 @@ loaded(function() {
 	});
 
 	$(".message").hover(function() {
-		if($(this).find(".horizontalMenu").children().length == 1 && $(this).find(".username").text() == currentUser.username) {
+		if($(this).find(".horizontalMenu").children().length == 1 && $(this).find(".username").text() == session.username) {
 			horizontalMenuAddButtons($(this).find(".horizontalMenu").data("id"), getMessageManagementButtons());
 		}
 	});
@@ -114,7 +112,7 @@ function newMessage(message) {
 	let flagHtml = "";
 
 	let extra = [];
-	if((currentUser != {} && message.author == currentUser._id)
+	if((session != {} && message.author == session.user)
 		|| canEditAndDeleteAny) {
 		extra = getMessageManagementButtons();
 	}

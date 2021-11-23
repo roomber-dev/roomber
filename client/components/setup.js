@@ -3,7 +3,7 @@ let setupTheme = "gradient";
 
 function setupNext() {
 	setupCurrentPage += 1;
-	$("#setup-container").html(setupPage(currentUser.username));
+	$("#setup-container").html(setupPage(session.username));
 }
 
 function setupNotImplemented() {
@@ -12,7 +12,7 @@ function setupNotImplemented() {
 
 function setupSetTheme(theme) {
 	setupTheme = theme;
-	$("#setup-container").html(setupPage(currentUser.username));
+	$("#setup-container").html(setupPage(session.username));
 }
 
 function setupPage(username) {

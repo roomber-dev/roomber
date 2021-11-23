@@ -95,16 +95,31 @@ var Permission = mongoose.model(
 		permissions: Array
 	}
 )
+var Session = mongoose.model(
+	'Session',
+	{
+		user: String
+	}
+)
 
 var models = {
 	"Permission": Permission,
 	"Message": Message,
-	"User": User
+	"User": User,
+	"Session": Session
 };
 
+/*
 function auth(email, password, success) {
 	User.find({ email: email, password: password }, (err, user) => {
 		if (user.length) success();
+	})
+}
+*/
+
+function auth(user, sessionID, success) {
+	Session.find({_id: sessionID, user: user}, (err, session) => {
+		if(session.length) success();
 	})
 }
 
@@ -145,16 +160,18 @@ function hasPermissions(user, permissions, callback) {
 }
 
 function hasPermissionAuth(req, permission, callback) {
-	User.find({ _id: req.user, email: req.email, password: req.password }, (err, user) => {
-		if (user.length) {
-			Permission.find({ name: user[0].permission }, (err, perm) => {
-				if (perm.length) {
-					if (perm[0].permissions.includes(permission)) {
-						callback();
+	auth(req.user, req.session, () => {
+		User.find({ _id: req.user }, (err, user) => {
+			if (user.length) {
+				Permission.find({ name: user[0].permission }, (err, perm) => {
+					if (perm.length) {
+						if (perm[0].permissions.includes(permission)) {
+							callback();
+						}
 					}
-				}
-			})
-		}
+				})
+			}
+		})
 	})
 }
 
@@ -236,15 +253,15 @@ app.post('/hasGroup', (req, res) => {
 	})
 })
 
-app.post('/username', (req, res) => {
-	User.find(req.body, (err, user) => {
-		if (user.length) {
-			res.send(user[0].username);
+function getUsername(user, success) {
+	User.find({_id: user}, (err, user) => {
+		if(user.length) {
+			success(user[0].username);
 			return;
 		}
-		res.send("Unknown");
+		success("Unknown");
 	})
-})
+}
 
 app.post('/modifyDb', (req, res) => {
 	hasPermissionAuth(req.body, "db.manage", () => {
@@ -273,16 +290,20 @@ app.post('/messages', (req, res) => {
 	msg.flagged = false;
 	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
-	auth(req.body.email, req.body.password, () => {
-		var message = new Message(msg);
-		message.save(err => {
-			if (err) {
-				console.log(chalk.redBright(err))
-				res.sendStatus(500);
-				return;
-			}
-			io.emit('message', message);
-			res.sendStatus(200);
+	auth(msg.author, req.body.session, () => {
+		console.log("authed");
+		getUsername(msg.author, username => {
+			msg.author_name = username;
+			var message = new Message(msg);
+			message.save(err => {
+				if (err) {
+					console.log(chalk.redBright(err))
+					res.sendStatus(500);
+					return;
+				}
+				io.emit('message', message);
+				res.sendStatus(200);
+			})
 		})
 	})
 })
@@ -292,74 +313,68 @@ app.post('/editMessage', (req, res) => {
 		res.send({error: "Your message is past the limit of " + characterLimits["message"][1] + " characters."});
 		return;
 	}
-	User.find({ email: req.body.email, password: req.body.password }, (err, user) => {
-		if (user.length) {
-			let a = {};
-			hasPermission(user[0]._id, "messages.edit_any", result => {
-				if (result == false) {
-					a = { author: user[0]._id };
-				}
+	auth(req.body.editor, req.body.session, () => {
+		let a = {};
+		hasPermission(req.body.editor, "messages.edit_any", result => {
+			if (result == false) {
+				a = { author: req.body.editor };
+			}
 
-				Message.find({ ...a, _id: req.body.message }, (err, message) => {
-					if (message.length) {
-						var message = message[0];
-						message.message = req.body.newMessage;
-						message.save(err_ => {
-							if (err_) {
-								console.log(err_);
-								res.sendStatus(500);
-								return;
-							}
-							io.emit('edit', {
-								message: req.body.message,
-								newMessage: req.body.newMessage
-							});
-							res.sendStatus(200);
-						})
-					} else {
-						res.sendStatus(401);
-					}
-				})
+			Message.find({ ...a, _id: req.body.message }, (err, message) => {
+				if (message.length) {
+					var message = message[0];
+					message.message = req.body.newMessage;
+					message.save(err_ => {
+						if (err_) {
+							console.log(err_);
+							res.sendStatus(500);
+							return;
+						}
+						io.emit('edit', {
+							message: req.body.message,
+							newMessage: req.body.newMessage
+						});
+						res.sendStatus(200);
+					})
+				} else {
+					res.sendStatus(401);
+				}
 			})
-		}
+		})
 	})
 })
 
 app.post('/deleteMessage', (req, res) => {
-	User.find({ email: req.body.email, password: req.body.password }, (err_, user) => {
-		if (user.length) {
-			hasPermission(user[0]._id, "messages.delete_any", result => {
-				if (result == true) {
-					Message.deleteOne({_id: req.body.message}, () => {
-						io.emit('delete', {
-							message: req.body.message
-						});
-					})
-					res.sendStatus(200);
-					return;
-				}
-
-				Message.find({author: user[0]._id, _id: req.body.message}, (err, msg) => {
-					if(msg.length) {
-						var message = msg[0];
-						message.removed = true;
-						message.save(err_ => {
-							if(err_) {
-								console.log(err_);
-								res.sendStatus(500);
-								return;
-							}
-						})
-						io.emit('delete', {
-							message: req.body.message
-						});
-						res.sendStatus(200);
-					}
+	auth(req.body.deleter, req.body.session, () => {
+		hasPermission(req.body.deleter, "messages.delete_any", result => {
+			if (result == true) {
+				Message.deleteOne({_id: req.body.message}, () => {
+					io.emit('delete', {
+						message: req.body.message
+					});
 				})
+				res.sendStatus(200);
+				return;
+			}
+
+			Message.find({author: req.body.deleter, _id: req.body.message}, (err, msg) => {
+				if(msg.length) {
+					var message = msg[0];
+					message.removed = true;
+					message.save(err_ => {
+						if(err_) {
+							console.log(err_);
+							res.sendStatus(500);
+							return;
+						}
+					})
+					io.emit('delete', {
+						message: req.body.message
+					});
+					res.sendStatus(200);
+				}
 			})
-		} else {
-			res.sendStatus(401);
-		}
+		})
 	})
 })
 
@@ -387,7 +402,18 @@ app.post('/register', (req, res) => {
 					res.sendStatus(500);
 				}
 				else {
-					res.send(user);
+					var session = new Session({user: user._id});
+					session.save(err__ => {
+						if(err__) {
+							console.log(err__);
+							res.sendStatus(500);
+						}
+						res.send({
+							session: session._id,
+							user: session.user,
+							username: doc[0].username
+						})
+					})
 				}
 			})
 		}
@@ -405,11 +431,26 @@ app.post('/login', (req, res) => {
 	}
 	User.find({ email: req.body.email, password: req.body.password }, (err, doc) => {
 		if (doc.length) {
-			res.send(doc[0]);
+			var session = new Session({user: doc[0]._id});
+			session.save(err__ => {
+				if(err__) {
+					console.log(err__);
+					res.sendStatus(500);
+				}
+				res.send({
+					session: session._id,
+					user: session.user,
+					username: doc[0].username
+				})
+			})
 		} else {
 			res.sendStatus(401);
 		}
 	})
+})
+
+app.post('/logout', (req, res) => {
+	Session.deleteOne({_id: req.body.session, user: req.body.user}, ()=>{})
 })
 
 var server = http.listen(3000, () => {

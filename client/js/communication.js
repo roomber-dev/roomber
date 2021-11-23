@@ -1,20 +1,6 @@
-usernames = {};
-
-async function getUsername(id) {
-	if(usernames[id]) {
-		return usernames[id];
-	}
-	let username = "Unknown";
-	await $.post('/username', {_id: id}, function(data) {
-		username = data;
-	});
-	usernames[id] = username;
-	return username;
-}
-
 function ifPermission(permission, ifTrue) {
 	$.post('/can', {
-		user: currentUser._id,
+		user: session.user,
 		permission: permission	
 	}, function(data) {
 		if(data == true) {
@@ -25,7 +11,7 @@ function ifPermission(permission, ifTrue) {
 
 function ifPermissions(permissions, ifTrue) {
 	$.post('/hasPermissions', {
-		user: currentUser._id,
+		user: session.user,
 		permissions: permissions
 	}, function(data) {
 		if(data == true) {
@@ -74,8 +60,8 @@ function sendMessage(message) {
 
 function editMessage(message, newMessage) {
 	$.post('/editMessage', {
-		email: currentUser.email, 
-		password: currentUser.password, 
+		editor: session.user,
+		session: session.session,
 		message: message, 
 		newMessage: newMessage
 	}, function(data) {
@@ -93,8 +79,8 @@ function editMessage(message, newMessage) {
 
 function deleteMessage(message) {
 	$.post('/deleteMessage', {
-		email: currentUser.email, 
-		password: currentUser.password, 
+		deleter: session.user,
+		session: session.session,
 		message: message
 	}).fail(function() {
 		setTimeout(function() {
