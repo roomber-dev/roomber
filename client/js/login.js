@@ -132,7 +132,7 @@ function loginInit() {
 		session = {
 			session: id,
 			username: getCookie("username"),
-			id: getCookie("userid")
+			user: getCookie("userid")
 		};
 		logIn();
 		checkSetup();

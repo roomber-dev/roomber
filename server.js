@@ -291,7 +291,6 @@ app.post('/messages', (req, res) => {
 	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
-		console.log("authed");
 		getUsername(msg.author, username => {
 			msg.author_name = username;
 			var message = new Message(msg);
