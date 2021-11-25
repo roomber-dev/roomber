@@ -84,7 +84,10 @@ function setupPage(username) {
 
 function setupClose() {
 	$(".setup-bg").remove();
-	setCookie("setup","false");
+	$.post('/setup', {
+		session: session.session, 
+		user: session.user
+	});
 	onSetupFinished();
 }
 

@@ -64,7 +64,6 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		setCookie("username", data.username);
 		setCookie("userid", data.user);
 		setCookie("session", data.session);
-		setCookie("setup", "true");
 		session = data;
 		logIn();
 		p.close();
@@ -116,11 +115,13 @@ function reg(finish) {
 }
 
 function checkSetup() {
-	if(getCookie("setup") == "true") {
-		setup();
-	} else {
-		onSetupFinished();
-	}
+	$.post('/getSetup', {user: session.user}, function(isSetup) {
+		if(isSetup) {
+			setup();
+		} else {
+			onSetupFinished();
+		}
+	})
 }
 
 function loginInit() {

@@ -85,7 +85,8 @@ var User = mongoose.model(
 		password: String,
 		email: String,
 		xtra: Boolean,
-		permission: String
+		permission: String,
+		setup: Boolean
 	}
 )
 var Permission = mongoose.model(
@@ -377,6 +378,33 @@ app.post('/deleteMessage', (req, res) => {
 	})
 })
 
+app.post('/setup', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		User.find({ _id: req.body.user }, (err, user) => {
+			if(user.length) {
+				var user = user[0];
+				user.setup = false;
+				user.save(err_ => {
+					if (err_) {
+						console.log(err_);
+						res.sendStatus(500);
+						return;
+					}
+					res.sendStatus(200);
+				});
+			}
+		})
+	})
+})
+
+app.post('/getSetup', (req, res) => {
+	User.find({ _id: req.body.user }, (err, user) => {
+		if(user.length) {
+			res.send(user[0].setup);
+		}
+	})
+})
+
 app.post('/register', (req, res) => {
 	if(!matchCharacterLimit("username", req.body.username)) {
 		res.send({error: "Your username is past the limit of " + characterLimits["username"][1] + " characters."});
@@ -395,6 +423,7 @@ app.post('/register', (req, res) => {
 			res.sendStatus(409);
 		} else {
 			var user = new User(req.body);
+			user.setup = true;
 			user.save(err_ => {
 				if (err_) {
 					console.log(err_);
@@ -409,8 +438,8 @@ app.post('/register', (req, res) => {
 						}
 						res.send({
 							session: session._id,
-							user: session.user,
-							username: doc[0].username
+							user: user._id,
+							username: user.username
 						})
 					})
 				}
@@ -438,7 +467,7 @@ app.post('/login', (req, res) => {
 				}
 				res.send({
 					session: session._id,
-					user: session.user,
+					user: doc[0]._id,
 					username: doc[0].username
 				})
 			})
