@@ -20,6 +20,15 @@ const characterLimits = {
 	"email": [1,320]
 };
 
+const profile = {
+	"avatar": (user, avatar) => {
+		user.avatar = avatar;
+		user.save(err_ => {
+			if(err_) console.log(err_);
+		});
+	}
+}
+
 function matchCharacterLimit(limit, text) {
 	return (text.length >= characterLimits[limit][0] &&
 			text.length <= characterLimits[limit][1]);
@@ -70,7 +79,6 @@ mongoose.connect(dbUrl, (err) => {
 
 let msgSchema = {
 	author: String,
-	author_name: String,
 	message: String,
 	timestamp: Number,
 	flagged: Boolean,
@@ -86,7 +94,8 @@ var User = mongoose.model(
 		email: String,
 		xtra: Boolean,
 		permission: String,
-		setup: Boolean
+		setup: Boolean,
+		avatar: String
 	}
 )
 var Permission = mongoose.model(
@@ -194,6 +203,29 @@ function filterMessage(text) {
 	return false;
 }
 
+function getUsername(user, success) {
+	User.find({_id: user}, (err, user) => {
+		if(user.length) {
+			success(user[0].username);
+			return;
+		}
+		success("Unknown");
+	})
+}
+
+function removeCredentials(object) {
+	let result = object._doc;
+	Object.keys(result).forEach(key => {
+		if([
+			"password",
+			"email"
+		].includes(key)) {
+			delete result[key];
+		}
+	});
+	return result;
+}
+
 io.on('connection', socket => {
 	usersOnline++;
 	console.log(`A user connected (${usersOnline} users)`);
@@ -207,7 +239,21 @@ io.on('connection', socket => {
 app.post('/getMessages', (req, res) => {
 	if(req.body.fetch) {
 		Message.find().sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
-			res.send(messages);
+			if(!messages.length) {
+				res.send({error: "No messages found"});
+				return;
+			}
+
+			let users = [];
+			messages.forEach(message => {
+				if(!users.includes(message.author)) {
+					users.push(message.author);
+				}
+			});
+			res.send({
+				messages: messages,
+				users: users
+			});
 		})
 		return;
 	}
@@ -240,6 +286,22 @@ app.post('/hasPermissions', (req, res) => {
 	})
 })
 
+app.post('/getUsers', (req, res) => {
+	let ids
+	if(req.body["users[]"].constructor === Array) {
+		ids = req.body["users[]"].map(user => mongoose.Types.ObjectId(user));
+	} else {
+		ids = [mongoose.Types.ObjectId(req.body["users[]"])];
+	}
+	let noCredentialUsers = [];
+	User.find({_id: {"$in": ids}}, (err, users) => {
+		users.forEach(user => {
+			noCredentialUsers.push(removeCredentials(user));
+		});
+		res.send(noCredentialUsers);
+	});
+})
+
 app.post('/broadcast', (req, res) => {
 	if(!matchCharacterLimit("broadcast", req.body.message)) {
 		res.send({error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters."});
@@ -260,23 +322,13 @@ app.post('/hasGroup', (req, res) => {
 	})
 })
 
-function getUsername(user, success) {
-	User.find({_id: user}, (err, user) => {
-		if(user.length) {
-			success(user[0].username);
-			return;
-		}
-		success("Unknown");
-	})
-}
-
 app.post('/modifyDb', (req, res) => {
 	hasPermissionAuth(req.body, "db.manage", () => {
 		switch (req.body.command) {
 			case "clear_collection": {
 				models[req.body.collection].deleteMany({}, () => { });
 				if (req.body.collection == "Message") {
-					io.emit('messagesCleared', req.body.user);
+					io.emit('messagesCleared');
 				}
 				break;
 			}
@@ -298,8 +350,7 @@ app.post('/messages', (req, res) => {
 	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
-		getUsername(msg.author, username => {
-			msg.author_name = username;
+		User.find({_id: msg.author}, (err, user) => {
 			var message = new Message(msg);
 			message.save(err => {
 				if (err) {
@@ -307,7 +358,7 @@ app.post('/messages', (req, res) => {
 					res.sendStatus(500);
 					return;
 				}
-				io.emit('message', message);
+				io.emit('message', {...message._doc, user: removeCredentials(user[0])});
 				res.sendStatus(200);
 			})
 		})
@@ -406,6 +457,10 @@ app.post('/setup', (req, res) => {
 app.post('/getSetup', (req, res) => {
 	User.find({ _id: req.body.user }, (err, user) => {
 		if(user.length) {
+			if(!("setup" in user[0]._doc)) {
+				res.send(true);
+				return;
+			}
 			res.send(user[0].setup);
 		}
 	})
@@ -451,6 +506,23 @@ app.post('/register', (req, res) => {
 				}
 			})
 		}
+	})
+})
+
+app.post('/changeProfile', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		User.find({_id: req.body.user}, (err, user) => {
+			profile[req.body.toChange](user[0], req.body[req.body.toChange]);
+		});
+		res.sendStatus(200);
+	})
+})
+
+app.post('/profile', (req, res) => {
+	User.find({_id: req.body.user}, (err, user) => {
+		res.send({
+			avatar: user[0].avatar
+		});
 	})
 })
 

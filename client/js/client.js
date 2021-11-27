@@ -30,6 +30,12 @@ function composeMessageContent(message, messageText) {
 	message[0].innerHTML = parseUrls(message[0].innerHTML);
 }
 
+function getAvatar(onAvatar) {
+	$.post("/profile", {user: session.user}, function(data) {
+		onAvatar(data.avatar);
+	});
+}
+
 function getMessageManagementButtons() {
 	return [
 		{
@@ -63,11 +69,29 @@ function getMessageManagementButtons() {
 	];
 }
 
+function updateTheme() {
+	$("body").prop("class", theme);
+}
+
+function setTheme(_theme) {
+	theme = _theme;
+	updateTheme();
+	setCookie("theme", _theme);
+}
+
 function onSetupFinished() {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function() {
 		canEditAndDeleteAny = true;
 	});
 	getMessages(false, true);
+	getAvatar(function(avatar) {
+		$("#login img").prop("src", avatar);	
+	})
+
+	if(getCookie("theme") != "") {
+		theme = getCookie("theme");
+		updateTheme();
+	}
 }
 
 loaded(function() {
@@ -111,12 +135,17 @@ loaded(function() {
 	$("#chat-area #messages").scroll(function(e) {
 		if($(this).prop("scrollTop") == 0) {
 			if(fetchingMessages == false) {
+				console.log("about to fetch some messages");
 				toFetch += 50;
 				scrolledMessage = $(".message").first();
 				getMessages(true);
 				fetchingMessages = true;
 			}
 		}
+	});
+
+	$("#by-the-logo").append('<button class="button"><i class="megasmall material-icons">add_a_photo</i></button>').click(function() {
+		setupPickProfilePicture();
 	});
 })
 
@@ -137,10 +166,10 @@ function newMessage(message) {
 
 	return `<div class="message glass" id="${message._id}">
 		<div class="flex">
-		    <img src="avatars/default.png" class="avatar">
+		    <img src="${avatars[message.author]}" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
-		            <div class="username">${message.author_name}</div>${flagHtml}
+		            <div class="username">${usernames[message.author]}</div>${flagHtml}
 		            <div class="msgln"></div>
 		        </div>
 				${HorizontalMenu([

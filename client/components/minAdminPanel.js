@@ -14,9 +14,8 @@ $().ready(function() {
                 p.close();
                 setTimeout(function() {
                     $.post('/modifyDb', {
-                        email: currentUser.email,
-                        password: currentUser.password,
-                        user: currentUser._id,
+                        session: session.session,
+                        user: session.user,
                         command: "clear_collection",
                         collection: "Message"
                     }); 
@@ -42,9 +41,8 @@ $().ready(function() {
                 p.close();
                 setTimeout(function() {
                     $.post('/broadcast', {
-                        email: currentUser.email,
-                        password: currentUser.password,
-                        user: currentUser._id,
+                        session: session.session,
+                        user: session.user,
                         message: msg
                     }, function(data) {
                         if(data.error) {

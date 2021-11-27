@@ -10,6 +10,25 @@ function setupNotImplemented() {
 	alert("nope not yet");
 }
 
+function setupPickProfilePicture() {
+	popup("Pick a profile picture", `just type a url lol<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
+		label: "Cancel",
+		click: function(p) {
+			p.close();
+		}
+	}, {
+		label: "OK",
+		click: function(p) {
+			let avatar = $("#avatarInput").val();
+			$.post("/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
+				$("#setup-pfp img").prop("src", avatar);
+				$("#login img").prop("src", avatar);
+			});
+			p.close();
+		}
+	}]);
+}
+
 function setupSetTheme(theme) {
 	setupTheme = theme;
 	$("#setup-container").html(setupPage(session.username));
@@ -36,7 +55,7 @@ function setupPage(username) {
 						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-text">Pick a nice profile picture!</div>
 						<div id="setup-pfp"><img src="../avatars/default.png"></div>
-						<button id="setup-btn" class="setup-button button" onclick="setupNotImplemented()">Pick</button>
+						<button id="setup-btn" class="setup-button button" onclick="setupPickProfilePicture()">Pick</button>
 						<div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
 					</div>
 				</div>

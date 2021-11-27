@@ -1,3 +1,6 @@
+usernames = {}
+avatars = {}
+
 function ifPermission(permission, ifTrue) {
 	$.post('/can', {
 		user: session.user,
@@ -20,11 +23,17 @@ function ifPermissions(permissions, ifTrue) {
 	})
 }
 
-function addMessage(message, scroll = true, before) {
+function addMessage(message, scroll = true, before = false) {
 	if(before == false) {
 		$("#messages").append(newMessage(message));
+		$(".message").last().find("img").on("error", function() {
+			$(this).prop("src", "avatars/default.png")
+		});
 	} else {
 		$("#messages").prepend(newMessage(message));
+		$(".message").first().find("img").on("error", function() {
+			$(this).prop("src", "avatars/default.png")
+		});
 	}
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
 
@@ -39,16 +48,45 @@ async function adAppend(scroll = true) {
 	scroll && chatScrollDown();
 }
 
+function cacheUser(user) {
+	if(!Object.keys(usernames).includes(user._id)) {
+		avatars[user._id] = user.avatar;
+		usernames[user._id] = user.username;
+	}
+}
+
+function cacheUsers(users, onCache) {
+	$.post('/getUsers', {users:users}, function(data) {
+		data.forEach(cacheUser);
+		onCache();
+	})
+}
 
 function getMessages(before = false, load = false) {
+	console.log("fetching messages from",toFetch,"with limit",50);
+	if($(".message").length) {
+		console.log("last message id ", $(".message").last().prop("id"));
+		console.log("highest message id", scrolledMessage.prop("id"));
+	}
 	$.post('/getMessages', {fetch: toFetch},
 		function(data) {
+			if(data.error) {
+				console.log(data.error);
+				if(load) {
+					fireLoaded();
+				}
+				return;
+			}
+
 			var forEach = new Promise(function(resolve, reject) {
-				if(data.length == 0) resolve();
-				if(before == false) data = data.reverse();
-				data.forEach(function(message, index, array) {
-					addMessage(message, false, before);
-					if (index === array.length - 1) resolve();
+				console.log("fetched", data.messages.length, "messages");
+				if(data.messages.length == 0) resolve();
+				if(before == false) data.messages = data.messages.reverse();
+				cacheUsers(data.users, function() {
+					data.messages.forEach(function(message, index, array) {
+						addMessage(message, false, before);
+						if (index === array.length - 1) resolve();
+					});
 				});
 			});
 			if(before) {
@@ -104,7 +142,10 @@ function deleteMessage(message) {
 }
 
 var socket = io();
-socket.on('message', addMessage);
+socket.on('message', function(message) {
+	cacheUser(message.user);
+	addMessage(message);
+});
 socket.on('edit', function(e) {
 	const line = $(`#${e.message} .msgln`);
 	line.html("");
@@ -118,11 +159,9 @@ socket.on('delete', function(e) {
 	$(`#${e.message}`).remove();
 });
 socket.on('ad', adAppend);
-socket.on('messagesCleared', function(user) {
+socket.on('messagesCleared', function() {
 	$("#messages").html("");
-	getUsername(user).then(function(username) {
-		alert('All of the messages were cleared by <p class="username">' + username + "</p>");
-	});
+	alert("All of the messages were cleared");
 });
 socket.on('broadcast', function(message) {
 	popup("Broadcast", message);

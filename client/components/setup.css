@@ -10,21 +10,6 @@
 	align-items: center;
 }
 
-.setup-bg.gradient {
-	background: url('../assets/bggradient.png');
-	background-size: cover;
-}
-
-.setup-bg.landscape {
-	background: url('../assets/test-bg.jpg');
-	background-size: cover;
-}
-
-.setup-bg.dark {
-	background: url('../assets/bgdark.png');
-	background-size: cover;
-}
-
 #setup-page {
 	width: 80%;
 	height: 90%;
@@ -94,6 +79,7 @@
 #setup-pfp img {
 	width: 128px;
 	height: 128px;
+	border-radius: 50%;
 }
 
 #setup-pfp {
@@ -119,10 +105,7 @@
 	display: flex;
 	flex-direction: column;
 	font-weight: bold;
-}
-
-.setup-theme p {
-	margin-left: 20px;
+	align-items: center;
 }
 
 #setup-themes {

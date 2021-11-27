@@ -17,6 +17,26 @@ body {
 	background-size: cover;
 }
 
+.gradient {
+	background: url('../assets/bggradient.png');
+	background-size: cover;
+}
+
+.landscape {
+	background: url('../assets/test-bg.jpg');
+	background-size: cover;
+}
+
+.dark {
+	background: url('../assets/bgdark.png');
+	background-size: cover;
+}
+
+.light {
+	background: url('../assets/bglight.png');
+	background-size: cover;
+}
+
 .flex {
 	display: flex;
 	height: 100%;
@@ -112,6 +132,7 @@ body {
 	width: 32px;
 	height: 32px;
 	margin-right: 10px;
+	border-radius: 50%;
 }
 
 #message-box {
