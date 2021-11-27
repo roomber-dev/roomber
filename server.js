@@ -68,7 +68,7 @@ mongoose.connect(dbUrl, (err) => {
 
 })
 
-let msgModel = {
+let msgSchema = {
 	author: String,
 	author_name: String,
 	message: String,
@@ -77,7 +77,7 @@ let msgModel = {
 	removed: Boolean
 }
 
-var Message = mongoose.model('Message', msgModel)
+var Message = mongoose.model('Message', msgSchema)
 var User = mongoose.model(
 	'User',
 	{
@@ -205,6 +205,12 @@ io.on('connection', socket => {
 })
 
 app.post('/getMessages', (req, res) => {
+	if(req.body.fetch) {
+		Message.find().sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
+			res.send(messages);
+		})
+		return;
+	}
 	if(req.body.flagged) {
 		Message.find({flagged: true}, (err, messages) => {
 			res.send(messages);
@@ -281,7 +287,7 @@ app.post('/modifyDb', (req, res) => {
 
 app.post('/messages', (req, res) => {
 	let msg = {}
-	Object.keys(msgModel).forEach(k => {
+	Object.keys(msgSchema).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	})
 	if(!matchCharacterLimit("message", msg.message)) {

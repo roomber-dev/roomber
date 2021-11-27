@@ -3,6 +3,8 @@ $(document).ready(function() {
 });
 
 canEditAndDeleteAny = false;
+toFetch = 0;
+fetchingMessages = false;
 
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
@@ -15,7 +17,9 @@ function copyMessage(id) {
 }
 
 function chatScrollDown() {
-	$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 1000);
+	if($('#messages').prop("scrollHeight") - $('#messages').prop("scrollTop") != 524) {
+		$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight")}, 300);
+	}
 }
 
 function composeMessageContent(message, messageText) {
@@ -63,7 +67,7 @@ function onSetupFinished() {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function() {
 		canEditAndDeleteAny = true;
 	});
-	getMessages();
+	getMessages(false, true);
 }
 
 loaded(function() {
@@ -104,6 +108,16 @@ loaded(function() {
 	makeDrag($("#minAdminPanel")[0]);
 
 	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
+	$("#chat-area #messages").scroll(function(e) {
+		if($(this).prop("scrollTop") == 0) {
+			if(fetchingMessages == false) {
+				toFetch += 50;
+				scrolledMessage = $(".message").first();
+				getMessages(true);
+				fetchingMessages = true;
+			}
+		}
+	});
 })
 
 function newMessage(message) {

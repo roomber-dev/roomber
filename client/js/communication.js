@@ -20,8 +20,12 @@ function ifPermissions(permissions, ifTrue) {
 	})
 }
 
-function addMessage(message, scroll = true) {
-	$("#messages").append(newMessage(message));
+function addMessage(message, scroll = true, before) {
+	if(before == false) {
+		$("#messages").append(newMessage(message));
+	} else {
+		$("#messages").prepend(newMessage(message));
+	}
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
 
 	scroll && chatScrollDown();
@@ -36,17 +40,27 @@ async function adAppend(scroll = true) {
 }
 
 
-function getMessages() {
-	$.post('/getMessages', {},
+function getMessages(before = false, load = false) {
+	$.post('/getMessages', {fetch: toFetch},
 		function(data) {
 			var forEach = new Promise(function(resolve, reject) {
 				if(data.length == 0) resolve();
+				if(before == false) data = data.reverse();
 				data.forEach(function(message, index, array) {
-					addMessage(message, false);
+					addMessage(message, false, before);
 					if (index === array.length - 1) resolve();
 				});
 			});
-			forEach.then(fireLoaded);
+			if(before) {
+				forEach.then(function() {
+					scrolledMessage[0].scrollIntoView();
+					fetchingMessages = false;
+					delete scrolledMessage;
+				});
+			}
+			if(load) {
+				forEach.then(fireLoaded);
+			}
 		})
 }
 
