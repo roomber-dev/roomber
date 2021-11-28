@@ -414,7 +414,8 @@ body {
 #channels ul {
 	direction: rtl;
 	overflow-y: auto;
-	height: calc(100% - 54px);
+	/*height: calc(100% - 54px);*/
+	height: 100%;
 }
 
 #channels ul li {

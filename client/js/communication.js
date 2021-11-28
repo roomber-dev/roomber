@@ -65,16 +65,19 @@ function cacheUsers(users, onCache) {
 }
 
 function getMessages(before = false, load = false) {
-	console.log("fetching messages from",toFetch,"with limit",50);
-	console.log("(fetching messages in channel",channel + ")");
+	if(channel || channel == "" || channel == " ") { 
+		cclog("no channel selected, loading messages from all channels", "warning");
+	}
+	cclog("fetching messages from "+toFetch+" with limit "+50, "debug");
+	cclog("(fetching messages in channel " + channel + ")", "debug");
 	if($(".message").length) {
-		console.log("last message id ", $(".message").last().prop("id"));
-		console.log("highest message id", scrolledMessage.prop("id"));
+		clog("last message id " + $(".message").last().prop("id"), "debug");
+		clog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
 	$.post('/getMessages', {fetch: toFetch, channel: channel},
 		function(data) {
 			if(data.error) {
-				console.log(data.error);
+				cclog(data.error, "error");
 				if(load) {
 					fireLoaded();
 				}
@@ -82,7 +85,7 @@ function getMessages(before = false, load = false) {
 			}
 
 			var forEach = new Promise(function(resolve, reject) {
-				console.log("fetched", data.messages.length, "messages");
+				cclog("fetched " + data.messages.length + " messages", "debug");
 				if(data.messages.length == 0) resolve();
 				if(before == false) data.messages = data.messages.reverse();
 				cacheUsers(data.users, function() {
@@ -142,6 +145,13 @@ function deleteMessage(message) {
 			popup("Error", "You can only delete your own messages!", undefined, false, "red");
 		}, 500);
 	});
+}
+
+function changeChannel(id) {
+	channel = id;
+	toFetch = 0;
+	$("#messages").html("");
+	getMessages();
 }
 
 var socket = io();

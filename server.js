@@ -46,16 +46,16 @@ function getRandomInt(min, max) {
 
 if (enableNgrok) {
 	(async function () {
-		console.log(chalk.greenBright("ngrok is enabled, starting"));
+		sclog("ngrok is enabled, starting", "start");
 		const url = await ngrok.connect({
 			authtoken: config.ngrokAuthtoken,
 			addr: 3000
 		});
 		if(config.openNgrokURL) open(url);
-		console.log(chalk.greenBright(`The ngrok url is ${url}`));
+		sclog(`The ngrok url is ${url}`, "start");
 	})();
 } else {
-	console.log(chalk.redBright("ngrok is disabled"));
+	sclog("ngrok is disabled", "start");
 }
 
 let usersOnline = 0;
@@ -70,9 +70,9 @@ var dbUrl = config.dbUrl;
 
 mongoose.connect(dbUrl, (err) => {
 	if (err) {
-		console.log(chalk.redBright(`Failed to connect to MongoDB: ${err}`));
+		sclog(`Failed to connect to MongoDB: ${err}`, "error");
 	} else {
-		console.log(chalk.greenBright('MongoDB connected'));
+		sclog('MongoDB connected', "start");
 	}
 
 })
@@ -246,11 +246,11 @@ function removeCredentials(object) {
 
 io.on('connection', socket => {
 	usersOnline++;
-	console.log(`A user connected (${usersOnline} users)`);
+	sclog(`A user connected (${usersOnline} users)`, "join");
 
 	socket.on('disconnect', () => {
 		usersOnline--;
-		console.log(`A user disconnected (${usersOnline} users)`);
+		sclog(`A user disconnected (${usersOnline} users)`, "leave");
 	})
 })
 
@@ -625,7 +625,78 @@ app.post('/logout', (req, res) => {
 })
 
 var server = http.listen(3000, () => {
-	console.log(chalk.greenBright(`Server running on port ${server.address().port}`));
+	sclog(`Server running on port ${server.address().port}`, "start");
 })
+
+/**
+ * Logs to the console using a cool, organized syntax
+ * 
+ * sclog stands for Server Category Log
+ * 
+ * @param {*} message 
+ * @param {*} type 
+ */
+function sclog(message, type) {
+	const category = {
+		debug: function(text) {
+			return chalk.blue("[DEBUG]")+" "+text
+		},
+		join: function(text) {
+				return chalk.greenBright("[JOIN]")+" "+text
+		},
+		leave: function(text) {
+			return chalk.redBright("[LEAVE]")+" "+text
+		},
+		start: function(text) {
+			return chalk.magenta("[START]")+" "+message
+		},
+		error: function(text) {
+			return chalk.red("[ERROR]")+" "+message
+		},
+		warning: function(text) {
+			return chalk.yellow("[WARNING]")+" "+message
+		}
+	}
+
+	if(category[type]) {
+		console.log(category[type](message));
+	}
+} // console.log('%c Oh my heavens! ', 'background: #222; color: #bada55');
+
+
+/**
+ * Logs to the console using a cool, organized syntax
+ * 
+ * cclog stands for Client Category Log
+ * 
+ * @param {*} message 
+ * @param {*} type 
+ * 
+ * it's here just because
+ */
+function cclog(message, type) {
+	const category = {
+		debug: function(text) {
+			return [`%c[DEBUG] `, `%c${text}`, 'color: blue', 'color: white']
+		},
+		join: function(text) {
+			return [`%c[JOIN] `, `%c${text}`, 'color: #32cd32', 'color: white']
+		},
+		leave: function(text) {
+			return [`%c[LEAVE] `, `%c${text}`, 'color: #EE4B2B', 'color: white']
+		},
+		start: function(text) {
+			return [`%c[START] `, `%c${text}`, 'color: #FF00FF', 'color: white']
+		},
+		error: function(text) {
+			return [`%c[ERROR] `, `%c${text}`, 'color: red', 'color: white']
+		}
+	}
+
+	if(category[type]) {
+		console.log(...category[type](message));
+	}
+}
+
 
 // Ad code will be moved over to the client side for simplicity's sake

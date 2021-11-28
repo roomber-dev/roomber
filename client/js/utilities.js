@@ -160,3 +160,40 @@ function decodeSaveCustomizationCode(code = String, setCustomization = false, de
 	}
 
 }
+
+/**
+ * 
+ * Console.logs a very cool and organized looking text.
+ * 
+ * Categories:
+ * 
+ * debug, join, leave, start, error, warning
+ * 
+ * @param {*} message 
+ * @param {*} type 
+ */
+ function cclog(message, type) {
+	const category = {
+		debug: function(text) {
+			return [`%c[DEBUG] %c${text}`, 'color: #0096FF', 'color: white']
+		},
+		join: function(text) {
+			return [`%c[JOIN] %c${text}`, 'color: #32cd32', 'color: white']
+		},
+		leave: function(text) {
+			return [`%c[LEAVE] %c${text}`, 'color: #EE4B2B', 'color: white']
+		},
+		start: function(text) {
+			return [`%c[START] %c${text}`, 'color: #FF00FF', 'color: white']
+		},
+		error: function(text) {
+			return [`%c[ERROR] %c${text}`, 'color: red', 'color: white']
+		},
+		warning: function(text) {
+			return [`%c[WARNING] %c${text}`, 'color: orange', 'color: white']
+		}
+	}
+	
+	console.log(...category[type](message));
+
+}

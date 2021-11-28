@@ -136,7 +136,7 @@ loaded(function() {
 	$("#chat-area #messages").scroll(function(e) {
 		if($(this).prop("scrollTop") == 0) {
 			if(fetchingMessages == false) {
-				console.log("about to fetch some messages");
+				cclog("about to fetch some messages", "debug");
 				toFetch += 50;
 				scrolledMessage = $(".message").first();
 				getMessages(true);
@@ -144,8 +144,9 @@ loaded(function() {
 			}
 		}
 	});
-
-	$("#by-the-logo").append('<button class="button"><i class="megasmall material-icons">add_a_photo</i></button>').click(function() {
+	$("#by-the-logo").append('<button class="button" id="addAvatarButton"><i class="megasmall material-icons">add_a_photo</i></button>');
+	// im sorry someever but this is the only way to fix the problem
+	$("#by-the-logo #addAvatarButton").click(function() {
 		setupPickProfilePicture();
 	});
 })
