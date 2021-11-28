@@ -1,6 +1,6 @@
 ![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
 ==
-Roomber is a messaging webapp that is currently in a lot of development and this is one of it's early, unreleased versions!
+Create a free Roomber account and discover a new messaging app that's better than anything else out there. Roomber is a fun way to talk with your friends and stay connected.
 
 ### Screenshots
 
