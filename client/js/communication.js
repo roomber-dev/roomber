@@ -1,5 +1,7 @@
-usernames = {}
-avatars = {}
+usernames = {};
+avatars = {};
+
+channel = "";
 
 function ifPermission(permission, ifTrue) {
 	$.post('/can', {
@@ -64,11 +66,12 @@ function cacheUsers(users, onCache) {
 
 function getMessages(before = false, load = false) {
 	console.log("fetching messages from",toFetch,"with limit",50);
+	console.log("(fetching messages in channel",channel + ")");
 	if($(".message").length) {
 		console.log("last message id ", $(".message").last().prop("id"));
 		console.log("highest message id", scrolledMessage.prop("id"));
 	}
-	$.post('/getMessages', {fetch: toFetch},
+	$.post('/getMessages', {fetch: toFetch, channel: channel},
 		function(data) {
 			if(data.error) {
 				console.log(data.error);
@@ -143,8 +146,10 @@ function deleteMessage(message) {
 
 var socket = io();
 socket.on('message', function(message) {
-	cacheUser(message.user);
-	addMessage(message);
+	if(message.channel == channel) {
+		cacheUser(message.user);
+		addMessage(message);
+	}
 });
 socket.on('edit', function(e) {
 	const line = $(`#${e.message} .msgln`);

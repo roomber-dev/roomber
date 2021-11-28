@@ -109,7 +109,8 @@ loaded(function() {
 			msg: {
 				author: session.user,
 				message: $("#message").val(),
-				timestamp: new Date().getTime()
+				timestamp: new Date().getTime(),
+				channel: channel
 			}
 		});
 		$("#message").val("");

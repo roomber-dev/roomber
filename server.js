@@ -82,7 +82,8 @@ let msgSchema = {
 	message: String,
 	timestamp: Number,
 	flagged: Boolean,
-	removed: Boolean
+	removed: Boolean,
+	channel: String
 }
 
 var Message = mongoose.model('Message', msgSchema)
@@ -111,12 +112,29 @@ var Session = mongoose.model(
 		user: String
 	}
 )
+var Channel = mongoose.model(
+	'Channel',
+	{
+		name: String,
+		type: String,
+		server: String
+	}
+)
+var Server = mongoose.model(
+	'Server',
+	{
+		name: String,
+		channels: Array
+	}
+)
 
 var models = {
 	"Permission": Permission,
 	"Message": Message,
 	"User": User,
-	"Session": Session
+	"Session": Session,
+	"Channel": Channel,
+	"Server": Server
 };
 
 /*
@@ -238,7 +256,11 @@ io.on('connection', socket => {
 
 app.post('/getMessages', (req, res) => {
 	if(req.body.fetch) {
-		Message.find().sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
+		let find = {};
+		if(req.body.channel && req.body.channel != "") {
+			find = {channel: req.body.channel};
+		}
+		Message.find(find).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
 			if(!messages.length) {
 				res.send({error: "No messages found"});
 				return;
@@ -265,6 +287,43 @@ app.post('/getMessages', (req, res) => {
 	}
 	Message.find({removed: false}, (err, messages) => {
 		res.send(messages);
+	})
+})
+
+app.post('/createServer', (req, res) => {
+	Server.countDocuments({name: req.body.name}, (err, count) => {
+		if(count > 0) {
+			res.sendStatus(409);
+		} else {
+			var server = new Server({
+				name: req.body.name,
+				channels: []
+			});
+			server.save(err => {
+				if(!err) res.send(server._id);
+			})
+		}
+	})
+})
+
+app.post('/createChannel', (req, res) => {
+	var channel = new Channel({
+		name: req.body.name,
+		type: "text",
+		server: req.body.server
+	});
+	channel.save(err => {
+		if(!err) {
+			Server.find({_id: req.body.server}, (err, server) => {
+				if(server.length) {
+					var server = server[0];
+					server.channels.push(channel._id);
+					server.save(err_ => {
+						if(!err_) res.send(channel._id);
+					})
+				}
+			})
+		}
 	})
 })
 
@@ -351,15 +410,21 @@ app.post('/messages', (req, res) => {
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
 		User.find({_id: msg.author}, (err, user) => {
-			var message = new Message(msg);
-			message.save(err => {
-				if (err) {
-					console.log(chalk.redBright(err))
-					res.sendStatus(500);
-					return;
+			Channel.countDocuments({_id: msg.channel}, (err, count) => {
+				if(count > 0) {
+					var message = new Message(msg);
+					message.save(err => {
+						if (err) {
+							console.log(chalk.redBright(err))
+							res.sendStatus(500);
+							return;
+						}
+						io.emit('message', {...message._doc, user: removeCredentials(user[0])});
+						res.sendStatus(200);
+					})
+				} else {
+					res.send({error: "Channel " + msg.channel + " does not exist."});
 				}
-				io.emit('message', {...message._doc, user: removeCredentials(user[0])});
-				res.sendStatus(200);
 			})
 		})
 	})
