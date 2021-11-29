@@ -144,9 +144,8 @@ loaded(function() {
 			}
 		}
 	});
-	$("#by-the-logo").append('<button class="button" id="addAvatarButton"><i class="megasmall material-icons">add_a_photo</i></button>');
-	// im sorry someever but this is the only way to fix the problem
-	$("#by-the-logo #addAvatarButton").click(function() {
+	$("#by-the-logo").append('<button class="button" id="avatar-btn"><i class="megasmall material-icons">add_a_photo</i></button>');
+	$("#by-the-logo #avatar-btn").click(function() {
 		setupPickProfilePicture();
 	});
 })

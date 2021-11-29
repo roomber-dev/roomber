@@ -96,7 +96,8 @@ var User = mongoose.model(
 		xtra: Boolean,
 		permission: String,
 		setup: Boolean,
-		avatar: String
+		avatar: String,
+		servers: Array
 	}
 )
 var Permission = mongoose.model(
@@ -124,7 +125,8 @@ var Server = mongoose.model(
 	'Server',
 	{
 		name: String,
-		channels: Array
+		channels: Array,
+		picture: String
 	}
 )
 
@@ -252,41 +254,67 @@ io.on('connection', socket => {
 		usersOnline--;
 		sclog(`A user disconnected (${usersOnline} users)`, "leave");
 	})
+
+	socket.on('joinChannel', channel => {
+		socket.join(channel);
+	})
 })
 
 app.post('/getMessages', (req, res) => {
 	if(req.body.fetch) {
-		let find = {};
-		if(req.body.channel && req.body.channel != "") {
-			find = {channel: req.body.channel};
-		}
-		Message.find(find).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
-			if(!messages.length) {
-				res.send({error: "No messages found"});
-				return;
-			}
+		Channel.countDocuments({_id: req.body.channel}, (err, count) => {
+			if(count > 0) {
+				Message.find({channel: req.body.channel}).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
+					if(!messages.length) {
+						res.send({error: "No messages found"});
+						return;
+					}
 
-			let users = [];
-			messages.forEach(message => {
-				if(!users.includes(message.author)) {
-					users.push(message.author);
-				}
-			});
-			res.send({
-				messages: messages,
-				users: users
-			});
-		})
+					let users = [];
+					messages.forEach(message => {
+						if(!users.includes(message.author)) {
+							users.push(message.author);
+						}
+					});
+					res.send({
+						messages: messages,
+						users: users
+					});
+				})
+			} else {
+				res.send({error: "Invalid channel"});
+			}
+		});
 		return;
 	}
 	if(req.body.flagged) {
 		Message.find({flagged: true}, (err, messages) => {
 			res.send(messages);
 		})
-		return;
 	}
-	Message.find({removed: false}, (err, messages) => {
-		res.send(messages);
+})
+
+app.post('/joinServer', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		Server.countDocuments({_id: req.body.server}, (err, count) => {
+			if(count > 0) {
+				User.find({_id: req.body.user}, (err, user) => {
+					var user = user[0];
+					if(user.servers.includes(req.body.server)) {
+						res.send({error: "You are already in this server!"});
+						return;
+					}
+					user.servers.push(req.body.server);
+					user.save(err => {
+						if(err) {
+							res.sendStatus(505);
+							return sclog(err, "error");
+						}
+						res.send(req.body.server);
+					})
+				})
+			}
+		})
 	})
 })
 
@@ -419,7 +447,7 @@ app.post('/messages', (req, res) => {
 							res.sendStatus(500);
 							return;
 						}
-						io.emit('message', {...message._doc, user: removeCredentials(user[0])});
+						io.to(msg.channel).emit('message', {...message._doc, user: removeCredentials(user[0])});
 						res.sendStatus(200);
 					})
 				} else {

@@ -65,14 +65,11 @@ function cacheUsers(users, onCache) {
 }
 
 function getMessages(before = false, load = false) {
-	if(channel || channel == "" || channel == " ") { 
-		cclog("no channel selected, loading messages from all channels", "warning");
-	}
 	cclog("fetching messages from "+toFetch+" with limit "+50, "debug");
 	cclog("(fetching messages in channel " + channel + ")", "debug");
 	if($(".message").length) {
-		clog("last message id " + $(".message").last().prop("id"), "debug");
-		clog("highest message id " + scrolledMessage.prop("id"), "debug");
+		cclog("last message id " + $(".message").last().prop("id"), "debug");
+		cclog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
 	$.post('/getMessages', {fetch: toFetch, channel: channel},
 		function(data) {
@@ -147,19 +144,30 @@ function deleteMessage(message) {
 	});
 }
 
+var socket = io();
+
 function changeChannel(id) {
 	channel = id;
 	toFetch = 0;
 	$("#messages").html("");
+	socket.emit("joinChannel", id);
 	getMessages();
 }
 
-var socket = io();
+function joinServer(id) {
+	$.post("/joinServer", {...session, server: id}, function(data) {
+		if(data.error) {
+			popup("Error", data.error);
+			return;
+		}
+		cclog("joined server " + data, "debug");
+		$("#server-list").append('<img class="server" src="assets/null.png"/>');
+	});
+}
+
 socket.on('message', function(message) {
-	if(message.channel == channel) {
-		cacheUser(message.user);
-		addMessage(message);
-	}
+	cacheUser(message.user);
+	addMessage(message);
 });
 socket.on('edit', function(e) {
 	const line = $(`#${e.message} .msgln`);

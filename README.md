@@ -4,8 +4,8 @@ Create a free Roomber account and discover a new messaging app that's better tha
 
 ### Screenshots
 
-![image](https://media.discordapp.net/attachments/882659049399787591/910638358928187422/image3.png)
 ![image](https://cdn.discordapp.com/attachments/881974256949395517/914605147450134568/unknown.png)
+
 ### Roadmap
 
 - Voice and video calls
