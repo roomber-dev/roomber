@@ -126,7 +126,8 @@ var Server = mongoose.model(
 	{
 		name: String,
 		channels: Array,
-		picture: String
+		picture: String,
+		users: Array
 	}
 )
 
@@ -296,8 +297,8 @@ app.post('/getMessages', (req, res) => {
 
 app.post('/joinServer', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		Server.countDocuments({_id: req.body.server}, (err, count) => {
-			if(count > 0) {
+		Server.find({_id: req.body.server}, (err, server) => {
+			if(server.length > 0) {
 				User.find({_id: req.body.user}, (err, user) => {
 					var user = user[0];
 					if(user.servers.includes(req.body.server)) {
@@ -310,12 +311,40 @@ app.post('/joinServer', (req, res) => {
 							res.sendStatus(505);
 							return sclog(err, "error");
 						}
-						res.send(req.body.server);
+						if(server.constructor === Array) {
+							server = server[0];
+						}
+						server.users.push(req.body.user);
+						server.save(err_ => {
+							if(err_) {
+								res.sendStatus(505);
+								return sclog(err, "error");
+							}
+							res.send(server);
+						})
 					})
 				})
 			}
 		})
 	})
+})
+
+app.post('/getServers', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		User.find({_id: req.body.user}, (err, user) => {
+			Server.find({_id: {"$in": user[0].servers}}, (err, servers) => {
+				res.send(servers);
+			})
+		});
+	})
+})
+
+app.post('/getChannels', (req, res) => {
+	Server.find({_id: req.body.server}, (err, server) => {
+		if(server.length) {
+			res.send(server[0].channels);
+		}
+	});
 })
 
 app.post('/createServer', (req, res) => {

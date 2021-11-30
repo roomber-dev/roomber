@@ -79,6 +79,14 @@ function setTheme(_theme) {
 	setCookie("theme", _theme);
 }
 
+function addServerIcon(server) {
+	if(server["picture"]) {
+		$("#server-list").append(`<div class="server"><img src="${server["picture"]}"/></div>`);
+	} else {
+		$("#server-list").append(`<div class="server basic"><p>${server["name"].at(0).toUpperCase()}</p></div>`);
+	}
+}
+
 function onSetupFinished() {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function() {
 		canEditAndDeleteAny = true;
@@ -92,6 +100,10 @@ function onSetupFinished() {
 		theme = getCookie("theme");
 		updateTheme();
 	}
+
+	$.post('/getServers', {...session}, function(servers) {
+		servers.forEach(addServerIcon)
+	});
 }
 
 loaded(function() {

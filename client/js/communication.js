@@ -161,7 +161,7 @@ function joinServer(id) {
 			return;
 		}
 		cclog("joined server " + data, "debug");
-		$("#server-list").append('<img class="server" src="assets/null.png"/>');
+		addServerIcon(data);
 	});
 }
 
