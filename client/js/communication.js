@@ -160,7 +160,7 @@ function joinServer(id) {
 			popup("Error", data.error);
 			return;
 		}
-		cclog("joined server " + data, "debug");
+		cclog("joined server " + data.name, "debug");
 		addServerIcon(data);
 	});
 }
