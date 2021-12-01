@@ -35,6 +35,7 @@ body {
 .light {
 	background: url('../assets/bglight.png');
 	background-size: cover;
+	color: black;
 }
 
 .flex {
@@ -54,6 +55,10 @@ body {
 	background: rgba(0, 0, 0, 0.6);
 }
 
+.light #topbar {
+	background: rgba(255,255,255,0.6);
+}
+
 .topbar-main {
 	display: flex;
 	height: 100%;
@@ -68,6 +73,10 @@ body {
 #channels {
 	width: 20%;
 	background: rgba(0, 0, 0, 0.6);
+}
+
+.light #channels {
+	background: rgba(255, 255, 255, 0.6);
 }
 
 #chat-area #messages {
@@ -151,13 +160,19 @@ body {
     border: 1px solid rgba(255,255,255,0.2);
     border-radius: 4px;
     transition: 0.5s background;
-    color: white;
     padding: 6px;
     background: rgba(0,0,0,0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
+    color: white;
+}
+
+.light .button {
+	background: white;
+    border: 1px solid rgba(0,0,0,0.2);
+    color: black;
 }
 
 .megasmall {
@@ -165,7 +180,18 @@ body {
 }
 
 .button:hover {
-    background: rgba(0,0,0,0.5);
+    background: rgba(30,30,30,0.5);
+}
+
+.light .button:hover {
+	background: rgba(220,220,220,0.5);
+}
+
+*[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  top: 100%;
+  left: 0;
 }
 
 #message {
@@ -180,6 +206,11 @@ body {
 	color: white;
 	background: rgba(0,0,0,0.3);
 	border-radius: 4px;
+}
+
+.light #message {
+	background: rgba(255,255,255,0.5);
+	color: black;
 }
 
 #message:hover {
@@ -201,9 +232,12 @@ body {
 	box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.3);
 }
 
+.light .glass {
+	background: rgba(255, 255, 255, 0.7);
+}
+
 .username {
 	font-weight: bold;
-	color: white;
 	padding: 2px 4px;
 	font-size: 120%;
 	border-radius: 4px;
@@ -212,17 +246,9 @@ body {
 	background-color: rgba(0, 0, 0, 0.2);
 }
 
-/*.username-bg {
-	font-weight: bold;
-	color: white;
-	padding: 2px 4px;
-	font-size: 120%;
-	border-radius: 4px;
-	margin: 0 5px 0 0;
-	background-color: rgba(0, 0, 0, 0.2);
-}*/
-
-
+.light .username {
+	background-color: rgba(0, 0, 0, 0.1);
+}
 
 .avatar {
 	border-radius: 50%;
@@ -363,6 +389,12 @@ body {
 	backdrop-filter: blur(10px);
 }
 
+.light #messages::-webkit-scrollbar-track, .light #channels ul::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+	background: rgba(255,255,255,0.3);
+	backdrop-filter: blur(10px);
+}
+
 #messages::-webkit-scrollbar-thumb, #channels ul::-webkit-scrollbar-thumb {
 	box-shadow: inset 0 0 10px 10px rgba(0,0,0,0.5);
 	border: 5px solid transparent;
@@ -431,6 +463,10 @@ body {
 	direction: ltr;
 }
 
+.light #channels ul li {
+	background: rgba(0,0,0,0.1);
+}
+
 #channels ul li .hash {
 	font-size: 32px;
 	margin-right: 6px;
@@ -451,11 +487,6 @@ body {
 	display: flex;
 }
 
-.server img {
-	height: 40px;
-	width: 40px;
-}
-
 .server p {
 	position: absolute;
 	top: calc(50% - 4px);
@@ -464,6 +495,10 @@ body {
 	text-align: center;
 	width: 100%;
 	height: 50%;
+	color: white;
+}
+
+.no-select {
 	user-select: none;
 	-webkit-user-select: none;
 	-khtml-user-select: none;
@@ -475,6 +510,9 @@ body {
 	margin: 5px;
 	transform: scaleY(-1);
 	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+	align-self: center;
 }
 
 .server.basic {

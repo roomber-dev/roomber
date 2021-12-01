@@ -64,7 +64,7 @@ function cacheUsers(users, onCache) {
 	})
 }
 
-function getMessages(before = false, load = false) {
+function getMessages(before = false, scroll = false) {
 	cclog("fetching messages from "+toFetch+" with limit "+50, "debug");
 	cclog("(fetching messages in channel " + channel + ")", "debug");
 	if($(".message").length) {
@@ -75,9 +75,6 @@ function getMessages(before = false, load = false) {
 		function(data) {
 			if(data.error) {
 				cclog(data.error, "error");
-				if(load) {
-					fireLoaded();
-				}
 				return;
 			}
 
@@ -99,8 +96,10 @@ function getMessages(before = false, load = false) {
 					delete scrolledMessage;
 				});
 			}
-			if(load) {
-				forEach.then(fireLoaded);
+			if(scroll) {
+				forEach.then(function() {
+					$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
+				});
 			}
 		})
 }
@@ -149,9 +148,10 @@ var socket = io();
 function changeChannel(id) {
 	channel = id;
 	toFetch = 0;
+	fetchingMessages = false;
 	$("#messages").html("");
 	socket.emit("joinChannel", id);
-	getMessages();
+	getMessages(false, true);
 }
 
 function joinServer(id) {
@@ -161,7 +161,7 @@ function joinServer(id) {
 			return;
 		}
 		cclog("joined server " + data.name, "debug");
-		addServerIcon(data);
+		addServer(data);
 	});
 }
 

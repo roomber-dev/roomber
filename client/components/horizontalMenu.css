@@ -17,10 +17,6 @@
 	align-items: center;
 	justify-content: center;
 	transition: 0.25s background;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
 }
 
 .horizontalMenuItem:hover {

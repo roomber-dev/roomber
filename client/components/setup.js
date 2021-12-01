@@ -107,7 +107,7 @@ function setupClose() {
 		session: session.session, 
 		user: session.user
 	});
-	onSetupFinished();
+	onSetupFinished(setupTheme);
 }
 
 function setup() {

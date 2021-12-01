@@ -5,6 +5,7 @@ $(document).ready(function() {
 canEditAndDeleteAny = false;
 toFetch = 0;
 fetchingMessages = false;
+servers = [];
 
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
@@ -79,31 +80,54 @@ function setTheme(_theme) {
 	setCookie("theme", _theme);
 }
 
-function addServerIcon(server) {
+function addServer(server) {
+	let idx = servers.push(server) - 1;
+
 	if(server["picture"]) {
-		$("#server-list").append(`<div class="server"><img src="${server["picture"]}"/></div>`);
+		$("#server-list").append(`<img title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
 	} else {
-		$("#server-list").append(`<div class="server basic"><p>${server["name"].at(0).toUpperCase()}</p></div>`);
+		$("#server-list").append(`<div title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
 	}
+
+	$.post("/getChannels", {server: server._id}, function(channels) {
+		servers[idx].channels = channels;
+	});
 }
 
-function onSetupFinished() {
+function openServer(index) {
+	$("#messages").html("");
+	setCookie("server", index);
+	let server = servers[index];
+	$("#channels ul").html("");
+	server.channels.forEach(function(channel) {
+		$("#channels ul").append(`
+			<li onclick="changeChannel('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
+		`);
+	})
+}
+
+function onSetupFinished(t) {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function() {
 		canEditAndDeleteAny = true;
 	});
-	getMessages(false, true);
-	getAvatar(function(avatar) {
-		$("#login img").prop("src", avatar);	
-	})
+
+	if(t) {
+		theme = t;
+		updateTheme();
+	}
+
+	$.post('/getServers', {...session}, function(servers) {
+		servers.forEach(addServer)
+		getAvatar(function(avatar) {
+			$("#login img").prop("src", avatar);
+			fireLoaded();
+		})
+	});
 
 	if(getCookie("theme") != "") {
 		theme = getCookie("theme");
 		updateTheme();
 	}
-
-	$.post('/getServers', {...session}, function(servers) {
-		servers.forEach(addServerIcon)
-	});
 }
 
 loaded(function() {

@@ -340,11 +340,11 @@ app.post('/getServers', (req, res) => {
 })
 
 app.post('/getChannels', (req, res) => {
-	Server.find({_id: req.body.server}, (err, server) => {
-		if(server.length) {
-			res.send(server[0].channels);
+	Channel.find({server: req.body.server}, (err, channels) => {
+		if(channels.length) {
+			res.send(channels);
 		}
-	});
+	})
 })
 
 app.post('/createServer', (req, res) => {
