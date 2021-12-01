@@ -151,6 +151,7 @@ function changeChannel(id) {
 	fetchingMessages = false;
 	$("#messages").html("");
 	socket.emit("joinChannel", id);
+	//$(`#channels ul #ch${id}`).addClass("active");
 	getMessages(false, true);
 }
 

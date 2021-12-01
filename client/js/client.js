@@ -99,7 +99,7 @@ function openServer(index) {
 	setCookie("server", index);
 	let server = servers[index];
 	$("#channels ul").html("");
-	server.channels.forEach(function(channel) {
+	server.channels.forEach(function(channel) { // add  id="ch${channel._id}" to <li> later!!
 		$("#channels ul").append(`
 			<li onclick="changeChannel('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
 		`);
