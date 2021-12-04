@@ -200,8 +200,14 @@ loaded(function() {
 		}
 	});
 	$("#by-the-logo").append('<button class="button" id="avatar-btn"><i class="megasmall material-icons">add_a_photo</i></button>');
+	$("#by-the-logo").append('<button class="button" id="dm-btn"><i class="megasmall material-icons">person</i></button>');
 	$("#by-the-logo #avatar-btn").click(function() {
 		setupPickProfilePicture();
+	});
+	$("#by-the-logo #dm-btn").click(function() {
+		$("#channels ul").html("");
+		$("#messages").html("");
+		getChats();
 	});
 })
 
@@ -215,12 +221,22 @@ function newMessage(message) {
 		|| canEditAndDeleteAny) {
 		extra = getMessageManagementButtons();
 	}
+	if(session == {} || message.author != session.user) {
+		extra.push({
+			icon: "person_add",
+			click: function(menuItem) {
+				$.post("/chat", {...session, recipient: menuItem.getMessage().data("author")}, function(chat) {
+					changeChannel(chat, "dm");
+				})
+			}
+		});
+	}
 
 	if(message.flagged) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
 
-	return `<div class="message glass" id="${message._id}">
+	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
 		    <img src="${avatars[message.author]}" class="avatar">
 		    <div class="flex msg">
@@ -241,6 +257,18 @@ function newMessage(message) {
 		    </div>
 		</div>
 	</div>`;
+}
+
+function addChat(chat) {
+	$("#channels ul").append(`
+		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
+	`);
+}
+
+function getChats() {
+	$.post("/chats", session, function(chats) {
+		chats.forEach(addChat);
+	});
 }
 
 function newAdMessage(id) {

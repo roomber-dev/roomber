@@ -83,7 +83,8 @@ let msgSchema = {
 	timestamp: Number,
 	flagged: Boolean,
 	removed: Boolean,
-	channel: String
+	channel: String,
+	chat: String
 }
 
 var Message = mongoose.model('Message', msgSchema)
@@ -118,7 +119,8 @@ var Channel = mongoose.model(
 	{
 		name: String,
 		type: String,
-		server: String
+		server: String,
+		chatParticipants: Array
 	}
 )
 var Server = mongoose.model(
@@ -239,7 +241,9 @@ function removeCredentials(object) {
 	Object.keys(result).forEach(key => {
 		if([
 			"password",
-			"email"
+			"email",
+			"servers",
+			"permission"
 		].includes(key)) {
 			delete result[key];
 		}
@@ -344,6 +348,52 @@ app.post('/getChannels', (req, res) => {
 		if(channels.length) {
 			res.send(channels);
 		}
+	})
+})
+
+app.post('/chat', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		Channel.find({chatParticipants: [req.body.user, req.body.recipient]}, (err, channel) => {
+			if(channel.length) {
+				res.send(channel[0]._id);
+			} else {
+				Channel.find({chatParticipants: [req.body.recipient, req.body.user]}, (err, channel_) => {
+					if(channel_.length) {
+						res.send(channel_[0]._id);
+					} else {
+						var channel = new Channel({
+							type: "chat",
+							chatParticipants: [req.body.user, req.body.recipient]
+						});
+						channel.save(() => {
+							res.send(channel._id);
+						});
+					}
+				})
+			}
+		})
+	})
+})
+
+app.post('/chats', (req, res) => {
+	auth(req.body.user, req.body.session, () => {
+		Channel.find({chatParticipants: req.body.user}, (err, channels) => {
+			if(channels.length) {
+				var chats = [];
+				var ids = {};
+				channels.forEach(channel => {
+					ids[channel.chatParticipants.filter(x => x != req.body.user)[0]] = channel._id;
+				})
+				User.find({_id: {"$in": Object.keys(ids)}}, (err, users) => {
+					if(users.length) {
+						res.send(users.map(user => ({
+							chat: ids[user._id],
+							recipient: removeCredentials(user)
+						})))
+					}
+				})
+			}
+		})
 	})
 })
 

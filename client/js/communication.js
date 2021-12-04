@@ -145,7 +145,10 @@ function deleteMessage(message) {
 
 var socket = io();
 
-function changeChannel(id) {
+function changeChannel(id, type = "text") {
+	if(type == "dm") {
+		$("#channels ul").html("");
+	}
 	channel = id;
 	toFetch = 0;
 	fetchingMessages = false;

@@ -71,7 +71,7 @@ body {
 }
 
 #channels {
-	width: 20%;
+	width: 200px;
 	background: rgba(0, 0, 0, 0.6);
 }
 
@@ -91,10 +91,6 @@ body {
 #channels {
 	display: flex;
 	text-align: left;
-}
-
-#channels {
-	width: 200px;
 }
 
 #topbar-content {
@@ -234,7 +230,6 @@ body {
 .username {
 	font-weight: bold;
 	padding: 2px 4px;
-	font-size: 120%;
 	border-radius: 4px;
 	margin: 0 5px 0 0;
 	display: inline-block;
@@ -458,13 +453,26 @@ body {
 	background: rgba(255,255,255,0.05);
 	outline: 1px solid rgba(255,255,255,0.2);
 	margin: 8px;
-	margin-right: 20px;
 	border-radius: 6px;
 	padding: 4px;
 	padding-bottom: 0;
 	padding-top: 0;
 	direction: ltr;
 	transition: 0.25s background, 0.25s margin-right;
+}
+
+#channels ul li:not(.dm) {
+	margin-right: 20px;
+}
+
+.dm {
+	margin-right: 8px;
+}
+
+#channels ul li img {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
 }
 
 #channels ul li.active {
