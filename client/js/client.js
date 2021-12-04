@@ -84,25 +84,44 @@ function addServer(server) {
 	let idx = servers.push(server) - 1;
 
 	if(server["picture"]) {
-		$("#server-list").append(`<img title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
+		$("#server-list").append(`<img id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
 	} else {
-		$("#server-list").append(`<div title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
+		$("#server-list").append(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
 	}
 
 	$.post("/getChannels", {server: server._id}, function(channels) {
 		servers[idx].channels = channels;
+		let current = getCookie("server");
+		if(server._id == current) {
+			openServer(idx);
+		}
 	});
+}
+
+function channelClick(id) {
+	changeChannel(id);
+	if(!$("#channels #"+id).hasClass("active")) {
+		$("#channels li").removeClass("active");
+		$("#channels #"+id).addClass("active");
+	}
 }
 
 function openServer(index) {
 	$("#messages").html("");
-	setCookie("server", index);
 	let server = servers[index];
+	setCookie("server", server._id);
+	if(!$("#server-list #"+server._id).hasClass("active")) {
+		$("#server-list *").removeClass("active");
+		$("#server-list #"+server._id).addClass("active");
+	}
 	$("#channels ul").html("");
-	server.channels.forEach(function(channel) { // add  id="ch${channel._id}" to <li> later!!
+	server.channels.forEach(function(channel, i) {
 		$("#channels ul").append(`
-			<li onclick="changeChannel('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
+			<li id="${channel._id}" onclick="channelClick('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
 		`);
+		if(i == 0) {
+			channelClick(channel._id);	
+		}
 	})
 }
 
@@ -117,7 +136,7 @@ function onSetupFinished(t) {
 	}
 
 	$.post('/getServers', {...session}, function(servers) {
-		servers.forEach(addServer)
+		servers.forEach(addServer);
 		getAvatar(function(avatar) {
 			$("#login img").prop("src", avatar);
 			fireLoaded();

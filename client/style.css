@@ -221,7 +221,7 @@ body {
 
 .glass {
 	background: rgba(0, 0, 0, 0.4);
-	backdrop-filter: blur(8px);
+	backdrop-filter: blur(25px);
 	outline: 1px solid rgba(0,0,0,0.2);
 	border: 1px solid rgba(255,255,255,0.2);
 	box-shadow: 5px 10px 10px rgba(0, 0, 0, 0.3);
@@ -380,18 +380,17 @@ body {
 
 #messages::-webkit-scrollbar-track, #channels ul::-webkit-scrollbar-track {
 	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-	background: rgba(0,0,0,0.3);
+	background: rgba(0,0,0,0.7);
 	backdrop-filter: blur(10px);
 }
 
 .light #messages::-webkit-scrollbar-track, .light #channels ul::-webkit-scrollbar-track {
 	box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
-	background: rgba(255,255,255,0.3);
-	backdrop-filter: blur(10px);
+	background: rgba(255,255,255,0.7);
 }
 
 #messages::-webkit-scrollbar-thumb, #channels ul::-webkit-scrollbar-thumb {
-	box-shadow: inset 0 0 10px 10px rgba(0,0,0,0.5);
+	box-shadow: inset 0 0 10px 10px rgba(255,255,255,0.4);
 	border: 5px solid transparent;
 	padding: 2px;
 	border-radius: 11px;
@@ -399,6 +398,14 @@ body {
 }
 
 #messages::-webkit-scrollbar-thumb:hover, #channels ul::-webkit-scrollbar-thumb:hover {
+	background: rgba(255,255,255,0.2);
+}
+
+.light #messages::-webkit-scrollbar-thumb, .light #channels ul::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 10px 10px rgba(0,0,0,0.4);
+}
+
+.light #messages::-webkit-scrollbar-thumb:hover, .light #channels ul::-webkit-scrollbar-thumb:hover {
 	background: rgba(0,0,0,0.2);
 }
 
@@ -451,19 +458,26 @@ body {
 	background: rgba(255,255,255,0.05);
 	outline: 1px solid rgba(255,255,255,0.2);
 	margin: 8px;
+	margin-right: 20px;
 	border-radius: 6px;
 	padding: 4px;
 	padding-bottom: 0;
 	padding-top: 0;
 	direction: ltr;
+	transition: 0.25s background, 0.25s margin-right;
 }
 
 #channels ul li.active {
-	background: rgba(0,0,0,0.2);
+	background: rgba(255,255,255,0.15);
+	margin-right: 8px;
 }
 
 .light #channels ul li {
 	background: rgba(0,0,0,0.1);
+}
+
+.light #channels ul li.active {
+	background: rgba(0,0,0,0.15);
 }
 
 #channels ul li .hash {
@@ -495,6 +509,7 @@ body {
 	width: 100%;
 	height: 50%;
 	color: white;
+	font-weight: bold;
 }
 
 .no-select {
@@ -521,7 +536,7 @@ body {
 	margin-top: 7px;
 }
 
-.server:active {
+.server.active {
 	outline: 2px solid rgba(90,90,255,0.4);
 }
 
