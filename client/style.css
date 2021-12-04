@@ -187,12 +187,7 @@ body {
 	background: rgba(220,220,220,0.5);
 }
 
-*[title]:hover::after {
-  content: attr(title);
-  position: absolute;
-  top: 100%;
-  left: 0;
-}
+
 
 #message {
 	flex: 1;
