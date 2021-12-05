@@ -8,7 +8,7 @@ function logOut() {
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
 
-    $.post("/logout", {
+    $.post(serverUrl+"/logout", {
     	user: session.user,
     	session: session.session
     })
@@ -115,7 +115,7 @@ function reg(finish) {
 }
 
 function checkSetup() {
-	$.post('/getSetup', {user: session.user}, function(isSetup) {
+	$.post(serverUrl+'/getSetup', {user: session.user}, function(isSetup) {
 		if(isSetup) {
 			setup();
 		} else {

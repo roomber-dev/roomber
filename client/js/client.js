@@ -24,7 +24,7 @@ function chatScrollDown() {
 }
 
 function getAvatar(onAvatar) {
-	$.post("/profile", {user: session.user}, function(data) {
+	$.post(serverUrl+"/profile", {user: session.user}, function(data) {
 		onAvatar(data.avatar);
 	});
 }
@@ -81,7 +81,7 @@ function addServer(server) {
 		$("#server-list").append(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
 	}
 
-	$.post("/getChannels", {server: server._id}, function(channels) {
+	$.post(serverUrl+"/getChannels", {server: server._id}, function(channels) {
 		servers[idx].channels = channels;
 		let current = getCookie("server");
 		if(server._id == current) {
@@ -127,7 +127,7 @@ function onSetupFinished(t) {
 		updateTheme();
 	}
 
-	$.post('/getServers', {...session}, function(servers) {
+	$.post(serverUrl+'/getServers', {...session}, function(servers) {
 		servers.forEach(addServer);
 		getAvatar(function(avatar) {
 			$("#login img").prop("src", avatar);
@@ -217,7 +217,7 @@ function newMessage(message) {
 		extra.push({
 			icon: "person_add",
 			click: function(menuItem) {
-				$.post("/chat", {...session, recipient: menuItem.getMessage().data("author")}, function(chat) {
+				$.post(serverUrl+"/chat", {...session, recipient: menuItem.getMessage().data("author")}, function(chat) {
 					changeChannel(chat, "dm");
 				})
 			}
@@ -261,7 +261,7 @@ function addChat(chat) {
 }
 
 function embed(url, lang, onResult) {
-    $.post('/embed', {url: url, lang: lang}, onResult);
+    $.post(serverUrl+'/embed', {url: url, lang: lang}, onResult);
 }
 
 function generateEmbed(embed) {
@@ -315,7 +315,7 @@ function composeMessageContent(message, messageText) {
 }
 
 function getChats() {
-	$.post("/chats", session, function(chats) {
+	$.post(serverUrl+"/chats", session, function(chats) {
 		chats.forEach(addChat);
 	});
 }

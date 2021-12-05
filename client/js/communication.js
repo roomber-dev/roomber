@@ -4,7 +4,7 @@ avatars = {};
 channel = "";
 
 function ifPermission(permission, ifTrue) {
-	$.post('/can', {
+	$.post(serverUrl+'/can', {
 		user: session.user,
 		permission: permission	
 	}, function(data) {
@@ -15,7 +15,7 @@ function ifPermission(permission, ifTrue) {
 }
 
 function ifPermissions(permissions, ifTrue) {
-	$.post('/hasPermissions', {
+	$.post(serverUrl+'/hasPermissions', {
 		user: session.user,
 		permissions: permissions
 	}, function(data) {
@@ -58,7 +58,7 @@ function cacheUser(user) {
 }
 
 function cacheUsers(users, onCache) {
-	$.post('/getUsers', {users:users}, function(data) {
+	$.post(serverUrl+'/getUsers', {users:users}, function(data) {
 		data.forEach(cacheUser);
 		onCache();
 	})
@@ -71,7 +71,7 @@ function getMessages(before = false, scroll = false) {
 		cclog("last message id " + $(".message").last().prop("id"), "debug");
 		cclog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
-	$.post('/getMessages', {fetch: toFetch, channel: channel},
+	$.post(serverUrl+'/getMessages', {fetch: toFetch, channel: channel},
 		function(data) {
 			if(data.error) {
 				cclog(data.error, "error");
@@ -105,7 +105,7 @@ function getMessages(before = false, scroll = false) {
 }
 
 function sendMessage(message) {
-	$.post('/messages', message, function(data) {
+	$.post(serverUrl+'/messages', message, function(data) {
 		if(data.error) {
 			popup("Error", data.error, undefined, false, "red");
 		}
@@ -113,7 +113,7 @@ function sendMessage(message) {
 }
 
 function editMessage(message, newMessage) {
-	$.post('/editMessage', {
+	$.post(serverUrl+'/editMessage', {
 		editor: session.user,
 		session: session.session,
 		message: message, 
@@ -132,7 +132,7 @@ function editMessage(message, newMessage) {
 }
 
 function deleteMessage(message) {
-	$.post('/deleteMessage', {
+	$.post(serverUrl+'/deleteMessage', {
 		deleter: session.user,
 		session: session.session,
 		message: message
@@ -159,7 +159,7 @@ function changeChannel(id, type = "text") {
 }
 
 function joinServer(id) {
-	$.post("/joinServer", {...session, server: id}, function(data) {
+	$.post(serverUrl+"/joinServer", {...session, server: id}, function(data) {
 		if(data.error) {
 			popup("Error", data.error);
 			return;
