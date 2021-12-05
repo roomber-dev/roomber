@@ -751,7 +751,9 @@ app.post('/logout', (req, res) => {
 	Session.deleteOne({ _id: req.body.session, user: req.body.user }, () => { })
 })
 
-var server = http.listen(3000, () => {
+const PORT = process.env.PORT ||5000;
+
+var server = http.listen(PORT, () => {
 	sclog(`Server running on port ${server.address().port}`, "start");
 })
 
