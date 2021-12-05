@@ -193,3 +193,4 @@ socket.on('messagesCleared', function() {
 socket.on('broadcast', function(message) {
 	popup("Broadcast", message);
 });
+socket.on('userJoin', cclog("yoo new user in channel!!", "join"))

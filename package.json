@@ -16,6 +16,7 @@
     "mongoose": "^6.0.12",
     "ngrok": "^4.2.2",
     "open": "^8.4.0",
+    "open-graph-scraper": "^4.11.0",
     "socket.io": "^4.3.1"
   }
 }

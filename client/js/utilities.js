@@ -172,7 +172,7 @@ function decodeSaveCustomizationCode(code = String, setCustomization = false, de
  * @param {*} message 
  * @param {*} type 
  */
- function cclog(message, type) {
+ function cclog(message, type, list = false) {
 	const category = {
 		debug: function(text) {
 			return [`%c[DEBUG] %c${text}`, 'color: #0096FF', 'color: white']
@@ -193,7 +193,18 @@ function decodeSaveCustomizationCode(code = String, setCustomization = false, de
 			return [`%c[WARNING] %c${text}`, 'color: orange', 'color: white']
 		}
 	}
+	 if(list) {
+		return [
+			"debug",
+			"join",
+			"leave",
+			"start",
+			"error",
+			"warning"
+		]
+	 } else {
+
 	
 	console.log(...category[type](message));
-
+}
 }

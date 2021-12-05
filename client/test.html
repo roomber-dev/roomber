@@ -1,0 +1,15 @@
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<style>
+
+</style>
+
+<div class="embed">
+
+</div>
+
+<script>
+    function embed(url, lang) {
+        $.post('/embed', {url: url, lang: lang}, console.log);
+    }
+</script>

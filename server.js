@@ -9,29 +9,30 @@ var config = require('./config.js');
 var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
+const ogs = require('open-graph-scraper');
 
 const enableNgrok = config.enableNgrok;
 
 const characterLimits = {
-	"message": [1,1000],
-	"broadcast": [1,500],
-	"username": [1,20],
-	"password": [7,50],
-	"email": [1,320]
+	"message": [1, 1000],
+	"broadcast": [1, 500],
+	"username": [1, 20],
+	"password": [7, 50],
+	"email": [1, 320]
 };
 
 const profile = {
 	"avatar": (user, avatar) => {
 		user.avatar = avatar;
 		user.save(err_ => {
-			if(err_) console.log(err_);
+			if (err_) console.log(err_);
 		});
 	}
 }
 
 function matchCharacterLimit(limit, text) {
 	return (text.length >= characterLimits[limit][0] &&
-			text.length <= characterLimits[limit][1]);
+		text.length <= characterLimits[limit][1]);
 }
 
 function getRandomArbitrary(min, max) {
@@ -51,7 +52,7 @@ if (enableNgrok) {
 			authtoken: config.ngrokAuthtoken,
 			addr: 3000
 		});
-		if(config.openNgrokURL) open(url);
+		if (config.openNgrokURL) open(url);
 		sclog(`The ngrok url is ${url}`, "start");
 	})();
 } else {
@@ -151,8 +152,8 @@ function auth(email, password, success) {
 */
 
 function auth(user, sessionID, success) {
-	Session.find({_id: sessionID, user: user}, (err, session) => {
-		if(session.length) success();
+	Session.find({ _id: sessionID, user: user }, (err, session) => {
+		if (session.length) success();
 	})
 }
 
@@ -227,8 +228,8 @@ function filterMessage(text) {
 }
 
 function getUsername(user, success) {
-	User.find({_id: user}, (err, user) => {
-		if(user.length) {
+	User.find({ _id: user }, (err, user) => {
+		if (user.length) {
 			success(user[0].username);
 			return;
 		}
@@ -239,7 +240,7 @@ function getUsername(user, success) {
 function removeCredentials(object) {
 	let result = object._doc;
 	Object.keys(result).forEach(key => {
-		if([
+		if ([
 			"password",
 			"email",
 			"servers",
@@ -265,19 +266,33 @@ io.on('connection', socket => {
 	})
 })
 
+
+app.post('/embed', (req, res) => {
+	ogs({
+		url: req.body.url,
+		headers: {
+			"Accept-Language": req.body.lang
+		}
+	}, (error, results, response) => {
+		if (!error) {
+			res.send(results);
+		}
+	});
+})
+
 app.post('/getMessages', (req, res) => {
-	if(req.body.fetch) {
-		Channel.countDocuments({_id: req.body.channel}, (err, count) => {
-			if(count > 0) {
-				Message.find({channel: req.body.channel}).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
-					if(!messages.length) {
-						res.send({error: "No messages found"});
+	if (req.body.fetch) {
+		Channel.countDocuments({ _id: req.body.channel }, (err, count) => {
+			if (count > 0) {
+				Message.find({ channel: req.body.channel }).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
+					if (!messages.length) {
+						res.send({ error: "No messages found" });
 						return;
 					}
 
 					let users = [];
 					messages.forEach(message => {
-						if(!users.includes(message.author)) {
+						if (!users.includes(message.author)) {
 							users.push(message.author);
 						}
 					});
@@ -287,13 +302,13 @@ app.post('/getMessages', (req, res) => {
 					});
 				})
 			} else {
-				res.send({error: "Invalid channel"});
+				res.send({ error: "Invalid channel" });
 			}
 		});
 		return;
 	}
-	if(req.body.flagged) {
-		Message.find({flagged: true}, (err, messages) => {
+	if (req.body.flagged) {
+		Message.find({ flagged: true }, (err, messages) => {
 			res.send(messages);
 		})
 	}
@@ -301,26 +316,26 @@ app.post('/getMessages', (req, res) => {
 
 app.post('/joinServer', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		Server.find({_id: req.body.server}, (err, server) => {
-			if(server.length > 0) {
-				User.find({_id: req.body.user}, (err, user) => {
+		Server.find({ _id: req.body.server }, (err, server) => {
+			if (server.length > 0) {
+				User.find({ _id: req.body.user }, (err, user) => {
 					var user = user[0];
-					if(user.servers.includes(req.body.server)) {
-						res.send({error: "You are already in this server!"});
+					if (user.servers.includes(req.body.server)) {
+						res.send({ error: "You are already in this server!" });
 						return;
 					}
 					user.servers.push(req.body.server);
 					user.save(err => {
-						if(err) {
+						if (err) {
 							res.sendStatus(505);
 							return sclog(err, "error");
 						}
-						if(server.constructor === Array) {
+						if (server.constructor === Array) {
 							server = server[0];
 						}
 						server.users.push(req.body.user);
 						server.save(err_ => {
-							if(err_) {
+							if (err_) {
 								res.sendStatus(505);
 								return sclog(err, "error");
 							}
@@ -335,8 +350,8 @@ app.post('/joinServer', (req, res) => {
 
 app.post('/getServers', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		User.find({_id: req.body.user}, (err, user) => {
-			Server.find({_id: {"$in": user[0].servers}}, (err, servers) => {
+		User.find({ _id: req.body.user }, (err, user) => {
+			Server.find({ _id: { "$in": user[0].servers } }, (err, servers) => {
 				res.send(servers);
 			})
 		});
@@ -344,8 +359,8 @@ app.post('/getServers', (req, res) => {
 })
 
 app.post('/getChannels', (req, res) => {
-	Channel.find({server: req.body.server}, (err, channels) => {
-		if(channels.length) {
+	Channel.find({ server: req.body.server }, (err, channels) => {
+		if (channels.length) {
 			res.send(channels);
 		}
 	})
@@ -353,12 +368,12 @@ app.post('/getChannels', (req, res) => {
 
 app.post('/chat', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		Channel.find({chatParticipants: [req.body.user, req.body.recipient]}, (err, channel) => {
-			if(channel.length) {
+		Channel.find({ chatParticipants: [req.body.user, req.body.recipient] }, (err, channel) => {
+			if (channel.length) {
 				res.send(channel[0]._id);
 			} else {
-				Channel.find({chatParticipants: [req.body.recipient, req.body.user]}, (err, channel_) => {
-					if(channel_.length) {
+				Channel.find({ chatParticipants: [req.body.recipient, req.body.user] }, (err, channel_) => {
+					if (channel_.length) {
 						res.send(channel_[0]._id);
 					} else {
 						var channel = new Channel({
@@ -377,15 +392,15 @@ app.post('/chat', (req, res) => {
 
 app.post('/chats', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		Channel.find({chatParticipants: req.body.user}, (err, channels) => {
-			if(channels.length) {
+		Channel.find({ chatParticipants: req.body.user }, (err, channels) => {
+			if (channels.length) {
 				var chats = [];
 				var ids = {};
 				channels.forEach(channel => {
 					ids[channel.chatParticipants.filter(x => x != req.body.user)[0]] = channel._id;
 				})
-				User.find({_id: {"$in": Object.keys(ids)}}, (err, users) => {
-					if(users.length) {
+				User.find({ _id: { "$in": Object.keys(ids) } }, (err, users) => {
+					if (users.length) {
 						res.send(users.map(user => ({
 							chat: ids[user._id],
 							recipient: removeCredentials(user)
@@ -398,8 +413,8 @@ app.post('/chats', (req, res) => {
 })
 
 app.post('/createServer', (req, res) => {
-	Server.countDocuments({name: req.body.name}, (err, count) => {
-		if(count > 0) {
+	Server.countDocuments({ name: req.body.name }, (err, count) => {
+		if (count > 0) {
 			res.sendStatus(409);
 		} else {
 			var server = new Server({
@@ -407,7 +422,7 @@ app.post('/createServer', (req, res) => {
 				channels: []
 			});
 			server.save(err => {
-				if(!err) res.send(server._id);
+				if (!err) res.send(server._id);
 			})
 		}
 	})
@@ -420,13 +435,13 @@ app.post('/createChannel', (req, res) => {
 		server: req.body.server
 	});
 	channel.save(err => {
-		if(!err) {
-			Server.find({_id: req.body.server}, (err, server) => {
-				if(server.length) {
+		if (!err) {
+			Server.find({ _id: req.body.server }, (err, server) => {
+				if (server.length) {
 					var server = server[0];
 					server.channels.push(channel._id);
 					server.save(err_ => {
-						if(!err_) res.send(channel._id);
+						if (!err_) res.send(channel._id);
 					})
 				}
 			})
@@ -454,13 +469,13 @@ app.post('/hasPermissions', (req, res) => {
 
 app.post('/getUsers', (req, res) => {
 	let ids
-	if(req.body["users[]"].constructor === Array) {
+	if (req.body["users[]"].constructor === Array) {
 		ids = req.body["users[]"].map(user => mongoose.Types.ObjectId(user));
 	} else {
 		ids = [mongoose.Types.ObjectId(req.body["users[]"])];
 	}
 	let noCredentialUsers = [];
-	User.find({_id: {"$in": ids}}, (err, users) => {
+	User.find({ _id: { "$in": ids } }, (err, users) => {
 		users.forEach(user => {
 			noCredentialUsers.push(removeCredentials(user));
 		});
@@ -469,8 +484,8 @@ app.post('/getUsers', (req, res) => {
 })
 
 app.post('/broadcast', (req, res) => {
-	if(!matchCharacterLimit("broadcast", req.body.message)) {
-		res.send({error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters."});
+	if (!matchCharacterLimit("broadcast", req.body.message)) {
+		res.send({ error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters." });
 		return;
 	}
 	hasPermissionAuth(req.body, "broadcast", () => {
@@ -508,17 +523,17 @@ app.post('/messages', (req, res) => {
 	Object.keys(msgSchema).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
 	})
-	if(!matchCharacterLimit("message", msg.message)) {
-		res.send({error: "Your message is past the limit of " + characterLimits["message"][1] + " characters."});
+	if (!matchCharacterLimit("message", msg.message)) {
+		res.send({ error: "Your message is past the limit of " + characterLimits["message"][1] + " characters." });
 		return;
 	}
 	msg.flagged = false;
 	msg.removed = false;
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
-		User.find({_id: msg.author}, (err, user) => {
-			Channel.countDocuments({_id: msg.channel}, (err, count) => {
-				if(count > 0) {
+		User.find({ _id: msg.author }, (err, user) => {
+			Channel.countDocuments({ _id: msg.channel }, (err, count) => {
+				if (count > 0) {
 					var message = new Message(msg);
 					message.save(err => {
 						if (err) {
@@ -526,11 +541,11 @@ app.post('/messages', (req, res) => {
 							res.sendStatus(500);
 							return;
 						}
-						io.to(msg.channel).emit('message', {...message._doc, user: removeCredentials(user[0])});
+						io.to(msg.channel).emit('message', { ...message._doc, user: removeCredentials(user[0]) });
 						res.sendStatus(200);
 					})
 				} else {
-					res.send({error: "Channel " + msg.channel + " does not exist."});
+					res.send({ error: "Channel " + msg.channel + " does not exist." });
 				}
 			})
 		})
@@ -538,8 +553,8 @@ app.post('/messages', (req, res) => {
 })
 
 app.post('/editMessage', (req, res) => {
-	if(!matchCharacterLimit("message", req.body.newMessage)) {
-		res.send({error: "Your message is past the limit of " + characterLimits["message"][1] + " characters."});
+	if (!matchCharacterLimit("message", req.body.newMessage)) {
+		res.send({ error: "Your message is past the limit of " + characterLimits["message"][1] + " characters." });
 		return;
 	}
 	auth(req.body.editor, req.body.session, () => {
@@ -577,7 +592,7 @@ app.post('/deleteMessage', (req, res) => {
 	auth(req.body.deleter, req.body.session, () => {
 		hasPermission(req.body.deleter, "messages.delete_any", result => {
 			if (result == true) {
-				Message.deleteOne({_id: req.body.message}, () => {
+				Message.deleteOne({ _id: req.body.message }, () => {
 					io.emit('delete', {
 						message: req.body.message
 					});
@@ -586,12 +601,12 @@ app.post('/deleteMessage', (req, res) => {
 				return;
 			}
 
-			Message.find({author: req.body.deleter, _id: req.body.message}, (err, msg) => {
-				if(msg.length) {
+			Message.find({ author: req.body.deleter, _id: req.body.message }, (err, msg) => {
+				if (msg.length) {
 					var message = msg[0];
 					message.removed = true;
 					message.save(err_ => {
-						if(err_) {
+						if (err_) {
 							console.log(err_);
 							res.sendStatus(500);
 							return;
@@ -610,7 +625,7 @@ app.post('/deleteMessage', (req, res) => {
 app.post('/setup', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
-			if(user.length) {
+			if (user.length) {
 				var user = user[0];
 				user.setup = false;
 				user.save(err_ => {
@@ -628,8 +643,8 @@ app.post('/setup', (req, res) => {
 
 app.post('/getSetup', (req, res) => {
 	User.find({ _id: req.body.user }, (err, user) => {
-		if(user.length) {
-			if(!("setup" in user[0]._doc)) {
+		if (user.length) {
+			if (!("setup" in user[0]._doc)) {
 				res.send(true);
 				return;
 			}
@@ -639,16 +654,16 @@ app.post('/getSetup', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-	if(!matchCharacterLimit("username", req.body.username)) {
-		res.send({error: "Your username is past the limit of " + characterLimits["username"][1] + " characters."});
+	if (!matchCharacterLimit("username", req.body.username)) {
+		res.send({ error: "Your username is past the limit of " + characterLimits["username"][1] + " characters." });
 		return;
 	}
-	if(!matchCharacterLimit("email", req.body.email)) {
-		res.send({error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters."});
+	if (!matchCharacterLimit("email", req.body.email)) {
+		res.send({ error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters." });
 		return;
 	}
-	if(!matchCharacterLimit("password", req.body.password)) {
-		res.send({error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters."});
+	if (!matchCharacterLimit("password", req.body.password)) {
+		res.send({ error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters." });
 		return;
 	}
 	User.find({ username: req.body.username }, (err, doc) => {
@@ -663,9 +678,9 @@ app.post('/register', (req, res) => {
 					res.sendStatus(500);
 				}
 				else {
-					var session = new Session({user: user._id});
+					var session = new Session({ user: user._id });
 					session.save(err__ => {
-						if(err__) {
+						if (err__) {
 							console.log(err__);
 							res.sendStatus(500);
 						}
@@ -683,7 +698,7 @@ app.post('/register', (req, res) => {
 
 app.post('/changeProfile', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		User.find({_id: req.body.user}, (err, user) => {
+		User.find({ _id: req.body.user }, (err, user) => {
 			profile[req.body.toChange](user[0], req.body[req.body.toChange]);
 		});
 		res.sendStatus(200);
@@ -691,7 +706,7 @@ app.post('/changeProfile', (req, res) => {
 })
 
 app.post('/profile', (req, res) => {
-	User.find({_id: req.body.user}, (err, user) => {
+	User.find({ _id: req.body.user }, (err, user) => {
 		res.send({
 			avatar: user[0].avatar
 		});
@@ -699,19 +714,19 @@ app.post('/profile', (req, res) => {
 })
 
 app.post('/login', (req, res) => {
-	if(!matchCharacterLimit("email", req.body.email)) {
-		res.send({error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters."});
+	if (!matchCharacterLimit("email", req.body.email)) {
+		res.send({ error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters." });
 		return;
 	}
-	if(!matchCharacterLimit("password", req.body.password)) {
-		res.send({error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters."});
+	if (!matchCharacterLimit("password", req.body.password)) {
+		res.send({ error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters." });
 		return;
 	}
 	User.find({ email: req.body.email, password: req.body.password }, (err, doc) => {
 		if (doc.length) {
-			var session = new Session({user: doc[0]._id});
+			var session = new Session({ user: doc[0]._id });
 			session.save(err__ => {
-				if(err__) {
+				if (err__) {
 					console.log(err__);
 					res.sendStatus(500);
 				}
@@ -728,7 +743,7 @@ app.post('/login', (req, res) => {
 })
 
 app.post('/logout', (req, res) => {
-	Session.deleteOne({_id: req.body.session, user: req.body.user}, ()=>{})
+	Session.deleteOne({ _id: req.body.session, user: req.body.user }, () => { })
 })
 
 var server = http.listen(3000, () => {
@@ -745,27 +760,27 @@ var server = http.listen(3000, () => {
  */
 function sclog(message, type) {
 	const category = {
-		debug: function(text) {
-			return chalk.blue("[DEBUG]")+" "+text
+		debug: function (text) {
+			return chalk.blue("[DEBUG]") + " " + text
 		},
-		join: function(text) {
-				return chalk.greenBright("[JOIN]")+" "+text
+		join: function (text) {
+			return chalk.greenBright("[JOIN]") + " " + text
 		},
-		leave: function(text) {
-			return chalk.redBright("[LEAVE]")+" "+text
+		leave: function (text) {
+			return chalk.redBright("[LEAVE]") + " " + text
 		},
-		start: function(text) {
-			return chalk.magenta("[START]")+" "+message
+		start: function (text) {
+			return chalk.magenta("[START]") + " " + message
 		},
-		error: function(text) {
-			return chalk.red("[ERROR]")+" "+message
+		error: function (text) {
+			return chalk.red("[ERROR]") + " " + message
 		},
-		warning: function(text) {
-			return chalk.yellow("[WARNING]")+" "+message
+		warning: function (text) {
+			return chalk.yellow("[WARNING]") + " " + message
 		}
 	}
 
-	if(category[type]) {
+	if (category[type]) {
 		console.log(category[type](message));
 	}
 } // console.log('%c Oh my heavens! ', 'background: #222; color: #bada55');
@@ -783,24 +798,24 @@ function sclog(message, type) {
  */
 function cclog(message, type) {
 	const category = {
-		debug: function(text) {
+		debug: function (text) {
 			return [`%c[DEBUG] `, `%c${text}`, 'color: blue', 'color: white']
 		},
-		join: function(text) {
+		join: function (text) {
 			return [`%c[JOIN] `, `%c${text}`, 'color: #32cd32', 'color: white']
 		},
-		leave: function(text) {
+		leave: function (text) {
 			return [`%c[LEAVE] `, `%c${text}`, 'color: #EE4B2B', 'color: white']
 		},
-		start: function(text) {
+		start: function (text) {
 			return [`%c[START] `, `%c${text}`, 'color: #FF00FF', 'color: white']
 		},
-		error: function(text) {
+		error: function (text) {
 			return [`%c[ERROR] `, `%c${text}`, 'color: red', 'color: white']
 		}
 	}
 
-	if(category[type]) {
+	if (category[type]) {
 		console.log(...category[type](message));
 	}
 }
