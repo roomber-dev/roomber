@@ -280,9 +280,9 @@ function generateEmbed(embed) {
     }
     return `<div class="embed">
         <div class="color"></div>
-        <a href="${embed.requestUrl}" class="title">${embed.ogTitle}</a>
+        <a href="${embed.requestUrl}" class="title" target="_blank">${embed.ogTitle}</a>
         <p class="description">${embed.ogDescription}</p>
-        <a href="${embed.requestUrl}"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
+        <a href="${embed.requestUrl}" target="_blank"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
     </div>`;
 }
 
