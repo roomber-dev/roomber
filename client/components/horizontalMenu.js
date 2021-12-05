@@ -9,7 +9,7 @@ function horizontalMenuAddButtons(menu, buttons, a = true) {
 			...button,
 			menuID: m,
 			getMenu: function() { return $("#horizontalMenu" + m) },
-			getMessage: function() { return $("#horizontalMenu" + m).parent().parent().parent() },
+			getMessage: function() { return $("#horizontalMenu" + m).parent().parent().parent().parent() },
 			getMessageLine: function() { return $("#horizontalMenu" + menus).parent().find(".msg-flex .msgln") }
 		};
 		horizontalMenuButtons.push(button);

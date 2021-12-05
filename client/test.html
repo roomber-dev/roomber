@@ -1,15 +1,28 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="style.css">
 
 <style>
 
 </style>
 
-<div class="embed">
-
+<div id="messages">
+    <div class="message glass" id="61aca8e82ebb0e8d29bdf02a" data-author="6180ebdf7ed9ac9b6a49ce30">
+    <div class="flex">
+        <img src="https://c.tenor.com/dLfPrFjfm1cAAAAC/animated-text-animated.gif" class="avatar">
+        <div class="flex msg">
+            <div class="flex-down msg-flex">
+                <div class="username">someever</div>
+                <div class="msgln">for the embeds <i class="twa twa-smiling-face-with-sunglasses"></i></div>
+                <div class="embeds"></div>
+            </div>
+            <div class="timestamp">05/12/2021, 14:56:24</div>
+        </div>
+    </div>
+    </div>
 </div>
 
 <script>
-    function embed(url, lang) {
-        $.post('/embed', {url: url, lang: lang}, console.log);
-    }
+    $(document).ready(() => {
+        createEmbed("61aca8e82ebb0e8d29bdf02a", "https://42e3-89-113-162-102.ngrok.io", "en-GB");
+    })
 </script>

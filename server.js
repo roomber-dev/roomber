@@ -272,7 +272,12 @@ app.post('/embed', (req, res) => {
 		url: req.body.url,
 		headers: {
 			"Accept-Language": req.body.lang
-		}
+		},
+		customMetaTags: [{
+			multiple: false,
+			property: 'theme-color',
+			fieldName: 'theme-color'
+		}]
 	}, (error, results, response) => {
 		if (!error) {
 			res.send(results);

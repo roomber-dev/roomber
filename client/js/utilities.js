@@ -1,10 +1,11 @@
 loadedEvents = [];
 
-function parseUrls(text) {
+function parseUrls(text, onUrl) {
 	var words = text.split(" ");
 
 	words.forEach(function (item, index) {
 		if (item.startsWith("https://") || item.startsWith("http://")) {
+			if(onUrl) onUrl(item);
 			words[index] = `<a href="${item}" class="msgUrl">${item}</a>`;
 		}
 	});

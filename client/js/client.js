@@ -23,14 +23,6 @@ function chatScrollDown() {
 	}
 }
 
-function composeMessageContent(message, messageText) {
-	message.text(messageText);
-	message[0].innerHTML = message[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
-    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
-	});
-	message[0].innerHTML = parseUrls(message[0].innerHTML);
-}
-
 function getAvatar(onAvatar) {
 	$.post("/profile", {user: session.user}, function(data) {
 		onAvatar(data.avatar);
@@ -120,7 +112,7 @@ function openServer(index) {
 			<li id="${channel._id}" onclick="channelClick('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
 		`);
 		if(i == 0) {
-			channelClick(channel._id);	
+			channelClick(channel._id);
 		}
 	})
 }
@@ -239,22 +231,25 @@ function newMessage(message) {
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
 		    <img src="${avatars[message.author]}" class="avatar">
-		    <div class="flex msg">
-		        <div class="flex-down msg-flex">
-		            <div class="username">${usernames[message.author]}</div>${flagHtml}
-		            <div class="msgln"></div>
-		        </div>
-				${HorizontalMenu([
-					{
-						icon: "content_copy",
-						click: function(menuItem) {
-							copyMessage(menuItem.getMessage().attr("id"));
-						}
-					},
-					...extra
-				])}
-		        <div class="timestamp">${ts}</div>
-		    </div>
+		    <div class="flex-down msg-embeds">
+			    <div class="flex msg">
+			        <div class="flex-down msg-flex">
+			            <div class="username">${usernames[message.author]}</div>${flagHtml}
+			            <div class="msgln"></div>
+			        </div>
+					${HorizontalMenu([
+						{
+							icon: "content_copy",
+							click: function(menuItem) {
+								copyMessage(menuItem.getMessage().attr("id"));
+							}
+						},
+						...extra
+					])}
+			        <div class="timestamp">${ts}</div>
+			    </div>
+			    <div class="embeds"></div>
+			</div>
 		</div>
 	</div>`;
 }
@@ -263,6 +258,60 @@ function addChat(chat) {
 	$("#channels ul").append(`
 		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
 	`);
+}
+
+function embed(url, lang, onResult) {
+    $.post('/embed', {url: url, lang: lang}, onResult);
+}
+
+function generateEmbed(embed) {
+    let size = {width: "100%", height: "130px"};
+    let img = "";
+    if(!embed.ogImage) {
+        size = {width:"0",height:"0"};
+    } else {
+    	img = embed.ogImage.url;
+    	if(embed.ogImage.width && embed.ogImage.width.replace("px","") < 300) {
+	        size.width = embed.ogImage.width;
+	    }
+	    if(embed.ogImage.height && embed.ogImage.height.replace("px","") < 300) {
+	        size.height = embed.ogImage.height;
+	    }
+    }
+    return `<div class="embed">
+        <div class="color"></div>
+        <a href="${embed.requestUrl}" class="title">${embed.ogTitle}</a>
+        <p class="description">${embed.ogDescription}</p>
+        <a href="${embed.requestUrl}"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
+    </div>`;
+}
+
+function createEmbed(messageID,  url, lang) {
+    embed(url, lang, function(embed) {
+    	if(embed) {
+    		console.log(embed);
+    		cclog("loaded embed " + embed.ogTitle, "debug");
+	    	$(`#chat-area #messages #${messageID} .embeds`).html("");
+	        $(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));
+	        $(`#chat-area #messages #${messageID} .embeds .color`).last().css({
+	            "background-color": embed["theme-color"]
+	        });
+    	} else {
+    		cclog("no embed", "debug");
+    	}
+    })
+}
+
+function composeMessageContent(message, messageText) {
+	message.text(messageText);
+	message[0].innerHTML = message[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function(emoji, a) {
+    	return `<i class="twa twa-${emoji.replaceAll(":","")}"></i>`
+	});
+	message[0].innerHTML = parseUrls(message[0].innerHTML, function(url) {
+		cclog("loading embed for " + url, "debug");
+		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo"></div>');
+		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
+	});
 }
 
 function getChats() {
