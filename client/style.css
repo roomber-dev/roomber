@@ -560,7 +560,6 @@ body {
 }
 
 .embed .color {
-	content: "";
 	width: 100%;
 	border-radius: 20px;
 	padding: 4px;
@@ -574,8 +573,8 @@ body {
 	margin-top: 20px;
 	padding: 10px;
 	padding-top: 6px;
+	max-width: 220px;
 	border-radius: 10px;
-	width: 80%;
 	display: flex;
 	flex-direction: column;
 }
@@ -589,14 +588,27 @@ body {
 	margin-top: 6px;
 	font-size: 16px;
 	margin-bottom: 6px;
-}
-
-.embed img {
-	align-self: center;
+	max-width: 250px;
+	height: fit-content;
 }
 
 .embed a {
 	font-size: 0;
+}
+
+.embed .desc-img {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.embed .img-container {
+	display: flex;
+	justify-content: center;
+	padding-left: 10px;
+}
+
+.embed img {
+	border-radius: 6px;
 }
 
 .embed .logo {
@@ -604,4 +616,5 @@ body {
 	width: 32px;
 	height: 32px;
 	justify-self: center;
+	align-self: center;
 }

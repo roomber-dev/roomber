@@ -74,6 +74,10 @@ function uuidv4() {
 	);
 }
 
+Number.prototype.clamp = function(min, max) {
+	return Math.min(Math.max(this, min), max);
+};
+
 function setCookie(cname, cvalue) {
 	const d = new Date();
 	d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));

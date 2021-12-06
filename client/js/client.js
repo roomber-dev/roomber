@@ -264,41 +264,51 @@ function embed(url, lang, onResult) {
     $.post(serverUrl+'/embed', {url: url, lang: lang}, onResult);
 }
 
-function generateEmbed(embed) {
-    let size = {width: "100%", height: "130px"};
+function generateEmbed(embed, useTextHeight) {
+    let size = {width: "130", height: "130"};
     let img = "";
     if(!embed.ogImage) {
         size = {width:"0",height:"0"};
     } else {
-    	img = embed.ogImage.url;
-    	if(embed.ogImage.width && embed.ogImage.width.replace("px","") < 300) {
-	        size.width = embed.ogImage.width;
-	    }
-	    if(embed.ogImage.height && embed.ogImage.height.replace("px","") < 300) {
-	        size.height = embed.ogImage.height;
-	    }
+        img = embed.ogImage.url;
+        if(embed.ogImage.width) {
+            size.width = Number(embed.ogImage.width).clamp(0,200);
+        }
+        if(embed.ogImage.height) {
+            size.height = Number(embed.ogImage.height).clamp(0,130);
+        }
     }
     return `<div class="embed">
         <div class="color"></div>
         <a href="${embed.requestUrl}" class="title" target="_blank">${embed.ogTitle}</a>
+        <div class="desc-img">
         <p class="description">${embed.ogDescription}</p>
+        <div class="img-container">
         <a href="${embed.requestUrl}" target="_blank"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
+        </div>
+        </div>
     </div>`;
 }
 
 function createEmbed(messageID,  url, lang) {
     embed(url, lang, function(embed) {
-    	if(embed) {
-    		console.log(embed);
-    		cclog("loaded embed " + embed.ogTitle, "debug");
-	    	$(`#chat-area #messages #${messageID} .embeds`).html("");
-	        $(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));
-	        $(`#chat-area #messages #${messageID} .embeds .color`).last().css({
-	            "background-color": embed["theme-color"]
-	        });
-    	} else {
-    		cclog("no embed", "debug");
-    	}
+        if(embed) {
+            console.log(embed);
+            cclog("loaded embed " + embed.ogTitle, "debug");
+            $(`#messages #${messageID} .embeds`).html("");
+            $(`#messages #${messageID} .embeds`).append(generateEmbed(embed));
+            let color = "";
+            if(embed["theme-color"]) {
+                color = embed["theme-color"];
+            } else {
+                color = "black";
+            }
+            $(`#messages #${messageID} .embeds .color`).last().css({
+                "background-color": color
+            });
+        } else {
+            cclog("no embed", "debug");
+        }
     })
 }
 
