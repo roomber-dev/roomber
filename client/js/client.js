@@ -295,15 +295,15 @@ function createEmbed(messageID,  url, lang) {
         if(embed) {
             console.log(embed);
             cclog("loaded embed " + embed.ogTitle, "debug");
-            $(`#messages #${messageID} .embeds`).html("");
-            $(`#messages #${messageID} .embeds`).append(generateEmbed(embed));
+            $(`#chat-area #messages #${messageID} .embeds`).html("");
+            $(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));
             let color = "";
             if(embed["theme-color"]) {
                 color = embed["theme-color"];
             } else {
                 color = "black";
             }
-            $(`#messages #${messageID} .embeds .color`).last().css({
+            $(`#chat-area #messages #${messageID} .embeds .color`).last().css({
                 "background-color": color
             });
         } else {
