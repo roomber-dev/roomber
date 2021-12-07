@@ -76,9 +76,9 @@ function addServer(server) {
 	let idx = servers.push(server) - 1;
 
 	if(server["picture"]) {
-		$("#server-list").append(`<img id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
+		$("#server-list").prepend(`<img id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
 	} else {
-		$("#server-list").append(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
+		$("#server-list").prepend(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
 	}
 
 	$.post(serverUrl+"/getChannels", {server: server._id}, function(channels) {
@@ -200,6 +200,25 @@ loaded(function() {
 		$("#channels ul").html("");
 		$("#messages").html("");
 		getChats();
+	});
+
+	$(".new-server").click(function() {
+		popup("Join server", `
+			<input type="text" placeholder="Server ID" id="server" class="textbox"/>
+		`, [{
+			label: "Cancel",
+			click: function(p) {
+				p.close();
+			}
+		}, {
+			label: "OK",
+			click: function(p) {
+				p.close();
+				setTimeout(function() {
+					joinServer($("#server").val());
+				}, 500);
+			}
+		}])
 	});
 })
 

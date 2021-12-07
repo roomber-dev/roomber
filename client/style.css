@@ -187,7 +187,7 @@ body, #body {
 #message-box {
 	padding: 4px;
 	position: absolute;
-	top: calc(100% - 75px);
+	bottom: 0;
 	right: 0;
 	left: 202px;
 	height: 40px;
@@ -595,6 +595,14 @@ body, #body {
 	width: 40px;
 	height: 40px;
 	margin-top: 7px;
+}
+
+.server.new-server {
+	background: linear-gradient(to bottom, #29c129, #094e09);
+}
+
+.server.new-server i {
+	padding-top: 2px;
 }
 
 .server.active {
