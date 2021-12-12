@@ -377,3 +377,32 @@ function newAdMessage(id) {
 		</div>
 	</div>`;
 }
+
+function easterEg() {
+	$("body").prepend('<iframe id="roombcursedguy" src="./roomberguy3d" style="width: 100%; height: 100%; z-index: 69420; border: 0;">no iframes for u</iframe>');
+	$("#message-box").css("display","none")
+	var audio = new Audio('./roomberguy3d/earsdead.m4a');
+	audio.play();
+	setTimeout(() => {
+		$("#message-box").css("display", "block");
+		$("#roombcursedguy").remove();
+		audio.pause();
+		audio.currentTime = 0;
+	}, 10000);
+}
+
+
+let keysPressed = {}
+
+document.addEventListener('keydown', (event) => {
+	keysPressed[event.key] = true;
+ 
+	if (/*keysPressed['Control'] && */event.key == 'r' && event.key == 'o' && event.key == 'm' && event.key == 'b') {
+		console.log("easter eg activatged!!")
+        easterEg();  
+	}
+ });
+ 
+ document.addEventListener('keyup', (event) => {
+	delete keysPressed[event.key];
+ });

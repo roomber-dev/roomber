@@ -52,7 +52,7 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 	if(has_username == true) {
 		u = {username: $("#reg-username").val()};
 	}
-	$.post(url, {
+	$.post(serverUrl+url, {
 		...u,
 		email: $("#reg-email").val(),
 		password: $("#reg-password").val()
