@@ -10,6 +10,7 @@ var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 const ogs = require('open-graph-scraper');
+let maintenance = false;
 
 const enableNgrok = config.enableNgrok;
 
@@ -65,7 +66,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded(
 	{ extended: false }
 ));
-app.use(express.static(__dirname + '/client'));
 
 var dbUrl = config.dbUrl;
 
@@ -74,6 +74,7 @@ mongoose.connect(dbUrl, (err) => {
 		sclog(`Failed to connect to MongoDB: ${err}`, "error");
 	} else {
 		sclog('MongoDB connected', "start");
+		appUse();
 	}
 
 })
@@ -134,14 +135,51 @@ var Server = mongoose.model(
 	}
 )
 
+var Settings = mongoose.model(
+	'Settings',
+	{
+		maintenance: Boolean
+	}
+)
+
 var models = {
 	"Permission": Permission,
 	"Message": Message,
 	"User": User,
 	"Session": Session,
 	"Channel": Channel,
-	"Server": Server
+	"Server": Server,
+	"Settings": Settings
 };
+
+function appUse() {
+app.use(function() {
+	sclog("someone refreshed | aaa", "debug")
+	Settings.find({}, (err, settings) => {
+		sclog("someone refreshed | bbb", "debug")
+		if(settings.length && settings[0].maintenance) {
+			sclog("someone refreshed | ccc111", "debug")
+			return express.static(__dirname + '/maintenance');
+		} else {
+			sclog("someone refreshed | ccc222", "debug")
+			return express.static(__dirname + '/client');
+		}
+	})
+	sclog("someone refreshed | ddd", "debug")
+	return express.static(__dirname + '/client');
+}());
+}
+
+app.post('/maintenance', (req, res) => {
+	hasPermissionAuth(req.body, "maintenance", () => {
+		var settings = new Settings({maintenance: req.body.maintenance});
+		settings.save();
+		io.emit('maintenance');
+	})
+})
+/*app.get('/', (req, res) => {
+	res.sendFile(express.static(__dirname + '/client'));
+})*/
 
 /*
 function auth(email, password, success) {
@@ -227,15 +265,6 @@ function filterMessage(text) {
 	return false;
 }
 
-function getUsername(user, success) {
-	User.find({ _id: user }, (err, user) => {
-		if (user.length) {
-			success(user[0].username);
-			return;
-		}
-		success("Unknown");
-	})
-}
 
 function removeCredentials(object) {
 	let result = object._doc;
