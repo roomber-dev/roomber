@@ -18,15 +18,74 @@ body {
     height: 300px;
     transform-style: preserve-3d;
     transform: rotateX(-30deg);
-    animation: animate 4s linear infinite;
+    animation: animate 4s, glow 10s, ass-end 5s 10s linear infinite;
+}
+
+#elevator {
+    position: absolute;
+    width: 50%;
+    height: 90%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    animation: elevata 4s 5s, elevata-up 5s 10s;
+}
+
+@keyframes elevata {
+    0% {
+        transform: translate(-50%, -300%);
+    }
+    100% {
+        transform: translate(-50%, -50%);
+    }
+}
+@keyframes elevata-up {
+    0% {
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        transform: translate(-50%, -300%);
+    }
+}
+
+@keyframes glow {
+    0% {
+        box-shadow: 0 0 120px rgba(155, 52, 186, 0.2),
+                    0 0 200px rgba(155, 52, 186, 0.4),
+                    0 0 300px rgba(155, 52, 186, 0.6),
+                    0 0 400px rgba(155, 52, 186, 0.8),
+                    0 0 500px rgba(155, 52, 186, 1);
+    }
+    100% {
+        box-shadow: 0 0 120px rgba(255, 255, 255, 0.2),
+                    0 0 200px rgba(255, 255, 255, 0.4),
+                    0 0 300px rgba(255, 255, 255, 0.6),
+                    0 0 400px rgba(255, 255, 255, 0.8),
+                    0 0 500px rgba(255, 255, 255, 1);
+    }
+}
+
+@keyframes ass-end {
+    100% {
+        transform: translateY(-300%);
+    }
+}
+
+@keyframes dissappear {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
 
 @keyframes animate {
     0% {
-        transform: rotateX(-30deg) rotateY(0deg)
+        transform: rotateX(-30deg) rotateY(0deg);
     }
     100% {
-        transform: rotateX(-30deg) rotateY(360deg)
+        transform: rotateX(-30deg) rotateY(360deg);
     }
 }
 
@@ -75,7 +134,8 @@ body {
     0 0 200px rgba(155, 52, 186, 0.4),
     0 0 300px rgba(155, 52, 186, 0.6),
     0 0 400px rgba(155, 52, 186, 0.8),
-    0 0 500px rgba(155, 52, 186, 1)
+    0 0 500px rgba(155, 52, 186, 1);
+    animation: dissappear 10s linear infinite;
 }
 
 .bottom {

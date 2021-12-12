@@ -57,6 +57,9 @@ body, #body {
 	font-family: 'Noto Sans';
 	color: white;
 	overflow: hidden;
+}
+
+body {
 	background: url("assets/bggradient.png");
 	background-size: cover;
 }

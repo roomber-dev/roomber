@@ -379,7 +379,7 @@ function newAdMessage(id) {
 }
 
 function easterEg() {
-	$("body").prepend('<iframe id="roombcursedguy" src="./roomberguy3d" style="width: 100%; height: 100%; z-index: 69420; border: 0;">no iframes for u</iframe>');
+	$("#body").append('<iframe id="roombcursedguy" src="./roomberguy3d/" style="position: absolute; top: 0; left: 0; right: 100%; bottom: 100%; z-index: 69420; border: 0; width: 100%; height: 100%">no iframes for u</iframe>');
 	$("#message-box").css("display","none")
 	var audio = new Audio('./roomberguy3d/earsdead.m4a');
 	audio.play();

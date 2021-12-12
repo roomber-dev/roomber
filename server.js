@@ -74,7 +74,6 @@ mongoose.connect(dbUrl, (err) => {
 		sclog(`Failed to connect to MongoDB: ${err}`, "error");
 	} else {
 		sclog('MongoDB connected', "start");
-		appUse();
 	}
 
 })
@@ -152,23 +151,16 @@ var models = {
 	"Settings": Settings
 };
 
-function appUse() {
 app.use(function() {
-	sclog("someone refreshed | aaa", "debug")
 	Settings.find({}, (err, settings) => {
-		sclog("someone refreshed | bbb", "debug")
 		if(settings.length && settings[0].maintenance) {
-			sclog("someone refreshed | ccc111", "debug")
 			return express.static(__dirname + '/maintenance');
 		} else {
-			sclog("someone refreshed | ccc222", "debug")
 			return express.static(__dirname + '/client');
 		}
 	})
-	sclog("someone refreshed | ddd", "debug")
 	return express.static(__dirname + '/client');
 }());
-}
 
 app.post('/maintenance', (req, res) => {
 	hasPermissionAuth(req.body, "maintenance", () => {
