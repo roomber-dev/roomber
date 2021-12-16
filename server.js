@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 	}
 	});
 
-let maintenance = false;
+let maintenance = true;
 
 const enableNgrok = config.enableNgrok;
 
@@ -161,14 +161,19 @@ var models = {
 };
 
 app.use(function() {
-	Settings.find({}, (err, settings) => {
+	/*Settings.find({}, (err, settings) => {
 		if(settings.length && settings[0].maintenance) {
 			return express.static(__dirname + '/maintenance');
 		} else {
 			return express.static(__dirname + '/client');
 		}
-	})
-	return express.static(__dirname + '/client');
+	})*/
+
+	if(maintenance) { // someever idk if this is bad code, it and is efficient so it's fine
+		return express.static(__dirname + '/maintenance');
+	} else {
+		return express.static(__dirname + '/client');
+	}
 }());
 
 app.post('/maintenance', (req, res) => {
