@@ -204,7 +204,7 @@ loaded(function() {
 
 	$(".new-server").click(function() {
 		popup("Join server", `
-			<input type="text" placeholder="Server ID" id="server" class="textbox"/>
+			<input type="text" placeholder="Server ID" id="serveridtextbox" class="textbox"/>
 		`, [{
 			label: "Cancel",
 			click: function(p) {
@@ -213,10 +213,11 @@ loaded(function() {
 		}, {
 			label: "OK",
 			click: function(p) {
-				p.close();
 				setTimeout(function() {
-					joinServer($("#server").val());
+					console.log($(`#serveridtextbox`));
+					joinServer($("#serveridtextbox").val());
 				}, 500);
+				p.close();
 			}
 		}])
 	});

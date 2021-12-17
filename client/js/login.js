@@ -126,14 +126,15 @@ function checkSetup() {
 
 function loginInit() {
 	let id = getCookie("session");
-	if(id == "") {
+	let user = getCookie("userid");
+	if(id == "" || user == "") {
 		session = {};
 		reg(checkSetup);
 	} else {
 		session = {
 			session: id,
 			username: getCookie("username"),
-			user: getCookie("userid")
+			user: user
 		};
 		logIn();
 		checkSetup();

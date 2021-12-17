@@ -19,7 +19,7 @@ const transporter = nodemailer.createTransport({
 	}
 	});
 
-let maintenance = true;
+let maintenance = false;
 
 const enableNgrok = config.enableNgrok;
 
@@ -221,6 +221,10 @@ function hasPermission(user, permission, callback) {
 
 function hasPermissions(user, permissions, callback) {
 	User.find({ _id: user }, (err, user) => {
+		if(err) {
+			callback(false);
+			return sclog(err, "error");
+		}
 		if (user.length) {
 			Permission.find({ name: user[0].permission }, (err, perm) => {
 				if (perm.length) {
@@ -356,7 +360,11 @@ app.post('/getMessages', (req, res) => {
 
 app.post('/joinServer', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
+		sclog("auth works","debug");
 		Server.find({ _id: req.body.server }, (err, server) => {
+			if(err) {
+				return sclog(err, "error");
+			}
 			if (server.length > 0) {
 				User.find({ _id: req.body.user }, (err, user) => {
 					var user = user[0];
@@ -724,7 +732,11 @@ app.post('/setup', (req, res) => {
 })
 
 app.post('/getSetup', (req, res) => {
-	User.find({ _id: req.body.user }, (err, user) => {
+	User.find({ _id: req.body.user || "" }, (err, user) => {
+		if(err) {
+			res.send(false);
+			return sclog(err, "error");
+		}
 		if (user.length) {
 			if (!("setup" in user[0]._doc)) {
 				res.send(true);
