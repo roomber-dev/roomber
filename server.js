@@ -90,6 +90,7 @@ mongoose.connect(dbUrl, (err) => {
 let msgSchema = {
 	author: String,
 	message: String,
+	xtra: Boolean,
 	timestamp: Number,
 	flagged: Boolean,
 	removed: Boolean,
@@ -622,6 +623,7 @@ app.post('/messages', (req, res) => {
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
 		User.find({ _id: msg.author }, (err, user) => {
+			msg.xtra = user[0]._doc.xtra;
 			Channel.countDocuments({ _id: msg.channel }, (err, count) => {
 				if (count > 0) {
 					var message = new Message(msg);

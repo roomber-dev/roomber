@@ -22,7 +22,18 @@ function logIn() {
 	$("#login").append('<p class="username">' + session.username + '</p>');
 	$("#login").append('<button id="logout" class="button"><i class="material-icons">exit_to_app</i></button>');
 	$("#logout").click(function() {
-		logOut();
+		popup("Log out", `Are you sure you want to log out?`, [{
+			label: "No",
+			click: function(p) {
+				p.close();
+			}
+		}, {
+			label: "Yes",
+			click: function(p) {
+				logOut();
+				p.close();
+			}
+		}]);
 	});
 }
 

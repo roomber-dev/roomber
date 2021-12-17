@@ -11,7 +11,7 @@ function setupNotImplemented() {
 }
 
 function setupPickProfilePicture() {
-	popup("Pick a profile picture", `just type a url lol<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
+	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
 		label: "Cancel",
 		click: function(p) {
 			p.close();
