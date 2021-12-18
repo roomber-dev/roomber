@@ -255,7 +255,7 @@ function newMessage(message) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
 	if(message.xtra) {
-		xtraHtml = '<div class="xtraBadge"><span>xtra</span></div>';
+		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
 	
 
@@ -265,7 +265,7 @@ function newMessage(message) {
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username">${usernames[message.author]}</div>${xtraHtml} ${flagHtml}
+			            <div class="username-badges"><div class="username">${usernames[message.author]}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([

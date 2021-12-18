@@ -38,6 +38,7 @@ function addMessage(message, scroll = true, before = false) {
 		});
 	}
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
+	ldmUpdate();
 
 	scroll && chatScrollDown();
 }

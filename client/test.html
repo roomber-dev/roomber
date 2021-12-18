@@ -1,32 +1,180 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="js/platform.js"></script>
-<script src="js/utilities.js"></script>
-<link rel="stylesheet" href="style.css">
+<!DOCTYPE html>
+<html lang="en">
 
-<style>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>user profile</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
 
-</style>
+    <style>
+        * {
+            padding: 0;
+            margin: 0;
+        }
 
-<div id="messages">
-    <div class="message glass" id="61aca8e82ebb0e8d29bdf02a">
-        <div class="flex">
-            <img src="avatars/default.png" class="avatar">
-            <div class="flex-down msg-embeds">
-                <div class="flex msg">
-                    <div class="flex-down msg-flex">
-                        <div class="username">smemover</div>
-                        <div class="msgln">hlelo</div>
-                    </div>
-                </div>
-                <div class="embeds"></div>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            font-size: 20px;
+            font-family: 'Noto Sans';
+            color: white;
+            overflow: hidden;
+            background: url("assets/bggradient.png");
+            background-size: cover;
+        }
+
+        .uprofile {
+            width: 204px;
+            height: 300px;
+            border-radius: 8px;
+            border: 3px solid black;
+            background: linear-gradient(0deg, rgba(113, 36, 137, 1) 70%, rgba(0, 149, 186, 1) 100%);
+            position: relative;
+        }
+
+
+        .uprofile .upavatar img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin-right: 0px;
+            background-color: rgba(0, 0, 0, 0.1);
+            vertical-align: middle;
+            margin-top: 5px;
+        }
+
+        .center {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .center-text-parent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username {
+            font-weight: bold;
+            color: white;
+            padding: 2px 4px;
+            font-size: 120%;
+            border-radius: 4px;
+            margin: 0 5px 0 0;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .uprofile .username {
+            font-size: 1rem;
+            margin: 0 0 0 0;
+            margin-top: 2px;
+        }
+
+
+        .uprofile-aboutme-content {
+            font-size: 0.7rem;
+            padding-top: 5px;
+        }
+
+        .uprofile-aboutme {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            outline: 3px solid rgba(0, 0, 0, 0.15);
+            width: 80%;
+            margin: 10px;
+            padding: 4px;
+        }
+
+        @keyframes dissappear {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+
+        .xtraBadge {
+            margin-left: 7px;
+            text-transform: capitalize;
+            color: black;
+            font-weight: bolder;
+            border-radius: 4px;
+            padding: 4px;
+            font-size: 0.7rem;
+            background: linear-gradient(to right, orange, yellow);
+        }
+
+        .button {
+            background: #1B1B1B;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            transition: 0.5s background;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.4);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+
+        .megasmall {
+            transform: scale(80%);
+        }
+
+        .uprofile-edit {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+    </style>
+
+
+</head>
+
+<body>
+    <div class="uprofile">
+        <button class="button uprofile-edit"><i class="material-icons megasmall">create</i></button>
+        <div class="upavatar center">
+            <img src="avatars/default.png">
+        </div>
+        <div class="center-text-parent">
+            <p class="username">
+                neksodebe
+            </p>
+            <div class="xtraBadge">xtra</div>
+
+        </div>
+        <div class="center">
+                <div class="uprofile-aboutme">
+                    <p class="uprofile-aboutme-content center-text-parent">
+                        Hi! My name is neksodebe and I am the owner of Roomber!
+                    </p>
             </div>
         </div>
+        <!--<div class="center">
+            <p>Public Servers</p>
+        </div>-->
     </div>
-</div>
 
-<script>
 
-    $(document).ready(() => {
-        createEmbed("61aca8e82ebb0e8d29bdf02a", "imgur.com", "en-GB");
-    })
-</script>
+    </div>
+</body>
+
+</html>

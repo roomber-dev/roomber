@@ -1,0 +1,81 @@
+
+        .uprofile-edit {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+
+        .uprofile {
+            width: 204px;
+            height: 300px;
+            border-radius: 8px;
+            border: 3px solid black;
+            background: linear-gradient(0deg, rgba(113, 36, 137, 1) 70%, rgba(0, 149, 186, 1) 100%);
+            position: relative;
+        }
+
+
+        .uprofile .upavatar img {
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            margin-right: 0px;
+            background-color: rgba(0, 0, 0, 0.1);
+            vertical-align: middle;
+            margin-top: 5px;
+        }
+
+        .center {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+
+        .center-text-parent {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .username {
+            font-weight: bold;
+            color: white;
+            padding: 2px 4px;
+            font-size: 120%;
+            border-radius: 4px;
+            margin: 0 5px 0 0;
+            display: inline-block;
+            background-color: rgba(0, 0, 0, 0.2);
+        }
+
+        .uprofile .username {
+            font-size: 1rem;
+            margin: 0 0 0 0;
+            margin-top: 2px;
+        }
+
+
+        .uprofile-aboutme-content {
+            font-size: 0.7rem;
+            padding-top: 5px;
+        }
+
+        .uprofile-aboutme {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            outline: 3px solid rgba(0, 0, 0, 0.15);
+            width: 80%;
+            margin: 10px;
+            padding: 4px;
+        }
+
+        @keyframes dissappear {
+            0% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }

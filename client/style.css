@@ -471,12 +471,7 @@ body {
 
 
 .xtraBadge {
-	top: 7px;
-	position: absolute;
-	display: inline-block;
-}
-
-.xtraBadge span {
+	margin-left: 7px;
 	text-transform: capitalize;
 	color: black;
 	font-weight: bolder;
@@ -484,6 +479,19 @@ body {
 	padding: 4px;
 	font-size: 0.7rem;
 	background: linear-gradient(to right, orange, yellow);
+}
+
+.message .badges {
+	display: flex;
+}
+
+.message .badges * {
+	margin-right: 4px;
+}
+
+.username-badges {
+	display:flex;
+	align-items: center;
 }
 
 @media screen and (max-width: 600px) {
