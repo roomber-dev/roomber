@@ -263,13 +263,15 @@ function filterMessage(text) {
 		"nigger",
 		"nigga",
 		"pussy",
-		"ass",
 		"fuck",
 		"bitch",
 		"cum",
 		"your ip",
 		"you're ip",
-		"ur ip"
+		"ur ip",
+		"ur location",
+		"your location",
+		"you're location"
 	]) {
 		if (text.includes(word)) return true;
 	}
