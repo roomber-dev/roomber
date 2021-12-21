@@ -195,7 +195,6 @@ var User = mongoose.model(
 		username: String,
 		password: String,
 		email: String,
-		xtra: Boolean,
 		permission: String,
 		setup: Boolean,
 		avatar: String,
@@ -701,7 +700,6 @@ app.post(apiPath+'/messages', (req, res) => {
 	if (filterMessage(msg.message)) msg.flagged = true;
 	auth(msg.author, req.body.session, () => {
 		User.find({ _id: msg.author }, (err, user) => {
-			msg.xtra = user[0]._doc.xtra;
 			Channel.countDocuments({ _id: msg.channel }, (err, count) => {
 				if (count > 0) {
 					var message = new Message(msg);

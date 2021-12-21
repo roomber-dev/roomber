@@ -255,18 +255,18 @@ function newMessage(message) {
 	if (message.flagged) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
-	if(message.xtra) {
+	if(cache[message.author].xtra) {
 		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
 	
 
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
-		    <img src="${avatars[message.author]}" class="avatar">
+		    <img src="${cache[message.author].avatar}" class="avatar">
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username">${usernames[message.author]}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([

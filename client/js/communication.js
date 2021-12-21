@@ -1,5 +1,4 @@
-usernames = {};
-avatars = {};
+cache = {};
 
 channel = "";
 
@@ -52,9 +51,8 @@ async function adAppend(scroll = true) {
 }
 
 function cacheUser(user) {
-	if(!Object.keys(usernames).includes(user._id)) {
-		avatars[user._id] = user.avatar;
-		usernames[user._id] = user.username;
+	if(!Object.keys(cache).includes(user._id)) {
+		cache[user._id] = user;
 	}
 }
 
