@@ -103,3 +103,13 @@
     height: 100%;
     z-index: 1001;
 }
+
+.light .popup-main {
+    background: #e5e5e5;
+    outline: 1px solid rgba(255,255,255,0.5);
+}
+
+.light .popup-footer {
+    background: rgb(225,224,224,0.8);
+    outline: 1px solid rgba(255,255,255,0.5);
+}

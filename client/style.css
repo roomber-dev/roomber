@@ -365,6 +365,11 @@ body {
 	border-radius: 6px;
 }
 
+.light .textbox {
+	background: rgb(255,255,255);
+	border: 1px solid rgba(0,0,0,0.3);
+}
+
 #loading-back {
 	position: absolute;
 	left: 0;

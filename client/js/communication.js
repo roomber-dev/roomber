@@ -36,9 +36,9 @@ function addMessage(message, scroll = true, before = false) {
 		$(".message").first().find("img").on("error", function() {
 			$(this).prop("src", "avatars/default.png")
 		});
+		ldmUpdate();
 	}
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
-	ldmUpdate();
 
 	scroll && chatScrollDown();
 }
@@ -72,37 +72,38 @@ function getMessages(before = false, scroll = false) {
 		cclog("last message id " + $(".message").last().prop("id"), "debug");
 		cclog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
-	$.post(serverUrl+'/getMessages', {fetch: toFetch, channel: channel},
-		function(data) {
-			if(data.error) {
-				cclog(data.error, "error");
-				return;
-			}
+	$.post(serverUrl+'/getMessages', {fetch: toFetch, channel: channel}, function(data) {
+		if(data.error) {
+			cclog(data.error, "error");
+			return;
+		}
 
-			var forEach = new Promise(function(resolve, reject) {
-				cclog("fetched " + data.messages.length + " messages", "debug");
-				if(data.messages.length == 0) resolve();
-				if(before == false) data.messages = data.messages.reverse();
-				cacheUsers(data.users, function() {
-					data.messages.forEach(function(message, index, array) {
-						addMessage(message, false, before);
-						if (index === array.length - 1) resolve();
-					});
+		var forEach = new Promise(function(resolve, reject) {
+			cclog("fetched " + data.messages.length + " messages", "debug");
+			if(data.messages.length == 0) resolve();
+			if(before == false) data.messages = data.messages.reverse();
+			cacheUsers(data.users, function() {
+				data.messages.forEach(function(message, index, array) {
+					addMessage(message, false, before);
+					if (index === array.length - 1) resolve();
 				});
 			});
-			if(before) {
-				forEach.then(function() {
-					scrolledMessage[0].scrollIntoView();
-					fetchingMessages = false;
-					delete scrolledMessage;
-				});
-			}
-			if(scroll) {
-				forEach.then(function() {
-					$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
-				});
-			}
-		})
+		});
+		if(before) {
+			forEach.then(function() {
+				scrolledMessage[0].scrollIntoView();
+				fetchingMessages = false;
+				delete scrolledMessage;
+			});
+		} else {
+			ldmUpdate();
+		}
+		if(scroll) {
+			forEach.then(function() {
+				$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
+			});
+		}
+	})
 }
 
 function sendMessage(message) {

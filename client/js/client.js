@@ -6,6 +6,7 @@ canEditAndDeleteAny = false;
 toFetch = 0;
 fetchingMessages = false;
 servers = [];
+ldmOn = getCookie("ldm") === 'true';
 
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
@@ -142,11 +143,9 @@ function onSetupFinished(t) {
 }
 
 loaded(function () {
-	window.ldmOn = Boolean(getCookie("ldm"));
 	$("#loading-back").fadeOut(1000, function () {
 		$("#loading-back").remove();
 	});
-	ldmUpdate();
 
 	$("#send").click(function () {
 		if ($("#message").val().trim() == "") {
@@ -227,6 +226,8 @@ loaded(function () {
 			}
 		}])
 	});
+
+	ldmUpdate();
 })
 
 function newMessage(message) {
@@ -426,10 +427,8 @@ function ldmToggle() {
 function ldmUpdate() {
 	setCookie("ldm",ldmOn);
 	if(ldmOn == true) {
-		cclog("ldm is on", "debug");
 		$(".glass").css("backdrop-filter", "blur(0px)");
 	} else if(ldmOn == false) {
-		cclog("ldm is off", "debug");
 		$(".glass").css("backdrop-filter", "blur(25px)");
 	}
 }
