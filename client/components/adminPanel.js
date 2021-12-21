@@ -31,7 +31,7 @@ AdminPanel = {
         })
 
         let that = this;
-        $.post('/getMessages', {flagged: true}, function(data) {
+        $.post(serverUrl+'/getMessages', {flagged: true}, function(data) {
             data.forEach(function(message) {
                 that.addFlaggedMessage(message);
             });

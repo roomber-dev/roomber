@@ -20,7 +20,7 @@ function setupPickProfilePicture() {
 		label: "OK",
 		click: function(p) {
 			let avatar = $("#avatarInput").val();
-			$.post("/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
+			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
 				$("#setup-pfp img").prop("src", avatar);
 				$("#login img").prop("src", avatar);
 			});
