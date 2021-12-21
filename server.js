@@ -23,7 +23,7 @@ const varToString = varObj => Object.keys(varObj)[0]
 
 
 
-/*var arr = [] // Arr, pirate!
+/*var arr = [] // Arr, daniel!
 Object.keys(require("./package.json").dependencies).forEach((value, index) => {
 
 	arr.push({
@@ -77,6 +77,8 @@ const roomber = {
 	]
 }
 
+const betaCode = "587162";
+
 function calculateCreatorImportance(name) { // lol why did i make this function
 	let importance = 0;
 	roomber.creators.map(function (creator) {
@@ -104,7 +106,7 @@ const jobimportance = {
 
 sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
-let maintenance = false;
+let maintenance = true;
 
 const enableNgrok = config.enableNgrok;
 
@@ -232,46 +234,32 @@ var Server = mongoose.model(
 	}
 )
 
-var Settings = mongoose.model(
-	'Settings',
-	{
-		maintenance: Boolean
-	}
-)
-
 var models = {
 	"Permission": Permission,
 	"Message": Message,
 	"User": User,
 	"Session": Session,
 	"Channel": Channel,
-	"Server": Server,
-	"Settings": Settings
+	"Server": Server
 };
 
-app.use(function () {
-	/*Settings.find({}, (err, settings) => {
-		if(settings.length && settings[0].maintenance) {
-			return express.static(__dirname + '/maintenance');
-		} else {
-			return express.static(__dirname + '/client');
+app.use((req, res, next) => {
+	if(maintenance) {
+		let valid = false;
+		if(req.header("Referer") && req.header("Referer").split("code=")[1] == betaCode) {
+			valid = true;
 		}
-	})*/
-
-	if (maintenance) { // someever idk if this is bad code, it and is efficient so it's fine
-		return express.static(__dirname + '/maintenance');
-	} else {
-		return express.static(__dirname + '/client');
+		if(req.query.code == betaCode) {
+			valid = true;
+		}
+		if(valid) {
+			return express.static(__dirname + '/client')(req,res,next);
+		}
+		return express.static(__dirname + '/maintenance')(req,res,next);
 	}
-}());
+	return express.static(__dirname + '/client')(req,res,next);
+});
 
-app.post(apiPath+'/maintenance', (req, res) => {
-	hasPermissionAuth(req.body, "maintenance", () => {
-		var settings = new Settings({ maintenance: req.body.maintenance });
-		settings.save();
-		io.emit('maintenance');
-	})
-})
 /*app.get('/', (req, res) => {
 	res.sendFile(express.static(__dirname + '/client'));
 })*/
@@ -522,7 +510,7 @@ app.post(apiPath+'/chat', (req, res) => {
 						channel.save(() => {
 							res.send(channel._id);
 						});
-					}
+					}Hi
 				})
 			}
 		})
@@ -613,12 +601,12 @@ app.post(apiPath+'/createChannel', (req, res) => {
  */
 function sendVerifyEmail(options, callback) {
 	const code = Math.floor(100000 + Math.random() * 900000).toString();
-	var msghtml = "<center><img src='http://roomber-dev.herokuapp.com/assets/roomberfull2.png' alt='Roomber' style='font-size: 2.5rem;color:black' height='200'></center><div style='border:4px solid #a7a7a7;border-radius:4px;width:80%;height:40%;background:#fff;width:50%;margin:0 auto;padding:10px;'><h1 style='color: black;'>Hi <p style='font-weight:700;padding:2px 4px;border-radius:4px;margin:0 5px 0 0;display:inline-block;background-color:rgba(0,0,0,.2)'>{{username}}</p>, welcome to Roomber!</h1><br>Thanks for creating a Roomber account! Unfortunately you have to confirm your email address before you start. But that's no problem, just Ctrl+C & Ctrl+V this code to finish everything up!<br><p style='text-align:center;color:#000;font-size:4rem;font-family:Arial,Helvetica,sans-serif'>{{vcode}}</p></div>"
+	var msghtml = `<center><img src='http://roomber-dev.herokuapp.com/assets/roomberfull2.png' alt='Roomber' style='font-size: 2.5rem;color:black' height='200'></center><div style='border:4px solid #a7a7a7;border-radius:4px;width:80%;height:40%;background:#fff;width:50%;margin:0 auto;padding:10px;'><h1 style='color: black;'>Hi <p style='font-weight:700;padding:2px 4px;border-radius:4px;margin:0 5px 0 0;display:inline-block;background-color:rgba(0,0,0,.2)'>${username}</p>, welcome to Roomber!</h1><br>Thanks for creating a Roomber account! Unfortunately you have to confirm your email address before you start. But that's no problem, just Ctrl+C & Ctrl+V this code to finish everything up!<br><p style='text-align:center;color:#000;font-size:4rem;font-family:Arial,Helvetica,sans-serif'>${vcode}</p></div>`
 	const mailOptions = {
 		from: 'Roomber Verification',
 		to: options.address,
 		subject: 'Verify your Roomber account',
-		html: msghtml.replace(/{{username}}/g, options.username).replace(/{{vcode}}/g, code)
+		html: msghtml
 	};
 	transporter.sendMail(mailOptions, (err, info) => {
 		console.log(err, info);

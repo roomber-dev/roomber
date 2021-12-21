@@ -41,37 +41,29 @@
         rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        const serverUrl = "api/v1";
 
-        let textboxes = [1, 2, 3, 4, 5, 6]
         let code = [];
         $(document).ready(function () {
-            textboxes.forEach(function (value, index) {
-                $("#" + value).keypress(function () {
-                    if ($("#" + value).val().length > 1) {
-                        $("#" + value).val($("#" + value).val().charAt(0));
+            $(".textbox").keyup(function() {
+                if($(this).val().charAt(0) != "") {
+                    const idx = $(this).data("idx");
+                    code[idx] = $(this).val().charAt(0);
+                    $(`.textbox[data-idx="${idx + 1}"]`).focus();
+
+                    if(code.length == 6) {
+                        window.location.href = "/?code=" + code.join("");
                     }
-                    console.log("clickd")
-                    code[index] = $(this).val();
-                    console.log(code.join(""))
-                    if(textboxes[value+1] == undefined) {
-                        check();
-                    }
-                    console.log($(this))
-                    $("#"+(value+1)).focus();
-                });
+                }
             })
         });
-
-        function check() {
-
-        }
     </script>
 </head>
 
 <body>
     <div id="loading-back">
-        <img alt="" src="assets/roomber-logo.png" id="loading-image">
         <div id="fun-fact-container">
+            <img alt="" src="assets/roomber-logo.png" id="loading-image">
             <p id="fun-fact-title">Notice</p>
             <p id="fun-fact">Roomber is currently in maintenance mode, that means it has a game-breaking bug, or it's
                 just in the works.<br>There's a high chance that info about this has been posted on our <a
@@ -80,19 +72,12 @@
                     href="https://discord.gg/uCrrUcm8wR" style="text-decoration: underline; color:white;">discord
                     server</a> down below.</p>
             <div class="codestuff">
-                <input class="textbox" id="1" type="number" min="0" max="9">
-
-                <input class="textbox" id="2" type="number" min="0" max="9">
-
-                <input class="textbox" id="3" type="number" min="0" max="9">
-
-                <input class="textbox" id="4" type="number" min="0" max="9">
-
-                <input class="textbox" id="5" type="number" min="0" max="9">
-
-                <input class="textbox" id="6" type="number" min="0" max="9">
-
-
+                <input class="textbox" data-idx="0" type="number">
+                <input class="textbox" data-idx="1" type="number">
+                <input class="textbox" data-idx="2" type="number">
+                <input class="textbox" data-idx="3" type="number">
+                <input class="textbox" data-idx="4" type="number">
+                <input class="textbox" data-idx="5" type="number">
             </div>
         </div>
 
