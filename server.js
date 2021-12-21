@@ -1,3 +1,43 @@
+const varToString = varObj => Object.keys(varObj)[0]
+
+/*require("./exports/imports.json").map(function(x) {
+	if(x.addons.func != null) {
+		if(x.addons.arg.length) {
+			let argstuff = [];
+			x.addons.arg.forEach((value, index) => {
+				if(x.addons.isvar[index]) {
+					argstuff.push(global[value])
+				} else {
+					argstuff.push(value)
+				}
+			})
+		global[x.name] = require(x.path)[x.addons.func](...argstuff)
+		} else {
+			global[x.name] = require(x.path)[x.addons.func]
+		}
+	} else {
+    	global[x.name] = require(x.path)
+	}
+});*/
+
+
+
+
+/*var arr = [] // Arr, pirate!
+Object.keys(require("./package.json").dependencies).forEach((value, index) => {
+
+	arr.push({
+		name: value,
+		path: value,
+		addons: {
+			func: null,
+			arg: [],
+			isvar: []
+		}
+	})
+})
+fs.writeFileSync("./exports/imports.json", JSON.stringify(arr, " ", 4))*/
+
 const path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -6,18 +46,63 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var mongoose = require('mongoose');
 var config = require('./config.js');
+const apiPath = config.apiPath;
 var chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 const ogs = require('open-graph-scraper');
 const nodemailer = require('nodemailer');
+const fs = require('fs');
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
-	user: 'verify.roomber@gmail.com',
-	pass: config.notfunny
+		user: 'verify.roomber@gmail.com',
+		pass: config.notfunny
 	}
-	});
+});
+const packagefile = require('./package.json')
+
+const roomber = {
+	version: packagefile.version,
+	name: "Roomber",
+	previousnames: [ // highest = latest
+		"XtraMessage"
+	],
+	owner: packagefile.author || "neksodebe",
+	creators: [
+		{ name: "neksodebe", jobs: ["programmer", "tester", "database", "design"], bestat: ["programmer", "tester"], role: "owner" },
+		{ name: "SomeEver", jobs: ["programmer", "design", "database"], bestat: ["design", "database"], role: "co-owner" },
+		{ name: "OlxsiU", jobs: ["graphic","design"], bestat: ["graphic"] },
+		{ name: "Gunner", jobs: ["tester","suggestor"], bestat: ["tester","suggestor"] }
+	]
+}
+
+function calculateCreatorImportance(name) { // lol why did i make this function
+	let importance = 0;
+	roomber.creators.map(function (creator) {
+		if (creator.name == name) {
+			creator.jobs.forEach((value) => {
+				if (creator.bestat.includes(value)) importance += 5
+				importance += jobimportance[value];
+			})
+		}
+	})
+	return importance;
+}
+const jobimportance = {
+	"programmer": 10,
+	"database": 8,
+	"graphic": 7,
+	"design": 6,
+	"suggestor": 5,
+	"tester": 4
+}
+
+/*roomber.creators.forEach((value) => {
+	sclog(value.name + "'s importance level is " + calculateCreatorImportance(value.name), "debug");
+})*/
+
+sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
 let maintenance = false;
 
@@ -54,6 +139,9 @@ function getRandomInt(min, max) {
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+
+sclog(`Starting 'Roomber v${roomber.version}'`)
 
 if (enableNgrok) {
 	(async function () {
@@ -161,7 +249,7 @@ var models = {
 	"Settings": Settings
 };
 
-app.use(function() {
+app.use(function () {
 	/*Settings.find({}, (err, settings) => {
 		if(settings.length && settings[0].maintenance) {
 			return express.static(__dirname + '/maintenance');
@@ -170,16 +258,16 @@ app.use(function() {
 		}
 	})*/
 
-	if(maintenance) { // someever idk if this is bad code, it and is efficient so it's fine
+	if (maintenance) { // someever idk if this is bad code, it and is efficient so it's fine
 		return express.static(__dirname + '/maintenance');
 	} else {
 		return express.static(__dirname + '/client');
 	}
 }());
 
-app.post('/maintenance', (req, res) => {
+app.post(apiPath+'/maintenance', (req, res) => {
 	hasPermissionAuth(req.body, "maintenance", () => {
-		var settings = new Settings({maintenance: req.body.maintenance});
+		var settings = new Settings({ maintenance: req.body.maintenance });
 		settings.save();
 		io.emit('maintenance');
 	})
@@ -222,7 +310,7 @@ function hasPermission(user, permission, callback) {
 
 function hasPermissions(user, permissions, callback) {
 	User.find({ _id: user }, (err, user) => {
-		if(err) {
+		if (err) {
 			callback(false);
 			return sclog(err, "error");
 		}
@@ -309,7 +397,7 @@ io.on('connection', socket => {
 })
 
 
-app.post('/embed', (req, res) => {
+app.post(apiPath+'/embed', (req, res) => {
 	ogs({
 		url: req.body.url,
 		headers: {
@@ -327,7 +415,7 @@ app.post('/embed', (req, res) => {
 	});
 })
 
-app.post('/getMessages', (req, res) => {
+app.post(apiPath+'/getMessages', (req, res) => {
 	if (req.body.fetch) {
 		Channel.countDocuments({ _id: req.body.channel }, (err, count) => {
 			if (count > 0) {
@@ -361,11 +449,11 @@ app.post('/getMessages', (req, res) => {
 	}
 })
 
-app.post('/joinServer', (req, res) => {
+app.post(apiPath+'/joinServer', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
-		sclog("auth works","debug");
+		sclog("auth works", "debug");
 		Server.find({ _id: req.body.server }, (err, server) => {
-			if(err) {
+			if (err) {
 				return sclog(err, "error");
 			}
 			if (server.length > 0) {
@@ -399,7 +487,7 @@ app.post('/joinServer', (req, res) => {
 	})
 })
 
-app.post('/getServers', (req, res) => {
+app.post(apiPath+'/getServers', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			Server.find({ _id: { "$in": user[0].servers } }, (err, servers) => {
@@ -409,7 +497,7 @@ app.post('/getServers', (req, res) => {
 	})
 })
 
-app.post('/getChannels', (req, res) => {
+app.post(apiPath+'/getChannels', (req, res) => {
 	Channel.find({ server: req.body.server }, (err, channels) => {
 		if (channels.length) {
 			res.send(channels);
@@ -417,7 +505,7 @@ app.post('/getChannels', (req, res) => {
 	})
 })
 
-app.post('/chat', (req, res) => {
+app.post(apiPath+'/chat', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		Channel.find({ chatParticipants: [req.body.user, req.body.recipient] }, (err, channel) => {
 			if (channel.length) {
@@ -441,7 +529,7 @@ app.post('/chat', (req, res) => {
 	})
 })
 
-app.post('/chats', (req, res) => {
+app.post(apiPath+'/chats', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		Channel.find({ chatParticipants: req.body.user }, (err, channels) => {
 			if (channels.length) {
@@ -463,7 +551,7 @@ app.post('/chats', (req, res) => {
 	})
 })
 
-app.post('/createServer', (req, res) => {
+app.post(apiPath+'/createServer', (req, res) => {
 	Server.countDocuments({ name: req.body.name }, (err, count) => {
 		if (count > 0) {
 			res.sendStatus(409);
@@ -479,7 +567,7 @@ app.post('/createServer', (req, res) => {
 	})
 })
 
-app.post('/createChannel', (req, res) => {
+app.post(apiPath+'/createChannel', (req, res) => {
 	var channel = new Channel({
 		name: req.body.name,
 		type: "text",
@@ -500,7 +588,7 @@ app.post('/createChannel', (req, res) => {
 	})
 })
 
-/*app.post('/testsend', (req, res) => {
+/*app.post(apiPath+'/testsend', (req, res) => {
 
 	sendVerifyEmail(req.body, (err,code) => {
 		if(err) {
@@ -534,7 +622,7 @@ function sendVerifyEmail(options, callback) {
 	};
 	transporter.sendMail(mailOptions, (err, info) => {
 		console.log(err, info);
-		if(err) {
+		if (err) {
 			callback(err);
 		} else {
 			callback(err, code);
@@ -542,25 +630,25 @@ function sendVerifyEmail(options, callback) {
 	})
 }
 
-app.post('/userid', (req, res) => {
+app.post(apiPath+'/userid', (req, res) => {
 	User.find(req.body, (err, user) => {
 		res.send(user[0]._id);
 	})
 })
 
-app.post('/can', (req, res) => {
+app.post(apiPath+'/can', (req, res) => {
 	hasPermission(req.body.user, req.body.permission, result => {
 		res.send(result);
 	})
 })
 
-app.post('/hasPermissions', (req, res) => {
+app.post(apiPath+'/hasPermissions', (req, res) => {
 	hasPermissions(req.body.user, req.body["permissions[]"], result => {
 		res.send(result);
 	})
 })
 
-app.post('/getUsers', (req, res) => {
+app.post(apiPath+'/getUsers', (req, res) => {
 	let ids
 	if (req.body["users[]"].constructor === Array) {
 		ids = req.body["users[]"].map(user => mongoose.Types.ObjectId(user));
@@ -576,7 +664,7 @@ app.post('/getUsers', (req, res) => {
 	});
 })
 
-app.post('/broadcast', (req, res) => {
+app.post(apiPath+'/broadcast', (req, res) => {
 	if (!matchCharacterLimit("broadcast", req.body.message)) {
 		res.send({ error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters." });
 		return;
@@ -586,7 +674,7 @@ app.post('/broadcast', (req, res) => {
 	})
 })
 
-app.post('/hasGroup', (req, res) => {
+app.post(apiPath+'/hasGroup', (req, res) => {
 	User.find({ _id: req.body.user, permission: req.body.group }, (err, user) => {
 		if (user.length) {
 			res.send(true);
@@ -596,7 +684,7 @@ app.post('/hasGroup', (req, res) => {
 	})
 })
 
-app.post('/modifyDb', (req, res) => {
+app.post(apiPath+'/modifyDb', (req, res) => {
 	hasPermissionAuth(req.body, "db.manage", () => {
 		switch (req.body.command) {
 			case "clear_collection": {
@@ -611,7 +699,7 @@ app.post('/modifyDb', (req, res) => {
 	})
 })
 
-app.post('/messages', (req, res) => {
+app.post(apiPath+'/messages', (req, res) => {
 	let msg = {}
 	Object.keys(msgSchema).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
@@ -646,7 +734,7 @@ app.post('/messages', (req, res) => {
 	})
 })
 
-app.post('/editMessage', (req, res) => {
+app.post(apiPath+'/editMessage', (req, res) => {
 	if (!matchCharacterLimit("message", req.body.newMessage)) {
 		res.send({ error: "Your message is past the limit of " + characterLimits["message"][1] + " characters." });
 		return;
@@ -682,7 +770,7 @@ app.post('/editMessage', (req, res) => {
 	})
 })
 
-app.post('/deleteMessage', (req, res) => {
+app.post(apiPath+'/deleteMessage', (req, res) => {
 	auth(req.body.deleter, req.body.session, () => {
 		hasPermission(req.body.deleter, "messages.delete_any", result => {
 			if (result == true) {
@@ -716,7 +804,7 @@ app.post('/deleteMessage', (req, res) => {
 	})
 })
 
-app.post('/setup', (req, res) => {
+app.post(apiPath+'/setup', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			if (user.length) {
@@ -734,10 +822,9 @@ app.post('/setup', (req, res) => {
 		})
 	})
 })
-
-app.post('/getSetup', (req, res) => {
+app.post(apiPath+'/getSetup', (req, res) => {
 	User.find({ _id: req.body.user || "" }, (err, user) => {
-		if(err) {
+		if (err) {
 			res.send(false);
 			return sclog(err, "error");
 		}
@@ -751,7 +838,7 @@ app.post('/getSetup', (req, res) => {
 	})
 })
 
-app.post('/register', (req, res) => {
+app.post(apiPath+'/register', (req, res) => {
 	if (!matchCharacterLimit("username", req.body.username)) {
 		res.send({ error: "Your username is past the limit of " + characterLimits["username"][1] + " characters." });
 		return;
@@ -794,7 +881,7 @@ app.post('/register', (req, res) => {
 	})
 })
 
-app.post('/changeProfile', (req, res) => {
+app.post(apiPath+'/changeProfile', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			profile[req.body.toChange](user[0], req.body[req.body.toChange]);
@@ -803,7 +890,7 @@ app.post('/changeProfile', (req, res) => {
 	})
 })
 
-app.post('/profile', (req, res) => {
+app.post(apiPath+'/profile', (req, res) => {
 	User.find({ _id: req.body.user }, (err, user) => {
 		res.send({
 			avatar: user[0].avatar
@@ -811,7 +898,7 @@ app.post('/profile', (req, res) => {
 	})
 })
 
-app.post('/login', (req, res) => {
+app.post(apiPath+'/login', (req, res) => {
 	if (!matchCharacterLimit("email", req.body.email)) {
 		res.send({ error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters." });
 		return;
@@ -840,11 +927,11 @@ app.post('/login', (req, res) => {
 	})
 })
 
-app.post('/logout', (req, res) => {
+app.post(apiPath+'/logout', (req, res) => {
 	Session.deleteOne({ _id: req.body.session, user: req.body.user }, () => { })
 })
 
-const PORT = process.env.PORT ||5000;
+const PORT = process.env.PORT || 5000;
 
 var server = http.listen(PORT, () => {
 	sclog(`Server running on port ${server.address().port}`, "start");
@@ -877,6 +964,9 @@ function sclog(message, type) {
 		},
 		warning: function (text) {
 			return chalk.yellow("[WARNING]") + " " + message
+		},
+		load: function (text) {
+			return chalk.blueBright("[LOAD]") + " " + message
 		}
 	}
 
@@ -922,3 +1012,14 @@ function cclog(message, type) {
 
 
 // Ad code will be moved over to the client side for simplicity's sake
+
+/*const postFiles = fs.readdirSync('./exports/post').filter(file => file.endsWith('.js'))
+
+for(const file of postFiles) {
+	const event = require(`./exports/post/${file}`)
+	sclog("Loading event "+event.data.name, "load");
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+	app.post(apiPath+'/'+event.data.url, event.run)
+
+
+}*/

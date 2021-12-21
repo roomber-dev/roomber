@@ -3,5 +3,6 @@ module.exports = {
     ngrokAuthtoken: '1ph9ua1UFi9fxzZfatQUjiSZ2rt_3oo7p7hAhCxGMfZXoUETc',
     enableNgrok: false,
     openNgrokURL: false,
-    notfunny: "roomberiscool20@!"
+    notfunny: "roomberiscool20@!",
+    apiPath: "/api/v1"
 };

@@ -1,1 +1,1 @@
-const serverUrl = "";
+const serverUrl = "api/v1";

@@ -89,6 +89,11 @@ body {
 	color: black;
 }
 
+.plain-gradient {
+	background: linear-gradient(-45deg, #712489, #9b34ba, #0095ba, #004a5d);
+	background-size: cover;
+}
+
 .flex {
 	display: flex;
 	height: 100%;
@@ -685,4 +690,55 @@ body {
 	height: 32px;
 	justify-self: center;
 	align-self: center;
+}
+
+@keyframes rainbow-bg{
+	100%,0%{
+		background: rgb(255,0,0);
+	}
+	8%{
+		background: rgb(255,127,0);
+	}
+	16%{
+		background: rgb(255,255,0);
+	}
+	25%{
+		background: rgb(127,255,0);
+	}
+	33%{
+		background: rgb(0,255,0);
+	}
+	41%{
+		background: rgb(0,255,127);
+	}
+	50%{
+		background: rgb(0,255,255);
+	}
+	58%{
+		background: rgb(0,127,255);
+	}
+	66%{
+		background: rgb(0,0,255);
+	}
+	75%{
+		background: rgb(127,0,255);
+	}
+	83%{
+		background: rgb(255,0,255);
+	}
+	91%{
+		background: rgb(255,0,127);
+	}
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }

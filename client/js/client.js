@@ -63,7 +63,7 @@ function getMessageManagementButtons() {
 }
 
 function updateTheme() {
-	$("body").prop("class", theme);
+		$("body").prop("class", theme);
 }
 
 function setTheme(_theme) {
@@ -324,7 +324,6 @@ function generateEmbed(embed, useTextHeight) {
 function createEmbed(messageID, url, lang) {
 	embed(url, lang, function (embed) {
 		if (embed) {
-			console.log(embed);
 			cclog("loaded embed " + embed.ogTitle, "debug");
 			$(`#chat-area #messages #${messageID} .embeds`).html("");
 			$(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));

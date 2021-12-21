@@ -1,10 +1,10 @@
 {
-  "name": "roomber-concept",
-  "version": "4.2.0",
-  "description": "Roomber v4?",
+  "name": "roomber",
+  "version": "4.10.5",
+  "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"discord good but roomber superior\" && exit 1",
     "start": "node .",
     "dev": "nodemon ."
   },
