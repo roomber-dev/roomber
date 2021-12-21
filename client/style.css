@@ -89,6 +89,10 @@ body {
 	color: black;
 }
 
+.light * {
+	color: black;
+}
+
 .plain-gradient {
 	background: linear-gradient(-45deg, #712489, #9b34ba, #0095ba, #004a5d);
 	background-size: cover;
