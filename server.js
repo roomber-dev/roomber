@@ -16,7 +16,7 @@ const varToString = varObj => Object.keys(varObj)[0]
 			global[x.name] = require(x.path)[x.addons.func]
 		}
 	} else {
-    	global[x.name] = require(x.path)
+		global[x.name] = require(x.path)
 	}
 });*/
 
@@ -72,8 +72,8 @@ const roomber = {
 	creators: [
 		{ name: "neksodebe", jobs: ["programmer", "tester", "database", "design"], bestat: ["programmer", "tester"], role: "owner" },
 		{ name: "SomeEver", jobs: ["programmer", "design", "database"], bestat: ["design", "database"], role: "co-owner" },
-		{ name: "OlxsiU", jobs: ["graphic","design"], bestat: ["graphic"] },
-		{ name: "Gunner", jobs: ["tester","suggestor"], bestat: ["tester","suggestor"] }
+		{ name: "OlxsiU", jobs: ["graphic", "design"], bestat: ["graphic"] },
+		{ name: "Gunner", jobs: ["tester", "suggestor"], bestat: ["tester", "suggestor"] }
 	]
 }
 
@@ -103,8 +103,22 @@ const jobimportance = {
 /*roomber.creators.forEach((value) => {
 	sclog(value.name + "'s importance level is " + calculateCreatorImportance(value.name), "debug");
 })*/
+var exec = require('child_process').exec;
+function execute(command, callback) {
+	exec(command, function (error, stdout, stderr) { callback(stdout); });
+};
 
-sclog("Starting "+roomber.name+" v"+roomber.version, "start");
+
+execute("git rev-list --all --count", (out) => {
+	let estver = 4 // estimated version start point
+	let vername = [];
+	vername[0] = out.charAt(0) + out.charAt(1);
+	vername[1] = out.charAt(2);
+	sclog(`Starting Roomber v${estver + "." + vername.join(".")}`, "start")
+})
+
+
+//sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
 let maintenance = true;
 
@@ -143,7 +157,7 @@ function getRandomInt(min, max) {
 }
 
 
-sclog(`Starting 'Roomber v${roomber.version}'`)
+
 
 if (enableNgrok) {
 	(async function () {
@@ -243,20 +257,20 @@ var models = {
 };
 
 app.use((req, res, next) => {
-	if(maintenance) {
+	if (maintenance) {
 		let valid = false;
-		if(req.header("Referer") && req.header("Referer").split("code=")[1] == betaCode) {
+		if (req.header("Referer") && req.header("Referer").split("code=")[1] == betaCode) {
 			valid = true;
 		}
-		if(req.query.code == betaCode) {
+		if (req.query.code == betaCode) {
 			valid = true;
 		}
-		if(valid) {
-			return express.static(__dirname + '/client')(req,res,next);
+		if (valid) {
+			return express.static(__dirname + '/client')(req, res, next);
 		}
-		return express.static(__dirname + '/maintenance')(req,res,next);
+		return express.static(__dirname + '/maintenance')(req, res, next);
 	}
-	return express.static(__dirname + '/client')(req,res,next);
+	return express.static(__dirname + '/client')(req, res, next);
 });
 
 /*app.get('/', (req, res) => {
@@ -384,7 +398,7 @@ io.on('connection', socket => {
 })
 
 
-app.post(apiPath+'/embed', (req, res) => {
+app.post(apiPath + '/embed', (req, res) => {
 	ogs({
 		url: req.body.url,
 		headers: {
@@ -402,7 +416,7 @@ app.post(apiPath+'/embed', (req, res) => {
 	});
 })
 
-app.post(apiPath+'/getMessages', (req, res) => {
+app.post(apiPath + '/getMessages', (req, res) => {
 	if (req.body.fetch) {
 		Channel.countDocuments({ _id: req.body.channel }, (err, count) => {
 			if (count > 0) {
@@ -436,7 +450,7 @@ app.post(apiPath+'/getMessages', (req, res) => {
 	}
 })
 
-app.post(apiPath+'/joinServer', (req, res) => {
+app.post(apiPath + '/joinServer', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		sclog("auth works", "debug");
 		Server.find({ _id: req.body.server }, (err, server) => {
@@ -474,7 +488,7 @@ app.post(apiPath+'/joinServer', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/getServers', (req, res) => {
+app.post(apiPath + '/getServers', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			Server.find({ _id: { "$in": user[0].servers } }, (err, servers) => {
@@ -484,7 +498,7 @@ app.post(apiPath+'/getServers', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/getChannels', (req, res) => {
+app.post(apiPath + '/getChannels', (req, res) => {
 	Channel.find({ server: req.body.server }, (err, channels) => {
 		if (channels.length) {
 			res.send(channels);
@@ -492,7 +506,7 @@ app.post(apiPath+'/getChannels', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/chat', (req, res) => {
+app.post(apiPath + '/chat', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		Channel.find({ chatParticipants: [req.body.user, req.body.recipient] }, (err, channel) => {
 			if (channel.length) {
@@ -509,14 +523,14 @@ app.post(apiPath+'/chat', (req, res) => {
 						channel.save(() => {
 							res.send(channel._id);
 						});
-					}Hi
+					} Hi
 				})
 			}
 		})
 	})
 })
 
-app.post(apiPath+'/chats', (req, res) => {
+app.post(apiPath + '/chats', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		Channel.find({ chatParticipants: req.body.user }, (err, channels) => {
 			if (channels.length) {
@@ -538,7 +552,7 @@ app.post(apiPath+'/chats', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/createServer', (req, res) => {
+app.post(apiPath + '/createServer', (req, res) => {
 	Server.countDocuments({ name: req.body.name }, (err, count) => {
 		if (count > 0) {
 			res.sendStatus(409);
@@ -554,7 +568,7 @@ app.post(apiPath+'/createServer', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/createChannel', (req, res) => {
+app.post(apiPath + '/createChannel', (req, res) => {
 	var channel = new Channel({
 		name: req.body.name,
 		type: "text",
@@ -617,25 +631,25 @@ function sendVerifyEmail(options, callback) {
 	})
 }
 
-app.post(apiPath+'/userid', (req, res) => {
+app.post(apiPath + '/userid', (req, res) => {
 	User.find(req.body, (err, user) => {
 		res.send(user[0]._id);
 	})
 })
 
-app.post(apiPath+'/can', (req, res) => {
+app.post(apiPath + '/can', (req, res) => {
 	hasPermission(req.body.user, req.body.permission, result => {
 		res.send(result);
 	})
 })
 
-app.post(apiPath+'/hasPermissions', (req, res) => {
+app.post(apiPath + '/hasPermissions', (req, res) => {
 	hasPermissions(req.body.user, req.body["permissions[]"], result => {
 		res.send(result);
 	})
 })
 
-app.post(apiPath+'/getUsers', (req, res) => {
+app.post(apiPath + '/getUsers', (req, res) => {
 	let ids
 	if (req.body["users[]"].constructor === Array) {
 		ids = req.body["users[]"].map(user => mongoose.Types.ObjectId(user));
@@ -651,7 +665,7 @@ app.post(apiPath+'/getUsers', (req, res) => {
 	});
 })
 
-app.post(apiPath+'/broadcast', (req, res) => {
+app.post(apiPath + '/broadcast', (req, res) => {
 	if (!matchCharacterLimit("broadcast", req.body.message)) {
 		res.send({ error: "Your broadcast message is past the limit of " + characterLimits["broadcast"][1] + " characters." });
 		return;
@@ -661,7 +675,7 @@ app.post(apiPath+'/broadcast', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/hasGroup', (req, res) => {
+app.post(apiPath + '/hasGroup', (req, res) => {
 	User.find({ _id: req.body.user, permission: req.body.group }, (err, user) => {
 		if (user.length) {
 			res.send(true);
@@ -671,7 +685,7 @@ app.post(apiPath+'/hasGroup', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/modifyDb', (req, res) => {
+app.post(apiPath + '/modifyDb', (req, res) => {
 	hasPermissionAuth(req.body, "db.manage", () => {
 		switch (req.body.command) {
 			case "clear_collection": {
@@ -686,7 +700,7 @@ app.post(apiPath+'/modifyDb', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/messages', (req, res) => {
+app.post(apiPath + '/messages', (req, res) => {
 	let msg = {}
 	Object.keys(msgSchema).forEach(k => {
 		msg[k] = req.body['msg[' + k + ']'];
@@ -720,7 +734,7 @@ app.post(apiPath+'/messages', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/editMessage', (req, res) => {
+app.post(apiPath + '/editMessage', (req, res) => {
 	if (!matchCharacterLimit("message", req.body.newMessage)) {
 		res.send({ error: "Your message is past the limit of " + characterLimits["message"][1] + " characters." });
 		return;
@@ -756,7 +770,7 @@ app.post(apiPath+'/editMessage', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/deleteMessage', (req, res) => {
+app.post(apiPath + '/deleteMessage', (req, res) => {
 	auth(req.body.deleter, req.body.session, () => {
 		hasPermission(req.body.deleter, "messages.delete_any", result => {
 			if (result == true) {
@@ -790,7 +804,7 @@ app.post(apiPath+'/deleteMessage', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/setup', (req, res) => {
+app.post(apiPath + '/setup', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			if (user.length) {
@@ -808,7 +822,7 @@ app.post(apiPath+'/setup', (req, res) => {
 		})
 	})
 })
-app.post(apiPath+'/getSetup', (req, res) => {
+app.post(apiPath + '/getSetup', (req, res) => {
 	User.find({ _id: req.body.user || "" }, (err, user) => {
 		if (err) {
 			res.send(false);
@@ -824,7 +838,7 @@ app.post(apiPath+'/getSetup', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/register', (req, res) => {
+app.post(apiPath + '/register', (req, res) => {
 	if (!matchCharacterLimit("username", req.body.username)) {
 		res.send({ error: "Your username is past the limit of " + characterLimits["username"][1] + " characters." });
 		return;
@@ -867,7 +881,7 @@ app.post(apiPath+'/register', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/changeProfile', (req, res) => {
+app.post(apiPath + '/changeProfile', (req, res) => {
 	auth(req.body.user, req.body.session, () => {
 		User.find({ _id: req.body.user }, (err, user) => {
 			profile[req.body.toChange](user[0], req.body[req.body.toChange]);
@@ -876,7 +890,7 @@ app.post(apiPath+'/changeProfile', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/profile', (req, res) => {
+app.post(apiPath + '/profile', (req, res) => {
 	User.find({ _id: req.body.user }, (err, user) => {
 		res.send({
 			avatar: user[0].avatar
@@ -884,7 +898,7 @@ app.post(apiPath+'/profile', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/login', (req, res) => {
+app.post(apiPath + '/login', (req, res) => {
 	if (!matchCharacterLimit("email", req.body.email)) {
 		res.send({ error: "Your e-mail is past the limit of " + characterLimits["email"][1] + " characters." });
 		return;
@@ -913,7 +927,7 @@ app.post(apiPath+'/login', (req, res) => {
 	})
 })
 
-app.post(apiPath+'/logout', (req, res) => {
+app.post(apiPath + '/logout', (req, res) => {
 	Session.deleteOne({ _id: req.body.session, user: req.body.user }, () => { })
 })
 
@@ -1004,8 +1018,26 @@ function cclog(message, type) {
 for(const file of postFiles) {
 	const event = require(`./exports/post/${file}`)
 	sclog("Loading event "+event.data.name, "load");
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			  
 	app.post(apiPath+'/'+event.data.url, event.run)
 
 
 }*/
+const { MessageEmbed, WebhookClient } = require('discord.js');
+const webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/923288459899183164/KvAtvAPM017mvZkysKMub9Ff0BL9GsSIunw4DkKOsaXFmk7Obzchmu7Y4KqOSEBF_I7P' });
+process.on('uncaughtException', function (err) {
+	sclog('Caught exception: ' + err, "error");
+
+	const embed = new MessageEmbed()
+	.setTitle('Uncaught Exception Detected!')
+	.setColor('#ff0000')
+	.setDescription(err.toString())
+	.setFooter("Roomber Logs");
+
+webhookClient.send({
+	content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
+	username: 'Roomber Logs',
+	avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
+	embeds: [embed]
+});
+});
