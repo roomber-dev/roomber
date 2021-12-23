@@ -77,7 +77,6 @@ const roomber = {
 	]
 }
 
-const betaCode = "587162";
 
 function calculateCreatorImportance(name) { // lol why did i make this function
 	let importance = 0;
@@ -121,7 +120,7 @@ execute("git rev-list --all --count", (out) => {
 //sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
 let maintenance = true;
-
+const betaCode = "587162";
 const enableNgrok = config.enableNgrok;
 
 const characterLimits = {
