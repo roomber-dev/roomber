@@ -1022,7 +1022,7 @@ for(const file of postFiles) {
 
 
 }*/
-const { MessageEmbed, WebhookClient } = require('discord.js');
+const { MessageEmbed, WebhookClient, RichEmbed } = require('discord.js');
 const webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/923288459899183164/KvAtvAPM017mvZkysKMub9Ff0BL9GsSIunw4DkKOsaXFmk7Obzchmu7Y4KqOSEBF_I7P' });
 process.on('uncaughtException', function (err) {
 	sclog('Caught exception: ' + err, "error");
