@@ -119,7 +119,7 @@ execute("git rev-list --all --count", (out) => {
 
 //sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
-let maintenance = true;
+let maintenance = false;
 const betaCode = "587162";
 const enableNgrok = config.enableNgrok;
 
