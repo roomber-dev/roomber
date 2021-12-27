@@ -1067,18 +1067,18 @@ const { MessageEmbed, WebhookClient, RichEmbed } = require('discord.js');
 const { count } = require('console');
 const webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/923288459899183164/KvAtvAPM017mvZkysKMub9Ff0BL9GsSIunw4DkKOsaXFmk7Obzchmu7Y4KqOSEBF_I7P' });
 process.on('uncaughtException', function (err) {
-	sclog('Caught exception: ' + err, "error");
+	sclog(err, "error");
 
 	const embed = new MessageEmbed()
-		.setTitle('Uncaught Exception Detected!')
-		.setColor('#ff0000')
-		.setDescription(err.toString())
-		.setFooter("Roomber Logs");
+	.setTitle('Uncaught Exception Detected!')
+	.setColor('#ff0000')
+	.setDescription(err.toString())
+	.setFooter("Roomber Logs");
 
-	webhookClient.send({
-		content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
-		username: 'Roomber Logs',
-		avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
-		embeds: [embed]
-	});
+webhookClient.send({
+	content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
+	username: 'Roomber Logs',
+	avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
+	embeds: [embed]
+});
 });
