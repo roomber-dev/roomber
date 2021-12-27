@@ -13,7 +13,7 @@ $().ready(function() {
             click: function(p) {
                 p.close();
                 setTimeout(function() {
-                    $.post('/modifyDb', {
+                    $.post(serverUrl+'/modifyDb', {
                         session: session.session,
                         user: session.user,
                         command: "clear_collection",
@@ -40,7 +40,7 @@ $().ready(function() {
                 const msg = $("#broadcast-msg").val();
                 p.close();
                 setTimeout(function() {
-                    $.post('/broadcast', {
+                    $.post(serverUrl+'/broadcast', {
                         session: session.session,
                         user: session.user,
                         message: msg

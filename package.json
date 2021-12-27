@@ -17,6 +17,7 @@
     "discord.js": "^13.3.1",
     "express": "^4.17.1",
     "http": "^0.0.1-security",
+    "js-confuser": "^1.4.0",
     "mongoose": "^6.0.12",
     "ngrok": "^4.2.2",
     "nodemailer": "^6.7.2",

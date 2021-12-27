@@ -1,5 +1,7 @@
 ![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
 ==
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/0-percent-optimized.svg)](https://forthebadge.com)
+
 Create a free Roomber account and discover a new messaging app that's better than anything else out there. Roomber is a fun way to talk with your friends and stay connected.
 
 ### Screenshots
@@ -11,7 +13,7 @@ Create a free Roomber account and discover a new messaging app that's better tha
 - Voice and video calls
 - Screensharing
 - Roomber Xtra (paid subscription)
-- Desktop App
+- Desktop App (Complete!)
 - Mobile App
 
 ### Made by

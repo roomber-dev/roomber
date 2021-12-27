@@ -19,7 +19,49 @@ const varToString = varObj => Object.keys(varObj)[0]
 		global[x.name] = require(x.path)
 	}
 });*/
+const fs = require('fs');
+var JsConfuser = require("js-confuser");
 
+function updateClientCode() {
+
+	let codetotal = "";
+	fs.readdir("src/client", (err, files) => {
+		if (err)
+			sclog(err, "error");
+		else {
+			sclog("Updating client source...", "load");
+			files.forEach(file => {
+				sclog("✅ " + file, "load");
+				codetotal += "\n\n" + fs.readFileSync("src/client/" + file);
+			})
+			//fs.writeFileSync("test2.js", codetotal);
+			JsConfuser.obfuscate(codetotal, {
+				target: "browser",
+				preset: "low",
+				stringEncoding: false, // <- Normally enabled
+			}).then(obfuscated => {
+				fs.writeFileSync("client/script.js", obfuscated);
+				var i;
+				var count = 0;
+				fs.createReadStream("client/script.js")
+					.on('data', function (chunk) {
+						for (i = 0; i < chunk.length; ++i)
+							if (chunk[i] == 10) count++;
+					})
+					.on('end', function () {
+						sclog("Total length: "+codetotal.split(/\r\n|\r|\n/).length, "debug");
+						if(codetotal.includes("HorizontalMenu")) {
+							sclog("it does contain horizontalmenu", "debug");
+						}
+						sclog("Total obfuscated length: " + count, "debug");
+					});
+			})
+		}
+	})
+
+}
+
+//updateClientCode();
 
 
 
@@ -52,7 +94,6 @@ const ngrok = require('ngrok');
 const open = require('open');
 const ogs = require('open-graph-scraper');
 const nodemailer = require('nodemailer');
-const fs = require('fs');
 const transporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
@@ -119,7 +160,7 @@ execute("git rev-list --all --count", (out) => {
 
 //sclog("Starting "+roomber.name+" v"+roomber.version, "start");
 
-let maintenance = true;
+let maintenance = false;
 const betaCode = "587162";
 const enableNgrok = config.enableNgrok;
 
@@ -1023,20 +1064,21 @@ for(const file of postFiles) {
 
 }*/
 const { MessageEmbed, WebhookClient, RichEmbed } = require('discord.js');
+const { count } = require('console');
 const webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/923288459899183164/KvAtvAPM017mvZkysKMub9Ff0BL9GsSIunw4DkKOsaXFmk7Obzchmu7Y4KqOSEBF_I7P' });
 process.on('uncaughtException', function (err) {
 	sclog('Caught exception: ' + err, "error");
 
 	const embed = new MessageEmbed()
-	.setTitle('Uncaught Exception Detected!')
-	.setColor('#ff0000')
-	.setDescription(err.toString())
-	.setFooter("Roomber Logs");
+		.setTitle('Uncaught Exception Detected!')
+		.setColor('#ff0000')
+		.setDescription(err.toString())
+		.setFooter("Roomber Logs");
 
-webhookClient.send({
-	content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
-	username: 'Roomber Logs',
-	avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
-	embeds: [embed]
-});
+	webhookClient.send({
+		content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
+		username: 'Roomber Logs',
+		avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
+		embeds: [embed]
+	});
 });
