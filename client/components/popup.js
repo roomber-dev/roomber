@@ -47,7 +47,7 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
         <div class="popup-blur">
         </div>
     </div>`;
-    $("body").append(html);
+    $("#body").append(html);
     let popupElement = document.getElementById(id);
     let popupText = document.querySelector(`#${id} .popup-text`);
     let content = document.querySelector(`#${id} .popup-content`);

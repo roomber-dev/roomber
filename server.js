@@ -82,6 +82,9 @@ fs.writeFileSync("./exports/imports.json", JSON.stringify(arr, " ", 4))*/
 
 const path = require('path');
 const express = require('express');
+
+var app = express();
+
 const bodyParser = require('body-parser');
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
@@ -101,8 +104,6 @@ const transporter = nodemailer.createTransport({
 	}
 });
 const packagefile = require('./package.json');
-
-var app = express();
 
 const roomber = {
 	version: packagefile.version,
