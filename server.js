@@ -1,53 +1,12 @@
-const varToString = varObj => Object.keys(varObj)[0]
-
-/*require("./exports/imports.json").map(function(x) {
-	if(x.addons.func != null) {
-		if(x.addons.arg.length) {
-			let argstuff = [];
-			x.addons.arg.forEach((value, index) => {
-				if(x.addons.isvar[index]) {
-					argstuff.push(global[value])
-				} else {
-					argstuff.push(value)
-				}
-			})
-		global[x.name] = require(x.path)[x.addons.func](...argstuff)
-		} else {
-			global[x.name] = require(x.path)[x.addons.func]
-		}
-	} else {
-		global[x.name] = require(x.path)
-	}
-});*/
-
-
-
-
-/*var arr = [] // Arr, daniel!
-Object.keys(require("./package.json").dependencies).forEach((value, index) => {
-
-	arr.push({
-		name: value,
-		path: value,
-		addons: {
-			func: null,
-			arg: [],
-			isvar: []
-		}
-	})
-})
-fs.writeFileSync("./exports/imports.json", JSON.stringify(arr, " ", 4))*/
-
 const path = require('path');
-var express = require('express');
-var bodyParser = require('body-parser');
-var app = express();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var mongoose = require('mongoose');
-var config = require('./config.js');
+const express = require('express');
+const bodyParser = require('body-parser');
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+const mongoose = require('mongoose');
+const config = require('./config.js');
 const apiPath = config.apiPath;
-var chalk = require('chalk');
+const chalk = require('chalk');
 const ngrok = require('ngrok');
 const open = require('open');
 const ogs = require('open-graph-scraper');
@@ -60,7 +19,9 @@ const transporter = nodemailer.createTransport({
 		pass: config.notfunny
 	}
 });
-const packagefile = require('./package.json')
+const packagefile = require('./package.json');
+
+var app = express();
 
 const roomber = {
 	version: packagefile.version,
@@ -109,7 +70,7 @@ function execute(command, callback) {
 
 
 execute("git rev-list --all --count", (out) => {
-	let estver = 4 // estimated version start point
+	let estver = Number(packagefile.version);
 	let vername = [];
 	vername[0] = out.charAt(0) + out.charAt(1);
 	vername[1] = out.charAt(2);
@@ -522,7 +483,7 @@ app.post(apiPath + '/chat', (req, res) => {
 						channel.save(() => {
 							res.send(channel._id);
 						});
-					} Hi
+					}
 				})
 			}
 		})
@@ -1008,35 +969,3 @@ function cclog(message, type) {
 		console.log(...category[type](message));
 	}
 }
-
-
-// Ad code will be moved over to the client side for simplicity's sake
-
-/*const postFiles = fs.readdirSync('./exports/post').filter(file => file.endsWith('.js'))
-
-for(const file of postFiles) {
-	const event = require(`./exports/post/${file}`)
-	sclog("Loading event "+event.data.name, "load");
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																			  
-	app.post(apiPath+'/'+event.data.url, event.run)
-
-
-}*/
-const { MessageEmbed, WebhookClient, RichEmbed } = require('discord.js');
-const webhookClient = new WebhookClient({ url: 'https://canary.discord.com/api/webhooks/923288459899183164/KvAtvAPM017mvZkysKMub9Ff0BL9GsSIunw4DkKOsaXFmk7Obzchmu7Y4KqOSEBF_I7P' });
-process.on('uncaughtException', function (err) {
-	sclog('Caught exception: ' + err, "error");
-
-	const embed = new MessageEmbed()
-	.setTitle('Uncaught Exception Detected!')
-	.setColor('#ff0000')
-	.setDescription(err.toString())
-	.setFooter("Roomber Logs");
-
-webhookClient.send({
-	content: 'Hey <@593755503339765781> and <@227836082430017537>, an error occured!',
-	username: 'Roomber Logs',
-	avatarURL: 'https://cdn.discordapp.com/icons/861320602618036244/b997d12edad69f4eb5e3657b487fc5b4.webp?size=96',
-	embeds: [embed]
-});
-});
