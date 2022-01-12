@@ -207,13 +207,14 @@ loaded(function () {
 		ldmToggle();
 	});
 
-	$(".new-server").click(function () {
+	function j() {
 		popup("Join server", `
 			<input type="text" placeholder="Server ID" id="serveridtextbox" class="textbox"/>
 		`, [{
-			label: "Cancel",
+			label: "Back",
 			click: function (p) {
 				p.close();
+				setTimeout(newServerPopup, 501);
 			}
 		}, {
 			label: "OK",
@@ -221,11 +222,77 @@ loaded(function () {
 				setTimeout(function () {
 					console.log($(`#serveridtextbox`));
 					joinServer($("#serveridtextbox").val());
-				}, 500);
+				}, 501);
 				p.close();
 			}
 		}])
-	});
+	}
+
+	function createServer() {
+		popup("Create a new server", `
+			<div class="create-server-popup">
+			<input class="textbox" placeholder="Server Name"></input><br/>
+			<input class="textbox" placeholder="Server Picture. Leave empty for default one"></input>
+			</div>
+		`, [{
+			label: "Back",
+			click: function(p) {
+				p.close();
+				setTimeout(newServerPopup, 501);
+			}
+		}, {
+			label: "OK",
+			click: function(p) {
+				let stuff = {...session, 
+					name: $(".create-server-popup .textbox").first().val()};
+				if($(".create-server-popup .textbox").last().val() != "") {
+					stuff = {...stuff, picture: 
+						$(".create-server-popup .textbox").last().val()};
+				}
+				$.post(serverUrl + "/createServer", stuff, function(data) {
+					if(data["error"]) {
+						p.close();
+						setTimeout(function() {
+							popup("Error", data.error);
+						}, 501);
+					} else {
+						addServer(data);
+					}
+				})
+			}
+		}]);
+	}
+
+	function newServerPopup() {
+		let p_ = popup("New server", `
+			<div class="new-server-popup">
+			<button class="new-server-btn button">
+				<i class="large material-icons">group_add</i>
+				Join Server
+			</button>
+			<button class="new-server-btn button">
+				<i class="large material-icons">add_circle</i>	
+				Create Server
+			</button>
+			</div>
+		`, [{
+			label: "Cancel",
+			click: function(p) {
+				p.close();
+			}
+		}]);
+		let btns = $(".new-server-btn");
+		btns.first().click(function() {
+			removePopup(p_);
+			setTimeout(j, 501);
+		});
+		btns.last().click(function() {
+			removePopup(p_);
+			setTimeout(createServer, 501);
+		});
+	}
+
+	$(".new-server").click(newServerPopup);
 
 	ldmUpdate();
 })

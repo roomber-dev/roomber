@@ -172,7 +172,9 @@ const characterLimits = {
 	"broadcast": [1, 500],
 	"username": [1, 20],
 	"password": [7, 50],
-	"email": [1, 320]
+	"email": [1, 320],
+	"server": [1, 50],
+	"channel": [1, 20]
 };
 
 const profile = {
@@ -286,7 +288,8 @@ var Server = mongoose.model(
 		name: String,
 		channels: Array,
 		picture: String,
-		users: Array
+		users: Array,
+		owner: String
 	}
 )
 
@@ -607,18 +610,34 @@ app.post(apiPath + '/chats', (req, res) => {
 })
 
 app.post(apiPath + '/createServer', (req, res) => {
-	Server.countDocuments({ name: req.body.name }, (err, count) => {
-		if (count > 0) {
-			res.sendStatus(409);
-		} else {
-			var server = new Server({
-				name: req.body.name,
-				channels: []
-			});
-			server.save(err => {
-				if (!err) res.send(server._id);
-			})
-		}
+	auth(req.body.user, req.body.session, () => {
+		Server.countDocuments({ name: req.body.name }, (err, count) => {
+			if (count > 0) {
+				res.sendStatus(409);
+			} else {
+				if(!matchCharacterLimit("server", req.body.name)) {
+					res.send({error: `The server name you provided is over the character limit of ${characterLimits['server']} characters`});
+				} else {
+					var server = new Server({
+						name: req.body.name,
+						channels: [],
+						owner: req.body.user,
+						users: [req.body.user]
+					});
+					if(req.body["picture"]) {
+						server.picture = req.body.picture;
+					}
+					server.save(err => {
+						if (!err) res.send(server);
+					})
+					User.find({_id: req.body.user}, (err, usr) => {
+						var user = usr[0];
+						user.servers.append(server._id);
+						user.save();
+					})
+				}
+			}
+		})
 	})
 })
 

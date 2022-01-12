@@ -96,6 +96,14 @@ function reg(finish) {
 						<br>
 						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
 					`, [{
+						label: "Back",
+						click: function(p) {
+							p.close();
+							setTimeout(function() {
+								reg(finish);
+							}, 501);
+						}
+					}, {
 						label: "OK",
 						click: function(p_) {
 							reg_callback(p_, "/register", "This username is already taken", finish);
@@ -114,6 +122,14 @@ function reg(finish) {
 						<br>
 						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
 					`, [{
+						label: "Back",
+						click: function(p) {
+							p.close();
+							setTimeout(function() {
+								reg(finish);
+							}, 501);
+						}
+					}, {
 						label: "OK",
 						click: function(p_) {
 							reg_callback(p_, "/login", "Invalid e-mail or password", finish, false);
