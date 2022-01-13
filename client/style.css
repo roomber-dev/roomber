@@ -722,3 +722,7 @@ body {
 .create-server-popup .textbox {
 	width: calc(100% - 6px);
 }
+
+.create-channel {
+	font-size: 16px;
+}

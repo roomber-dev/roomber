@@ -99,6 +99,34 @@ function channelClick(id) {
 	}
 }
 
+function createChannel(index) {
+	const server = servers[index];
+	popup("Create channel", `
+		<input class="textbox" id="create-channel-name" placeholder="Channel name"></input>
+	`, [{
+		label: "Cancel",
+		click: function(p) {p.close();}
+	}, {
+		label: "OK",
+		click: function(p) {
+			let name = $("#create-channel-name").val();
+			p.close();
+			$.post(serverUrl + "/createChannel", {...session, 
+				server: server._id, name: name}, function(data) {
+				if(data["error"]) {
+					setTimeout(function() {popup("Error", data.error);}, 501);
+					return;
+				}
+				servers[index]["channels"].push({
+					_id: data,
+					name: name
+				});
+				openServer(index);
+			});
+		}
+	}]);
+}
+
 function openServer(index) {
 	$("#messages").html("");
 	let server = servers[index];
@@ -116,6 +144,11 @@ function openServer(index) {
 			channelClick(channel._id);
 		}
 	})
+	if(server["owner"] && server.owner == session.user) {
+		$("#channels ul").append(`
+			<li onclick="createChannel(${index})"><div class="hash no-select">+</div><div class="no-select create-channel">Create channel</div></li>
+		`);
+	}
 }
 
 function onSetupFinished(t) {
@@ -322,7 +355,7 @@ function newMessage(message) {
 	if (message.flagged) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
-	if(cache[message.author].xtra) {
+	if(cache[message.author] && cache[message.author]["xtra"]) {
 		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
 	

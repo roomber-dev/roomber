@@ -227,15 +227,6 @@ app.use(bodyParser.urlencoded(
 
 var dbUrl = config.dbUrl;
 
-mongoose.connect(dbUrl, (err) => {
-	if (err) {
-		sclog(`Failed to connect to MongoDB: ${err}`, "error");
-	} else {
-		sclog('MongoDB connected', "start");
-	}
-
-})
-
 let msgSchema = {
 	author: String,
 	message: String,
@@ -301,6 +292,14 @@ var models = {
 	"Channel": Channel,
 	"Server": Server
 };
+
+mongoose.connect(dbUrl, (err) => {
+	if (err) {
+		sclog(`Failed to connect to MongoDB: ${err}`, "error");
+	} else {
+		sclog('MongoDB connected', "start");
+	}
+})
 
 app.use((req, res, next) => {
 	/*
@@ -642,23 +641,25 @@ app.post(apiPath + '/createServer', (req, res) => {
 })
 
 app.post(apiPath + '/createChannel', (req, res) => {
-	var channel = new Channel({
-		name: req.body.name,
-		type: "text",
-		server: req.body.server
-	});
-	channel.save(err => {
-		if (!err) {
-			Server.find({ _id: req.body.server }, (err, server) => {
-				if (server.length) {
-					var server = server[0];
-					server.channels.push(channel._id);
-					server.save(err_ => {
-						if (!err_) res.send(channel._id);
-					})
-				}
-			})
-		}
+	auth(req.body.user, req.body.session, () => {
+		var channel = new Channel({
+			name: req.body.name,
+			type: "text",
+			server: req.body.server
+		});
+		channel.save(err => {
+			if (!err) {
+				Server.find({ _id: req.body.server }, (err, server) => {
+					if (server.length) {
+						var server = server[0];
+						server.channels.push(channel._id);
+						server.save(err_ => {
+							if (!err_) res.send(channel._id);
+						})
+					}
+				})
+			}
+		})
 	})
 })
 
@@ -1022,6 +1023,9 @@ function sclog(message, type) {
 	const category = {
 		debug: function (text) {
 			return chalk.blue("[DEBUG]") + " " + text
+		},
+		info: function (text) {
+			return chalk.blue("[INFO]") + " " + text
 		},
 		join: function (text) {
 			return chalk.greenBright("[JOIN]") + " " + text
