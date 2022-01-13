@@ -149,6 +149,9 @@ function openServer(index) {
 			<li onclick="createChannel(${index})"><div class="hash no-select">+</div><div class="no-select create-channel">Create channel</div></li>
 		`);
 	}
+	$("#channels ul").append(`
+		<li onclick="popup('Server ID', 'The server id is <b>${server._id}</b>')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div><div class="no-select create-channel">View ID</div></li>
+	`);
 }
 
 function onSetupFinished(t) {
