@@ -609,38 +609,42 @@ app.post(apiPath + '/chats', (req, res) => {
 })
 
 app.post(apiPath + '/createServer', (req, res) => {
+	if(!matchCharacterLimit("server", req.body.name)) {
+		res.send({error: `The server name you provided is over the character limit of ${characterLimits['server'][1]} characters`});
+		return;
+	}
 	auth(req.body.user, req.body.session, () => {
 		Server.countDocuments({ name: req.body.name }, (err, count) => {
 			if (count > 0) {
 				res.sendStatus(409);
 			} else {
-				if(!matchCharacterLimit("server", req.body.name)) {
-					res.send({error: `The server name you provided is over the character limit of ${characterLimits['server']} characters`});
-				} else {
-					var server = new Server({
-						name: req.body.name,
-						channels: [],
-						owner: req.body.user,
-						users: [req.body.user]
-					});
-					if(req.body["picture"]) {
-						server.picture = req.body.picture;
-					}
-					server.save(err => {
-						if (!err) res.send(server);
-					})
-					User.find({_id: req.body.user}, (err, usr) => {
-						var user = usr[0];
-						user.servers.append(server._id);
-						user.save();
-					})
+				var server = new Server({
+					name: req.body.name,
+					channels: [],
+					owner: req.body.user,
+					users: [req.body.user]
+				});
+				if(req.body["picture"]) {
+					server.picture = req.body.picture;
 				}
+				server.save(err => {
+					if (!err) res.send(server);
+				})
+				User.find({_id: req.body.user}, (err, usr) => {
+					var user = usr[0];
+					user.servers.append(server._id);
+					user.save();
+				})
 			}
 		})
 	})
 })
 
 app.post(apiPath + '/createChannel', (req, res) => {
+	if(!matchCharacterLimit("channel", req.body.name)) {
+		res.send({error: `The channel name you provided is over the character limit of ${characterLimits['channel'][1]} characters`});
+		return;
+	}
 	auth(req.body.user, req.body.session, () => {
 		var channel = new Channel({
 			name: req.body.name,
