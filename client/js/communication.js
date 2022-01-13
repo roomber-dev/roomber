@@ -66,18 +66,21 @@ function cacheUsers(users, onCache) {
 function getMessages(before = false, scroll = false) {
 	cclog("fetching messages from "+toFetch+" with limit "+50, "debug");
 	cclog("(fetching messages in channel " + channel + ")", "debug");
+	addLoadingAnimation(currentServer);
 	if($(".message").length) {
 		cclog("last message id " + $(".message").last().prop("id"), "debug");
 		cclog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
 	$.post(serverUrl+'/getMessages', {fetch: toFetch, channel: channel}, function(data) {
 		if(data.error) {
+			removeLoadingAnimation(currentServer);
 			cclog(data.error, "error");
 			return;
 		}
 
 		var forEach = new Promise(function(resolve, reject) {
 			cclog("fetched " + data.messages.length + " messages", "debug");
+			removeLoadingAnimation(currentServer);
 			if(data.messages.length == 0) resolve();
 			if(before == false) data.messages = data.messages.reverse();
 			cacheUsers(data.users, function() {

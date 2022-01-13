@@ -111,59 +111,59 @@ function fireLoaded() {
 	});
 }
 
-function decodeSaveCustomizationCode(code = String, setCustomization = false, debug = false) {
-	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME";cbp-X,Y,W,H
+const propertyCSS = {
+	cbw: {
+		element: "#channels",
+		property: "width",
+		prefix: "",
+		postfix: "px"
+	},
+	ff: {
+		element: "body, #body",
+		property: "font-family",
+		prefix: "'",
+		postfix: "'"
+	}
+};
 
-	let cells = code.split(";");
-	if (debug) console.log("length: ", cells.length);
-	let jsonThing = "";
-
-	cells.forEach((value, index) => {
-		let AAAAA = value.split("-");
-		if (debug) {
-			console.log(index, value);
-			console.log(index, `"${AAAAA[0]}":${AAAAA[1]},`)
-		}
-		if (index === cells.length - 1) {
-			jsonThing = jsonThing + `"${AAAAA[0]}":${AAAAA[1]}`;
-		} else {
-			jsonThing = jsonThing + `"${AAAAA[0]}":${AAAAA[1]},`;
-		}
-	})
-
-	if (debug) console.log('{' + jsonThing + '}');
-	jsonThing = "{" + jsonThing + "}";
-	let parsed = JSON.parse(jsonThing);
-	if (!setCustomization) {
-		return parsed;
-	} else {
-		if(parsed.cbw && parsed.cbw > 5 && parsed.cbw < 50) { // WIDTH IS IN PERCENT NOT IN PIXELS!!!
-			$("#channels").css("width", `${parsed.cbw}%`)
-		} else {
-			throw Error("Invalid Channels Bar Width")
-		}
-
-		if(parsed.sbh && parsed.sbh > 3 && parsed.sbh < 25) { // its height, not width.
-			$("#servers").css("height", `${parsed.sbh}%`)
-		} else {
-			throw Error("Invalid Servers Bar Height")
-		}
-
-		if(parsed.bg) {
-			$("body").css("background", `url(${atob(parsed.bg)})`)
-		} else {
-			throw Error("Background URL is undefined.")
-		}
-
-		if(parsed.fs && parsed.fs > 3 && parsed.fs < 25) { // font size
-			$("body").css("font-size", `${parsed.fs}px`)
-		} else {
-			throw Error("Invalid Font Size")
-		}
-
-
+function decodeSaveCustomizationCode(code = String, load = false) {
+	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME"
+	const result = {};
+	
+	{
+		const properties = code.split(";");
+		properties.forEach(function(property) {
+			const splitProperty = property.split("-");
+			result[splitProperty[0]] = splitProperty[1];
+		});
 	}
 
+	function requireProperties(properties) {
+		properties.forEach(function(property) {
+			if(!result[property]) throw Error(
+				"Customization code missing property " + property);
+		});
+	}
+
+	requireProperties(["cbw", "sbh", "bg", "fs", "ff"]);
+
+	function loadProperty(element, property, value) {
+		let css = {};
+		css[property] = value;
+		$(element).css(css);
+	}
+
+	if(load) {
+		Object.entries(result).forEach(function([property, value]) {
+			propertyCSS[property] && 
+				loadProperty(propertyCSS[property].element,
+					propertyCSS[property].property,
+					propertyCSS[property].prefix 
+					+ value + propertyCSS[property].postfix);
+		});
+	}
+
+	return result;
 }
 
 /**

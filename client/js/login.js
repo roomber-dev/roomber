@@ -82,6 +82,24 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 	}).fail(function() {reg_err(p, msg)});
 }
 
+function passVisibilityToggle() {
+	let visibility = false;
+	$(".password-visibility").click(function() {
+		visibility = !visibility;
+		$(this).html(visibility ? "visibility" : "visibility_off");
+		$("#pass-flex input").attr("type", 
+			visibility ? "text" : "password");
+	})
+}
+
+function regPass() {
+	return `<p>Password</p><div id="pass-flex">
+	<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
+	<i class="megasmall material-icons 
+		no-select password-visibility">visibility_off</i>
+	</div>`;
+}
+
 function reg(finish) {
 	popup("Welcome to Roomber!", "Pick an option", [
 		{
@@ -90,11 +108,13 @@ function reg(finish) {
 				p.close(); 
 				setTimeout(function() {
 					popup("Register", `
-						<input type="text" id="reg-email" class="textbox" placeholder="E-mail"/>
+						<p>E-mail</p>
+						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
-						<input type="text" id="reg-username" class="textbox" placeholder="Username"/>
+						<p>Username</p>
+						<input type="username" id="reg-username" class="textbox" placeholder="Username"/>
 						<br>
-						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
+						${regPass()}
 					`, [{
 						label: "Back",
 						click: function(p) {
@@ -109,6 +129,7 @@ function reg(finish) {
 							reg_callback(p_, "/register", "This username is already taken", finish);
 						}
 					}]);
+					passVisibilityToggle();
 				}, 500);
 			}
 		},
@@ -118,9 +139,10 @@ function reg(finish) {
 				p.close(); 
 				setTimeout(function() {
 					popup("Log in", `
-						<input type="text" id="reg-email" class="textbox" placeholder="E-mail"/>
+						<p>E-mail</p>
+						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
-						<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
+						${regPass()}
 					`, [{
 						label: "Back",
 						click: function(p) {
@@ -135,6 +157,7 @@ function reg(finish) {
 							reg_callback(p_, "/login", "Invalid e-mail or password", finish, false);
 						}
 					}]);
+					passVisibilityToggle();
 				}, 500);
 			}
 		}

@@ -479,6 +479,11 @@ body {
 @-ms-keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}}
 @keyframes blink {0%{opacity:1;} 50%{opacity:0;} 100%{opacity:1;}}
 
+@-moz-keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
+@-webkit-keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
+@-ms-keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
+@keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
+
 .msgUrl {
 	color: rgb(32, 147, 255);
 }
@@ -631,7 +636,7 @@ body {
 }
 
 .server.active {
-	outline: 2px solid rgba(90,90,255,0.4);
+	outline: 2px solid rgba(255, 255, 255, 0.7);
 }
 
 #server-list {
@@ -724,5 +729,32 @@ body {
 }
 
 .create-channel {
+	font-size: 16px;
+}
+
+.ellipsis-overflow {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#pass-flex {
+	display: flex;
+	align-items: center;
+}
+
+#pass-flex i {
+	height: 20px;
+	margin-left: 6px;
+}
+
+.popup .textbox {
+	width: 300px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+}
+
+.popup p {
+	margin-top: 10px;
 	font-size: 16px;
 }

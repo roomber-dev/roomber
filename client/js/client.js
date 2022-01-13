@@ -127,10 +127,25 @@ function createChannel(index) {
 	}]);
 }
 
+currentServer = 0;
+
+function addLoadingAnimation(server) {
+	$("#server-list #" + servers[server]._id).css({
+		animation: "1s blink60 infinite"
+	});
+}
+
+function removeLoadingAnimation(server) {
+	$("#server-list #" + servers[server]._id).css({
+		animation: ""
+	});
+}
+
 function openServer(index) {
 	$("#messages").html("");
 	let server = servers[index];
 	setCookie("server", server._id);
+	currentServer = index;
 	if (!$("#server-list #" + server._id).hasClass("active")) {
 		$("#server-list *").removeClass("active");
 		$("#server-list #" + server._id).addClass("active");
@@ -138,8 +153,11 @@ function openServer(index) {
 	$("#channels ul").html("");
 	server.channels.forEach(function (channel, i) {
 		$("#channels ul").append(`
-			<li id="${channel._id}" onclick="channelClick('${channel._id}')"><div class="hash no-select">#</div><div class="no-select">${channel.name}</div></li>
+			<li id="${channel._id}"><div class="hash no-select">#</div><div class="no-select ellipsis-overflow">${channel.name}</div></li>
 		`);
+		$("#channels #" + channel._id).click(function() {
+			channelClick($(this).attr("id"));
+		});
 		if (i == 0) {
 			channelClick(channel._id);
 		}
@@ -222,6 +240,7 @@ loaded(function () {
 			if (fetchingMessages == false) {
 				cclog("about to fetch some messages", "debug");
 				toFetch += 50;
+				removeLoadingAnimation(currentServer);
 				scrolledMessage = $(".message").first();
 				getMessages(true);
 				fetchingMessages = true;

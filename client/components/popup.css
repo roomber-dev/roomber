@@ -60,8 +60,8 @@
 .popup-content {
     display: flex;
     background: transparent;
-    width: 40%;
     min-width: 397px;
+    max-width: 35%;
     height: fit-content;
     flex-direction: column;
     z-index: 1002;
