@@ -1,3 +1,4 @@
+const logs = [];
 $(document).ready(function () {
 	loginInit();
 });
@@ -205,7 +206,7 @@ loaded(function () {
 		if ($("#message").val().trim() == "") {
 			return;
 		}
-
+		if($("#message").val() === "ROOMBAH??!") new Audio('assets/ROOMBAH.wav').play();
 		sendMessage({
 			session: session.session,
 			msg: {

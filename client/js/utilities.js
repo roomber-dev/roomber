@@ -5,7 +5,7 @@ function parseUrls(text, onUrl) {
 
 	words.forEach(function (item, index) {
 		if (item.startsWith("https://") || item.startsWith("http://")) {
-			if(onUrl) onUrl(item);
+			if (onUrl) onUrl(item);
 			words[index] = `<a href="${item}" class="msgUrl">${item}</a>`;
 		}
 	});
@@ -15,7 +15,7 @@ function parseUrls(text, onUrl) {
 
 function makeDrag(element) {
 	var dragElement = element;
-	if(element.firstElementChild.dataset["dragger"] == "true") {
+	if (element.firstElementChild.dataset["dragger"] == "true") {
 		dragElement = element.firstElementChild;
 	}
 
@@ -24,7 +24,7 @@ function makeDrag(element) {
 	var newPosX = 0;
 	var newPosY = 0;
 
-	let mouseMove = function(e) {
+	let mouseMove = function (e) {
 		newPosX = startPosX - e.clientX;
 		newPosY = startPosY - e.clientY;
 
@@ -35,14 +35,14 @@ function makeDrag(element) {
 		element.style.left = (element.offsetLeft - newPosX) + "px";
 	};
 
-	dragElement.onmousedown = function(e) {
+	dragElement.onmousedown = function (e) {
 		e.preventDefault();
 
 		startPosX = e.clientX;
 		startPosY = e.clientY;
 		document.onmousemove = mouseMove;
 
-		document.onmouseup = function() {
+		document.onmouseup = function () {
 			document.onmousemove = null;
 		};
 	};
@@ -74,7 +74,7 @@ function uuidv4() {
 	);
 }
 
-Number.prototype.clamp = function(min, max) {
+Number.prototype.clamp = function (min, max) {
 	return Math.min(Math.max(this, min), max);
 };
 
@@ -106,7 +106,7 @@ function loaded(cb) {
 }
 
 function fireLoaded() {
-	loadedEvents.forEach(function(event) {
+	loadedEvents.forEach(function (event) {
 		event();
 	});
 }
@@ -129,18 +129,18 @@ const propertyCSS = {
 function decodeSaveCustomizationCode(code = String, load = false) {
 	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME"
 	const result = {};
-	
+
 	{
 		const properties = code.split(";");
-		properties.forEach(function(property) {
+		properties.forEach(function (property) {
 			const splitProperty = property.split("-");
 			result[splitProperty[0]] = splitProperty[1];
 		});
 	}
 
 	function requireProperties(properties) {
-		properties.forEach(function(property) {
-			if(!result[property]) throw Error(
+		properties.forEach(function (property) {
+			if (!result[property]) throw Error(
 				"Customization code missing property " + property);
 		});
 	}
@@ -153,12 +153,12 @@ function decodeSaveCustomizationCode(code = String, load = false) {
 		$(element).css(css);
 	}
 
-	if(load) {
-		Object.entries(result).forEach(function([property, value]) {
-			propertyCSS[property] && 
+	if (load) {
+		Object.entries(result).forEach(function ([property, value]) {
+			propertyCSS[property] &&
 				loadProperty(propertyCSS[property].element,
 					propertyCSS[property].property,
-					propertyCSS[property].prefix 
+					propertyCSS[property].prefix
 					+ value + propertyCSS[property].postfix);
 		});
 	}
@@ -177,28 +177,28 @@ function decodeSaveCustomizationCode(code = String, load = false) {
  * @param {*} message 
  * @param {*} type 
  */
- function cclog(message, type, list = false) {
+function cclog(message, type, list = false) {
 	const category = {
-		debug: function(text) {
+		debug: function (text) {
 			return [`%c[DEBUG] %c${text}`, 'color: #0096FF', 'color: white']
 		},
-		join: function(text) {
+		join: function (text) {
 			return [`%c[JOIN] %c${text}`, 'color: #32cd32', 'color: white']
 		},
-		leave: function(text) {
+		leave: function (text) {
 			return [`%c[LEAVE] %c${text}`, 'color: #EE4B2B', 'color: white']
 		},
-		start: function(text) {
+		start: function (text) {
 			return [`%c[START] %c${text}`, 'color: #FF00FF', 'color: white']
 		},
-		error: function(text) {
+		error: function (text) {
 			return [`%c[ERROR] %c${text}`, 'color: red', 'color: white']
 		},
-		warning: function(text) {
+		warning: function (text) {
 			return [`%c[WARNING] %c${text}`, 'color: orange', 'color: white']
 		}
 	}
-	 if(list) {
+	if (list) {
 		return [
 			"debug",
 			"join",
@@ -207,9 +207,52 @@ function decodeSaveCustomizationCode(code = String, load = false) {
 			"error",
 			"warning"
 		]
-	 } else {
-
-	
-	console.log(...category[type](message));
+	} else {
+		//logs.push(`[${type.toUpperCase()}] ${message}`);
+		let uniquecode = generateUID();
+		HtmlConsole_insert(`[${type.toUpperCase()}_${uniquecode}] ${message}`, uniquecode, type);
+		console.log(...category[type](message));
+	}
 }
+
+window.onerror = function (error, url, line) {
+	//controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
+	cclog("Error occured at " + url + ":" + line + " " + error, "error");
+};
+
+function HtmlConsole_insert(text, uniquecode, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
+	$("#console").append(`
+		${HtmlConsole_formatText(text, uniquecode, searchFor)}
+	`)
+}
+
+function HtmlConsole_formatText(text, uniquecode, searchFor = String) { // im sorry someever i couldn't use regex
+	console.log(text, uniquecode, searchFor)
+	let final = "";
+	let array = text.split(" ")
+	array.forEach((element, index) => {
+		if(element.includes(`[${searchFor.toUpperCase()}_${uniquecode}]`)) {
+			console.log("DOES CONTAIN SHIT");
+			array[index] = `<b class="prefix ${searchFor} no-select">${searchFor.toUpperCase()}</b>`;
+		}
+	});
+	final = `<span class="logline"> ${array.join(" ")} </span><br><br>`;
+	console.log(final);
+	return final;
+
+}
+
+function generateUID() {
+	// I generate the UID from two parts here 
+	// to ensure the random number provide enough bits.
+	var firstPart = (Math.random() * 46656) | 0;
+	var secondPart = (Math.random() * 46656) | 0;
+	firstPart = ("000" + firstPart.toString(36)).slice(-3);
+	secondPart = ("000" + secondPart.toString(36)).slice(-3);
+	return firstPart + secondPart;
+}
+
+function showConsole() {
+	$("#console").css("display", "block");
+	makeDrag(document.getElementById("console"))
 }
