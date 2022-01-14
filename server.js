@@ -632,7 +632,7 @@ app.post(apiPath + '/createServer', (req, res) => {
 				})
 				User.find({_id: req.body.user}, (err, usr) => {
 					var user = usr[0];
-					user.servers.append(server._id);
+					user.servers.push(server._id);
 					user.save();
 				})
 			}
