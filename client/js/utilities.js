@@ -219,8 +219,7 @@ function cclog(message, type, list = false) {
 		]
 	} else {
 		//logs.push(`[${type.toUpperCase()}] ${message}`);
-		let uniquecode = generateUID();
-		HtmlConsole_insert(`[${type.toUpperCase()}_${uniquecode}] ${message}`, uniquecode, type);
+		HtmlConsole_insert(message, type);
 		console.log(...category[type](message));
 	}
 }
@@ -231,22 +230,15 @@ window.onerror = function (error, url, line) {
 	return true;
 };
 
-function HtmlConsole_insert(text, uniquecode, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
+function htmlConsoleInsert(text, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
 	$("#console").append(`
-		${HtmlConsole_formatText(text, uniquecode, searchFor)}
+		${HtmlConsole_formatText(text, searchFor)}
 	`)
 }
 
-function HtmlConsole_formatText(text, uniquecode, searchFor = String) { // im sorry someever i couldn't use regex
-	let final = "";
-	let array = text.split(" ")
-	array.forEach((element, index) => {
-		if(element.includes(`[${searchFor.toUpperCase()}_${uniquecode}]`)) {
-			array[index] = `<b class="prefix ${searchFor} no-select">${searchFor.toUpperCase()}</b>`;
-		}
-	});
-	final = `<span class="logline"> ${array.join(" ")} </span><br><br>`;
-	return final;
+function htmlConsoleFormatText(text, searchFor = String) { // im sorry someever i couldn't use regex
+
+	return `<span class="logline"> <b class="prefix ${searchFor} no-select">${searchFor.toUpperCase()}</b> ${text} </span><br><br>`;
 
 }
 
