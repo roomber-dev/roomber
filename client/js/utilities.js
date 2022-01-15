@@ -1,5 +1,6 @@
 loadedEvents = [];
-
+const logs = [];
+const errors = [];
 function parseUrls(text, onUrl) {
 	var words = text.split(" ");
 
@@ -179,7 +180,7 @@ function decodeSaveCustomizationCode(code = String, load = false) {
  * @param {*} message 
  * @param {*} type 
  */
-function cclog(message, type, list = false) {
+function cclog(message, type, timestamp = true, list = false) {
 	const category = {
 		debug: function (text) {
 			return [`%c[DEBUG] %c${text}`, 'color: #0096FF', 'color: white']
@@ -218,7 +219,10 @@ function cclog(message, type, list = false) {
 			"load"
 		]
 	} else {
-		//logs.push(`[${type.toUpperCase()}] ${message}`);
+			const d = new Date();
+			const ts = d.toLocaleString();
+		logs.push(`[${ts}] [${type.toUpperCase()}] ${message}`);
+		if(type.toLowerCase() == "error") errors.push(`[${ts}] [${type.toUpperCase()}] ${message}`);
 		htmlConsoleInsert(message, type);
 		console.log(...category[type](message));
 	}

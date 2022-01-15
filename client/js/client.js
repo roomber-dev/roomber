@@ -1,6 +1,19 @@
-const logs = [];
 $(document).ready(function () {
-	loginInit();
+	if(getCookie("cookies") == "") {
+		popup("Cookies", `By visiting and using this website you agree for the usage of cookies.`, [{
+			label: "I agree",
+			click: function(p) {
+				setCookie("cookies", "true")
+				p.close();
+				setTimeout(() => {
+					loginInit();
+				}, 1000);
+			}
+		}]);
+	} else {
+		loginInit();
+	}
+
 });
 
 canEditAndDeleteAny = false;
@@ -424,7 +437,7 @@ function newMessage(message) {
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges no-select"><div class="username">${cache[message.author].username}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([
