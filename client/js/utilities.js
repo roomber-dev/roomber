@@ -219,7 +219,7 @@ function cclog(message, type, list = false) {
 		]
 	} else {
 		//logs.push(`[${type.toUpperCase()}] ${message}`);
-		HtmlConsole_insert(message, type);
+		htmlConsoleInsert(message, type);
 		console.log(...category[type](message));
 	}
 }
@@ -232,7 +232,7 @@ window.onerror = function (error, url, line) {
 
 function htmlConsoleInsert(text, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
 	$("#console").append(`
-		${HtmlConsole_formatText(text, searchFor)}
+		${htmlConsoleFormatText(text, searchFor)}
 	`)
 }
 
