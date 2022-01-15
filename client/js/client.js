@@ -19,6 +19,17 @@ function copyMessage(id) {
 	window.getSelection().removeAllRanges();
 }
 
+function copyUsername() {
+	var copyText = $(`#login .username`)[0];
+	var range = document.createRange();
+	range.selectNodeContents(copyText);
+	window.getSelection().removeAllRanges();
+	window.getSelection().addRange(range);
+	document.execCommand("copy", false, copyText.innerHTML);
+	window.getSelection().removeAllRanges();
+}
+
+
 function chatScrollDown() {
 	if ($('#messages').prop("scrollHeight") - $('#messages').prop("scrollTop") != 524) {
 		$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight") }, 300);
@@ -206,7 +217,6 @@ loaded(function () {
 		if ($("#message").val().trim() == "") {
 			return;
 		}
-		if($("#message").val() === "ROOMBAH??!") new Audio('assets/ROOMBAH.wav').play();
 		sendMessage({
 			session: session.session,
 			msg: {
@@ -218,6 +228,31 @@ loaded(function () {
 		});
 		$("#message").val("");
 	})
+
+	jQuery.fn.single_double_click = function(single_click_callback, double_click_callback, timeout) {
+		return this.each(function(){
+		  var clicks = 0, self = this;
+		  jQuery(this).click(function(event){
+			clicks++;
+			if (clicks == 1) {
+			  setTimeout(function(){
+				if(clicks == 1) {
+				  single_click_callback.call(self, event);
+				} else if(clicks >= 2) {
+				  double_click_callback.call(self, event);
+				}
+				clicks = 0;
+			  }, timeout || 300);
+			}
+		  });
+		});
+	  }
+	
+	  $("#roomber-logo").single_double_click(function() {
+			cclog("clicked logo", "debug");
+	  }, function () {
+		new Audio('assets/ROOMBAH.wav').play();
+	  })
 
 	$("#message").keypress(function (e) {
 		var key = e.which;
@@ -385,11 +420,11 @@ function newMessage(message) {
 
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
-		    <img src="${cache[message.author].avatar}" class="avatar">
+		    <img src="${cache[message.author].avatar}" class="avatar no-select">
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges no-select"><div class="username">${cache[message.author].username}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([
@@ -448,7 +483,7 @@ function generateEmbed(embed, useTextHeight) {
 function createEmbed(messageID, url, lang) {
 	embed(url, lang, function (embed) {
 		if (embed) {
-			cclog("loaded embed " + embed.ogTitle, "debug");
+			cclog("loaded embed " + embed.ogTitle, "load");
 			$(`#chat-area #messages #${messageID} .embeds`).html("");
 			$(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));
 			let color = "";
@@ -461,7 +496,7 @@ function createEmbed(messageID, url, lang) {
 				"background-color": color
 			});
 		} else {
-			cclog("no embed", "debug");
+			cclog("no embed", "warning");
 		}
 	})
 }
@@ -472,8 +507,8 @@ function composeMessageContent(message, messageText) {
 		return `<i class="twa twa-${emoji.replaceAll(":", "")}"></i>`
 	});
 	message[0].innerHTML = parseUrls(message[0].innerHTML, function (url) {
-		cclog("loading embed for " + url, "debug");
-		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo"></div>');
+		cclog("loading embed for " + url, "loading");
+		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo no-select"></div>');
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 }
@@ -529,18 +564,17 @@ function easterEg() {
 
 let keysPressed = {}
 
-document.addEventListener('keydown', (event) => {
+/*document.addEventListener('keydown', (event) => {
 	keysPressed[event.key] = true;
 
-	if (/*keysPressed['Control'] && */event.key == 'r' && event.key == 'o' && event.key == 'm' && event.key == 'b') {
+	
 		console.log("easter eg activatged!!")
 		easterEg();
-	}
-});
+});*/
 
-document.addEventListener('keyup', (event) => {
+/*document.addEventListener('keyup', (event) => {
 	delete keysPressed[event.key];
-});
+});*/
 
 function ldmToggle() {
 	ldmOn = !ldmOn;

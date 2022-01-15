@@ -816,6 +816,14 @@ body {
 	background: orange;
 }
 
+#console .prefix.loading {
+	background: #4e03fc;
+}
+
+#console .prefix.load {
+	background: #0096FF;
+}
+
 #console .logline {
 	margin-top: 5px;
 	margin-bottom: 5px;

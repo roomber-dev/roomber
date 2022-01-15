@@ -64,8 +64,8 @@ function cacheUsers(users, onCache) {
 }
 
 function getMessages(before = false, scroll = false) {
-	cclog("fetching messages from "+toFetch+" with limit "+50, "debug");
-	cclog("(fetching messages in channel " + channel + ")", "debug");
+	cclog("fetching messages from "+toFetch+" with limit "+50, "loading");
+	cclog("(fetching messages in channel " + channel + ")", "loading");
 	addLoadingAnimation(currentServer);
 	if($(".message").length) {
 		cclog("last message id " + $(".message").last().prop("id"), "debug");
@@ -79,7 +79,7 @@ function getMessages(before = false, scroll = false) {
 		}
 
 		var forEach = new Promise(function(resolve, reject) {
-			cclog("fetched " + data.messages.length + " messages", "debug");
+			cclog("fetched " + data.messages.length + " messages", "load");
 			removeLoadingAnimation(currentServer);
 			if(data.messages.length == 0) resolve();
 			if(before == false) data.messages = data.messages.reverse();

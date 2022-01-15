@@ -101,9 +101,11 @@ function getCookie(cname) {
 	return "";
 }
 
+
+
 function loaded(cb) {
 	loadedEvents.push(cb);
-}
+	};
 
 function fireLoaded() {
 	loadedEvents.forEach(function (event) {
@@ -196,8 +198,14 @@ function cclog(message, type, list = false) {
 		},
 		warning: function (text) {
 			return [`%c[WARNING] %c${text}`, 'color: orange', 'color: white']
+		},
+		loading: function (text) {
+			return [`%c[LOADING] %c${text}`, 'color: #4e03fc', 'color: white']
+		},
+		load: function (text) {
+			return [`%c[LOAD] %c${text}`, 'color: #0096FF', 'color: white']
 		}
-	}
+	} // #4e03fc
 	if (list) {
 		return [
 			"debug",
@@ -205,7 +213,9 @@ function cclog(message, type, list = false) {
 			"leave",
 			"start",
 			"error",
-			"warning"
+			"warning",
+			"loading",
+			"load"
 		]
 	} else {
 		//logs.push(`[${type.toUpperCase()}] ${message}`);
@@ -218,6 +228,7 @@ function cclog(message, type, list = false) {
 window.onerror = function (error, url, line) {
 	//controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
 	cclog("Error occured at " + url + ":" + line + " " + error, "error");
+	return true;
 };
 
 function HtmlConsole_insert(text, uniquecode, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
@@ -227,17 +238,14 @@ function HtmlConsole_insert(text, uniquecode, searchFor) { // yup i did the unne
 }
 
 function HtmlConsole_formatText(text, uniquecode, searchFor = String) { // im sorry someever i couldn't use regex
-	console.log(text, uniquecode, searchFor)
 	let final = "";
 	let array = text.split(" ")
 	array.forEach((element, index) => {
 		if(element.includes(`[${searchFor.toUpperCase()}_${uniquecode}]`)) {
-			console.log("DOES CONTAIN SHIT");
 			array[index] = `<b class="prefix ${searchFor} no-select">${searchFor.toUpperCase()}</b>`;
 		}
 	});
 	final = `<span class="logline"> ${array.join(" ")} </span><br><br>`;
-	console.log(final);
 	return final;
 
 }
