@@ -20,13 +20,33 @@ function setupPickProfilePicture() {
 		label: "OK",
 		click: function(p) {
 			let avatar = $("#avatarInput").val();
-			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
-				$("#setup-pfp img").prop("src", avatar);
-				$("#login img").prop("src", avatar);
+			testImage(avatar).then(function() {
+				$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
+					$("#setup-pfp img").prop("src", avatar);
+					$("#login img").prop("src", avatar);
+				});
+				p.close();
+			}, function() {
+				popup("Error", `Invalid Profile Picture`, [{
+					label: "OK",
+					click: function(p_) {
+						p_.close();
+					}
+				}]);
+			})
+
+		}
+	}, {
+		label: "Reset",
+		click: function(p) {
+			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png"}, function() {
+				$("#setup-pfp img").prop("src", "avatars/default.png");
+				$("#login img").prop("src", "avatars/default.png");
 			});
 			p.close();
 		}
-	}]);
+	}
+]);
 }
 
 function setupSetTheme(theme) {

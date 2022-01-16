@@ -251,7 +251,7 @@ loaded(function () {
 			  setTimeout(function(){
 				if(clicks == 1) {
 				  single_click_callback.call(self, event);
-				} else if(clicks >= 2) {
+				} else {
 				  double_click_callback.call(self, event);
 				}
 				clicks = 0;
@@ -459,7 +459,7 @@ function newMessage(message) {
 
 function addChat(chat) {
 	$("#channels ul").append(`
-		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
+		<li class="dm ellipsis-overflow" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
 	`);
 }
 
@@ -601,4 +601,28 @@ function ldmUpdate() {
 	} else if(ldmOn == false) {
 		$(".glass").css("backdrop-filter", "blur(25px)");
 	}
+}
+
+setTimeout(() => {
+	let i = 0;
+let intrv = setInterval(() => {
+	if (i > 2) return clearInterval(this);
+	warningMessageConsole();
+	i++
+}, 500);
+}, 2000);
+
+
+
+function warningMessageConsole() {
+
+
+	console.log(
+		"%cStop!",
+		"color:red;font-family:system-ui;font-size:4rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+	console.log(
+		"%cIf someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?",
+		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
+	)
 }
