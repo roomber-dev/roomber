@@ -758,3 +758,73 @@ body {
 	margin-top: 10px;
 	font-size: 16px;
 }
+
+#console {
+	padding: 5px;
+	color: lime;
+	background-color: black;
+	width: 500px;
+	height: 300px;
+	overflow: scroll;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	border: 4px solid white;
+	display: none;
+}
+
+#console .titlebar {
+	margin: 10px;
+	display: flex;
+	width: 90%;
+	justify-content: space-between;
+	border-bottom: 1px solid rgba(255,255,255,0.4);
+	cursor: move;
+}
+
+#console .prefix {
+    font-weight: bold;
+    color: white;
+	background: #546e7a;
+    padding: 2px 4px;
+    font-size: 100%;
+    border-radius: 4px;
+    margin: 0 5px 0 0;
+}
+
+#console .prefix.debug {
+	background: #0096FF;
+}
+
+#console .prefix.join {
+	background: #32cd32;
+}
+
+#console .prefix.leave {
+	background: #EE4B2B;
+}
+
+#console .prefix.start {
+	background: #FF00FF;
+}
+
+#console .prefix.error {
+	background: red;
+}
+
+#console .prefix.warning {
+	background: orange;
+}
+
+#console .prefix.loading {
+	background: #4e03fc;
+}
+
+#console .prefix.load {
+	background: #0096FF;
+}
+
+#console .logline {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}

@@ -20,7 +20,12 @@ function logIn() {
 	$("#login").text("");
 	$("#login").append(`<img src="avatars/default.png" alt="" class="avatar" id="avatar-btn">`);
 	$("#login").append('<p class="username">' + session.username + '</p>');
-	$("#login").append('<button id="logout" class="button"><i class="material-icons">exit_to_app</i></button>');
+	$("#login").append('<button id="logout" class="button no-select"><i class="material-icons">exit_to_app</i></button>');
+	$( "#login p.username" ).click(function() {
+		cclog("copy username", "debug")
+		copyUsername();
+	  });
+	
 	$("#logout").click(function() {
 		popup("Log out", `Are you sure you want to log out?`, [{
 			label: "No",

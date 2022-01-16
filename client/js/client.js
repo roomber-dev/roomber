@@ -1,5 +1,19 @@
 $(document).ready(function () {
-	loginInit();
+	if(getCookie("cookies") == "") {
+		popup("Cookies", `By visiting and using this website you agree for the usage of cookies.`, [{
+			label: "I agree",
+			click: function(p) {
+				setCookie("cookies", "true")
+				p.close();
+				setTimeout(() => {
+					loginInit();
+				}, 1000);
+			}
+		}]);
+	} else {
+		loginInit();
+	}
+
 });
 
 canEditAndDeleteAny = false;
@@ -17,6 +31,17 @@ function copyMessage(id) {
 	document.execCommand("copy", false, copyText.innerHTML);
 	window.getSelection().removeAllRanges();
 }
+
+function copyUsername() {
+	var copyText = $(`#login .username`)[0];
+	var range = document.createRange();
+	range.selectNodeContents(copyText);
+	window.getSelection().removeAllRanges();
+	window.getSelection().addRange(range);
+	document.execCommand("copy", false, copyText.innerHTML);
+	window.getSelection().removeAllRanges();
+}
+
 
 function chatScrollDown() {
 	if ($('#messages').prop("scrollHeight") - $('#messages').prop("scrollTop") != 524) {
@@ -205,7 +230,6 @@ loaded(function () {
 		if ($("#message").val().trim() == "") {
 			return;
 		}
-
 		sendMessage({
 			session: session.session,
 			msg: {
@@ -217,6 +241,31 @@ loaded(function () {
 		});
 		$("#message").val("");
 	})
+
+	jQuery.fn.single_double_click = function(single_click_callback, double_click_callback, timeout) {
+		return this.each(function(){
+		  var clicks = 0, self = this;
+		  jQuery(this).click(function(event){
+			clicks++;
+			if (clicks == 1) {
+			  setTimeout(function(){
+				if(clicks == 1) {
+				  single_click_callback.call(self, event);
+				} else {
+				  double_click_callback.call(self, event);
+				}
+				clicks = 0;
+			  }, timeout || 300);
+			}
+		  });
+		});
+	  }
+	
+	  $("#roomber-logo").single_double_click(function() {
+			cclog("clicked logo", "debug");
+	  }, function () {
+		new Audio('assets/ROOMBAH.wav').play();
+	  })
 
 	$("#message").keypress(function (e) {
 		var key = e.which;
@@ -384,11 +433,11 @@ function newMessage(message) {
 
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
-		    <img src="${cache[message.author].avatar}" class="avatar">
+		    <img src="${cache[message.author].avatar}" class="avatar no-select">
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([
@@ -410,7 +459,7 @@ function newMessage(message) {
 
 function addChat(chat) {
 	$("#channels ul").append(`
-		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
+		<li class="dm ellipsis-overflow" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
 	`);
 }
 
@@ -447,7 +496,7 @@ function generateEmbed(embed, useTextHeight) {
 function createEmbed(messageID, url, lang) {
 	embed(url, lang, function (embed) {
 		if (embed) {
-			cclog("loaded embed " + embed.ogTitle, "debug");
+			cclog("loaded embed " + embed.ogTitle, "load");
 			$(`#chat-area #messages #${messageID} .embeds`).html("");
 			$(`#chat-area #messages #${messageID} .embeds`).append(generateEmbed(embed));
 			let color = "";
@@ -460,7 +509,7 @@ function createEmbed(messageID, url, lang) {
 				"background-color": color
 			});
 		} else {
-			cclog("no embed", "debug");
+			cclog("no embed", "warning");
 		}
 	})
 }
@@ -471,8 +520,8 @@ function composeMessageContent(message, messageText) {
 		return `<i class="twa twa-${emoji.replaceAll(":", "")}"></i>`
 	});
 	message[0].innerHTML = parseUrls(message[0].innerHTML, function (url) {
-		cclog("loading embed for " + url, "debug");
-		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo"></div>');
+		cclog("loading embed for " + url, "loading");
+		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo no-select"></div>');
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 }
@@ -528,18 +577,17 @@ function easterEg() {
 
 let keysPressed = {}
 
-document.addEventListener('keydown', (event) => {
+/*document.addEventListener('keydown', (event) => {
 	keysPressed[event.key] = true;
 
-	if (/*keysPressed['Control'] && */event.key == 'r' && event.key == 'o' && event.key == 'm' && event.key == 'b') {
+	
 		console.log("easter eg activatged!!")
 		easterEg();
-	}
-});
+});*/
 
-document.addEventListener('keyup', (event) => {
+/*document.addEventListener('keyup', (event) => {
 	delete keysPressed[event.key];
-});
+});*/
 
 function ldmToggle() {
 	ldmOn = !ldmOn;
@@ -553,4 +601,28 @@ function ldmUpdate() {
 	} else if(ldmOn == false) {
 		$(".glass").css("backdrop-filter", "blur(25px)");
 	}
+}
+
+setTimeout(() => {
+	let i = 0;
+let intrv = setInterval(() => {
+	if (i > 2) return clearInterval(this);
+	warningMessageConsole();
+	i++
+}, 500);
+}, 2000);
+
+
+
+function warningMessageConsole() {
+
+
+	console.log(
+		"%cStop!",
+		"color:red;font-family:system-ui;font-size:4rem;-webkit-text-stroke: 1px black;font-weight:bold"
+	);
+	console.log(
+		"%cIf someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?",
+		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
+	)
 }
