@@ -11,7 +11,16 @@ function setupNotImplemented() {
 }
 
 function setupPickProfilePicture() {
-	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
+	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [ {
+		label: "Reset",
+		click: function(p) {
+			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png"}, function() {
+				$("#setup-pfp img").prop("src", "avatars/default.png");
+				$("#login img").prop("src", "avatars/default.png");
+			});
+			p.close();
+		}
+	},{
 		label: "Cancel",
 		click: function(p) {
 			p.close();
@@ -20,30 +29,29 @@ function setupPickProfilePicture() {
 		label: "OK",
 		click: function(p) {
 			let avatar = $("#avatarInput").val();
-			testImage(avatar).then(function() {
-				$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function() {
+			//testImage(avatar).then(function() {
+				$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function(data) {
 					$("#setup-pfp img").prop("src", avatar);
 					$("#login img").prop("src", avatar);
-				});
-				p.close();
+					p.close();
+				}).fail(function(data) {
+					popup("Error", data.responseText, [{
+						label: "OK",
+						click: function(p__) {
+							p__.close();
+						}
+					}], false, "red");
+					cclog("Server responded with " + data.status + ": " + data.responseText, "debug");
+				  });
 			}, function() {
 				popup("Error", `Invalid Profile Picture`, [{
 					label: "OK",
 					click: function(p_) {
 						p_.close();
 					}
-				}]);
-			})
+				}], false, "red");
+			//})
 
-		}
-	}, {
-		label: "Reset",
-		click: function(p) {
-			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png"}, function() {
-				$("#setup-pfp img").prop("src", "avatars/default.png");
-				$("#login img").prop("src", "avatars/default.png");
-			});
-			p.close();
 		}
 	}
 ]);

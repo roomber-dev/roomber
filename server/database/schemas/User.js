@@ -7,7 +7,8 @@ const User = require('mongoose').Schema({
     permission: String,
     setup: Boolean,
     avatar: String,
-    servers: Array
+    servers: Array,
+    xtra: Boolean
 });
 
 User.methods.hasPermission = function (db, permission, callback) {
@@ -36,6 +37,10 @@ User.methods.hasPermissions = function (db, permissions, callback) {
             callback(false);
         }
     })
+}
+
+User.methods.hasXtra = function () {
+    return this.xtra;
 }
 
 User.methods.hasPermissionAuth = function (db, session, permission, callback) {

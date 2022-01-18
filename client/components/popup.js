@@ -30,7 +30,7 @@ function popup(title, text, buttons = [{label: "OK", click: function(popup) { po
     let id = `popup-${popups}`;
     let t = title;
     if(color != "") {
-        t = `<p style='color: ${color}; font-weight: bold;'>${title}</p>`;
+        t = `<span style='color: ${color}; font-weight: bold;'>${title}</p>`;
     }
     let html = `<div class="popup" id="${id}">
     <div class="popup-content">
