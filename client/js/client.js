@@ -1,8 +1,8 @@
 $(document).ready(function () {
-	if(getCookie("cookies") == "") {
+	if (getCookie("cookies") == "") {
 		popup("Cookies", `By visiting and using this website you agree for the usage of cookies.`, [{
 			label: "I agree",
-			click: function(p) {
+			click: function (p) {
 				setCookie("cookies", "true")
 				p.close();
 				setTimeout(() => {
@@ -20,7 +20,6 @@ canEditAndDeleteAny = false;
 toFetch = 0;
 fetchingMessages = false;
 servers = [];
-ldmOn = getCookie("ldm") === 'true';
 
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
@@ -89,7 +88,7 @@ function getMessageManagementButtons() {
 }
 
 function updateTheme() {
-		$("body").prop("class", theme);
+	$("body").prop("class", theme);
 }
 
 function setTheme(_theme) {
@@ -130,16 +129,18 @@ function createChannel(index) {
 		<input class="textbox" id="create-channel-name" placeholder="Channel name"></input>
 	`, [{
 		label: "Cancel",
-		click: function(p) {p.close();}
+		click: function (p) { p.close(); }
 	}, {
 		label: "OK",
-		click: function(p) {
+		click: function (p) {
 			let name = $("#create-channel-name").val();
 			p.close();
-			$.post(serverUrl + "/createChannel", {...session, 
-				server: server._id, name: name}, function(data) {
-				if(data["error"]) {
-					setTimeout(function() {popup("Error", data.error);}, 501);
+			$.post(serverUrl + "/createChannel", {
+				...session,
+				server: server._id, name: name
+			}, function (data) {
+				if (data["error"]) {
+					setTimeout(function () { popup("Error", data.error); }, 501);
 					return;
 				}
 				servers[index]["channels"].push({
@@ -180,14 +181,14 @@ function openServer(index) {
 		$("#channels ul").append(`
 			<li id="${channel._id}"><div class="hash no-select">#</div><div class="no-select ellipsis-overflow">${channel.name}</div></li>
 		`);
-		$("#channels #" + channel._id).click(function() {
+		$("#channels #" + channel._id).click(function () {
 			channelClick($(this).attr("id"));
 		});
 		if (i == 0) {
 			channelClick(channel._id);
 		}
 	})
-	if(server["owner"] && server.owner == session.user) {
+	if (server["owner"] && server.owner == session.user) {
 		$("#channels ul").append(`
 			<li onclick="createChannel(${index})"><div class="hash no-select">+</div><div class="no-select create-channel">Create channel</div></li>
 		`);
@@ -242,30 +243,30 @@ loaded(function () {
 		$("#message").val("");
 	})
 
-	jQuery.fn.single_double_click = function(single_click_callback, double_click_callback, timeout) {
-		return this.each(function(){
-		  var clicks = 0, self = this;
-		  jQuery(this).click(function(event){
-			clicks++;
-			if (clicks == 1) {
-			  setTimeout(function(){
-				if(clicks == 1) {
-				  single_click_callback.call(self, event);
-				} else {
-				  double_click_callback.call(self, event);
+	jQuery.fn.single_double_click = function (single_click_callback, double_click_callback, timeout) {
+		return this.each(function () {
+			var clicks = 0, self = this;
+			jQuery(this).click(function (event) {
+				clicks++;
+				if (clicks == 1) {
+					setTimeout(function () {
+						if (clicks == 1) {
+							single_click_callback.call(self, event);
+						} else {
+							double_click_callback.call(self, event);
+						}
+						clicks = 0;
+					}, timeout || 300);
 				}
-				clicks = 0;
-			  }, timeout || 300);
-			}
-		  });
+			});
 		});
-	  }
-	
-	  $("#roomber-logo").single_double_click(function() {
-			cclog("clicked logo", "debug");
-	  }, function () {
+	}
+
+	$("#roomber-logo").single_double_click(function () {
+		cclog("clicked logo", "debug");
+	}, function () {
 		new Audio('assets/ROOMBAH.wav').play();
-	  })
+	})
 
 	$("#message").keypress(function (e) {
 		var key = e.which;
@@ -307,9 +308,7 @@ loaded(function () {
 		getChats();
 	});
 	$("#by-the-logo").append('<button class="button" id="ldm"><i class="megasmall material-icons">opacity</i></button>');
-	$("#ldm").click(function () {
-		ldmToggle();
-	});
+	$("#ldm").click(ldmToggle);
 
 	function j() {
 		popup("Join server", `
@@ -340,23 +339,27 @@ loaded(function () {
 			</div>
 		`, [{
 			label: "Back",
-			click: function(p) {
+			click: function (p) {
 				p.close();
 				setTimeout(newServerPopup, 501);
 			}
 		}, {
 			label: "OK",
-			click: function(p) {
-				let stuff = {...session, 
-					name: $(".create-server-popup .textbox").first().val()};
-				if($(".create-server-popup .textbox").last().val() != "") {
-					stuff = {...stuff, picture: 
-						$(".create-server-popup .textbox").last().val()};
+			click: function (p) {
+				let stuff = {
+					...session,
+					name: $(".create-server-popup .textbox").first().val()
+				};
+				if ($(".create-server-popup .textbox").last().val() != "") {
+					stuff = {
+						...stuff, picture:
+							$(".create-server-popup .textbox").last().val()
+					};
 				}
-				$.post(serverUrl + "/createServer", stuff, function(data) {
-					if(data["error"]) {
+				$.post(serverUrl + "/createServer", stuff, function (data) {
+					if (data["error"]) {
 						p.close();
-						setTimeout(function() {
+						setTimeout(function () {
 							popup("Error", data.error);
 						}, 501);
 					} else {
@@ -381,16 +384,16 @@ loaded(function () {
 			</div>
 		`, [{
 			label: "Cancel",
-			click: function(p) {
+			click: function (p) {
 				p.close();
 			}
 		}]);
 		let btns = $(".new-server-btn");
-		btns.first().click(function() {
+		btns.first().click(function () {
 			removePopup(p_);
 			setTimeout(j, 501);
 		});
-		btns.last().click(function() {
+		btns.last().click(function () {
 			removePopup(p_);
 			setTimeout(createServer, 501);
 		});
@@ -426,10 +429,10 @@ function newMessage(message) {
 	if (message.flagged) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
-	if(cache[message.author] && cache[message.author]["xtra"]) {
+	if (cache[message.author] && cache[message.author]["xtra"]) {
 		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
-	
+
 
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
@@ -589,34 +592,18 @@ let keysPressed = {}
 	delete keysPressed[event.key];
 });*/
 
-function ldmToggle() {
-	ldmOn = !ldmOn;
-	ldmUpdate();
-}
-
-function ldmUpdate() {
-	setCookie("ldm",ldmOn);
-	if(ldmOn == true) {
-		$(".glass").css("backdrop-filter", "blur(0px)");
-	} else if(ldmOn == false) {
-		$(".glass").css("backdrop-filter", "blur(25px)");
-	}
-}
-
 setTimeout(() => {
 	let i = 0;
-let intrv = setInterval(() => {
-	if (i > 2) return clearInterval(this);
-	warningMessageConsole();
-	i++
-}, 500);
+	let intrv = setInterval(() => {
+		if (i > 2) return clearInterval(this);
+		warningMessageConsole();
+		i++
+	}, 500);
 }, 2000);
 
 
 
 function warningMessageConsole() {
-
-
 	console.log(
 		"%cStop!",
 		"color:red;font-family:system-ui;font-size:4rem;-webkit-text-stroke: 1px black;font-weight:bold"
@@ -624,5 +611,5 @@ function warningMessageConsole() {
 	console.log(
 		"%cIf someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?",
 		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
-	)
+	);
 }

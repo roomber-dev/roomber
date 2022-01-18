@@ -3,40 +3,40 @@ cache = {};
 channel = "";
 
 function ifPermission(permission, ifTrue) {
-	$.post(serverUrl+'/can', {
+	$.post(serverUrl + '/can', {
 		user: session.user,
-		permission: permission	
-	}, function(data) {
-		if(data == true) {
+		permission: permission
+	}, function (data) {
+		if (data == true) {
 			ifTrue();
 		}
 	})
 }
 
 function ifPermissions(permissions, ifTrue) {
-	$.post(serverUrl+'/hasPermissions', {
+	$.post(serverUrl + '/hasPermissions', {
 		user: session.user,
 		permissions: permissions
-	}, function(data) {
-		if(data == true) {
+	}, function (data) {
+		if (data == true) {
 			ifTrue();
 		}
 	})
 }
 
 function addMessage(message, scroll = true, before = false) {
-	if(before == false) {
+	if (before == false) {
 		$("#messages").append(newMessage(message));
-		$(".message").last().find("img").on("error", function() {
+		$(".message").last().find("img").on("error", function () {
 			$(this).prop("src", "avatars/default.png")
 		});
 	} else {
 		$("#messages").prepend(newMessage(message));
-		$(".message").first().find("img").on("error", function() {
+		$(".message").first().find("img").on("error", function () {
 			$(this).prop("src", "avatars/default.png")
 		});
-		ldmUpdate();
 	}
+	ldmUpdate();
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
 
 	scroll && chatScrollDown();
@@ -51,47 +51,47 @@ async function adAppend(scroll = true) {
 }
 
 function cacheUser(user) {
-	if(!Object.keys(cache).includes(user._id)) {
+	if (!Object.keys(cache).includes(user._id)) {
 		cache[user._id] = user;
 	}
 }
 
 function cacheUsers(users, onCache) {
-	$.post(serverUrl+'/getUsers', {users:users}, function(data) {
+	$.post(serverUrl + '/getUsers', { users: users }, function (data) {
 		data.forEach(cacheUser);
 		onCache();
 	})
 }
 
 function getMessages(before = false, scroll = false) {
-	cclog("fetching messages from "+toFetch+" with limit "+50, "loading");
+	cclog("fetching messages from " + toFetch + " with limit " + 50, "loading");
 	cclog("(fetching messages in channel " + channel + ")", "loading");
 	addLoadingAnimation(currentServer);
-	if($(".message").length) {
+	if ($(".message").length) {
 		cclog("last message id " + $(".message").last().prop("id"), "debug");
 		cclog("highest message id " + scrolledMessage.prop("id"), "debug");
 	}
-	$.post(serverUrl+'/getMessages', {fetch: toFetch, channel: channel}, function(data) {
-		if(data.error) {
+	$.post(serverUrl + '/getMessages', { fetch: toFetch, channel: channel }, function (data) {
+		if (data.error) {
 			removeLoadingAnimation(currentServer);
 			cclog(data.error, "error");
 			return;
 		}
 
-		var forEach = new Promise(function(resolve, reject) {
+		var forEach = new Promise(function (resolve, reject) {
 			cclog("fetched " + data.messages.length + " messages", "load");
 			removeLoadingAnimation(currentServer);
-			if(data.messages.length == 0) resolve();
-			if(before == false) data.messages = data.messages.reverse();
-			cacheUsers(data.users, function() {
-				data.messages.forEach(function(message, index, array) {
+			if (data.messages.length == 0) resolve();
+			if (before == false) data.messages = data.messages.reverse();
+			cacheUsers(data.users, function () {
+				data.messages.forEach(function (message, index, array) {
 					addMessage(message, false, before);
 					if (index === array.length - 1) resolve();
 				});
 			});
 		});
-		if(before) {
-			forEach.then(function() {
+		if (before) {
+			forEach.then(function () {
 				scrolledMessage[0].scrollIntoView();
 				fetchingMessages = false;
 				delete scrolledMessage;
@@ -99,8 +99,8 @@ function getMessages(before = false, scroll = false) {
 		} else {
 			ldmUpdate();
 		}
-		if(scroll) {
-			forEach.then(function() {
+		if (scroll) {
+			forEach.then(function () {
 				$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
 			});
 		}
@@ -108,39 +108,39 @@ function getMessages(before = false, scroll = false) {
 }
 
 function sendMessage(message) {
-	$.post(serverUrl+'/messages', message, function(data) {
-		if(data.error) {
+	$.post(serverUrl + '/messages', message, function (data) {
+		if (data.error) {
 			popup("Error", data.error, undefined, false, "red");
 		}
 	})
 }
 
 function editMessage(message, newMessage) {
-	$.post(serverUrl+'/editMessage', {
+	$.post(serverUrl + '/editMessage', {
 		editor: session.user,
 		session: session.session,
-		message: message, 
+		message: message,
 		newMessage: newMessage
-	}, function(data) {
-		if(data.error) {
-			setTimeout(function() {
+	}, function (data) {
+		if (data.error) {
+			setTimeout(function () {
 				popup("Error", data.error, undefined, false, "red");
 			}, 500);
 		}
-	}).fail(function() {
-		setTimeout(function() {
+	}).fail(function () {
+		setTimeout(function () {
 			popup("Error", "You can only edit your own messages!", undefined, false, "red");
 		}, 500);
 	});
 }
 
 function deleteMessage(message) {
-	$.post(serverUrl+'/deleteMessage', {
+	$.post(serverUrl + '/deleteMessage', {
 		deleter: session.user,
 		session: session.session,
 		message: message
-	}).fail(function() {
-		setTimeout(function() {
+	}).fail(function () {
+		setTimeout(function () {
 			popup("Error", "You can only delete your own messages!", undefined, false, "red");
 		}, 500);
 	});
@@ -149,7 +149,7 @@ function deleteMessage(message) {
 var socket = io();
 
 function changeChannel(id, type = "text") {
-	if(type == "dm") {
+	if (type == "dm") {
 		$("#channels ul").html("");
 	}
 	channel = id;
@@ -162,8 +162,8 @@ function changeChannel(id, type = "text") {
 }
 
 function joinServer(id) {
-	$.post(serverUrl+"/joinServer", {...session, server: id}, function(data) {
-		if(data.error) {
+	$.post(serverUrl + "/joinServer", { ...session, server: id }, function (data) {
+		if (data.error) {
 			popup("Error", data.error);
 			return;
 		}
@@ -172,34 +172,34 @@ function joinServer(id) {
 	});
 }
 
-socket.on('message', function(message) {
+socket.on('message', function (message) {
 	cacheUser(message.user);
 	addMessage(message);
 });
-socket.on('edit', function(e) {
+socket.on('edit', function (e) {
 	const line = $(`#${e.message} .msgln`);
 	line.html("");
 	composeMessageContent(line, e.newMessage);
-	const adminPanelMessage = $("#admin-panel #"+e.message);
-	if(adminPanelMessage.length) {
+	const adminPanelMessage = $("#admin-panel #" + e.message);
+	if (adminPanelMessage.length) {
 		AdminPanel.editFlaggedMessage(e.message, e.newMessage);
 	}
 });
-socket.on('delete', function(e) {
+socket.on('delete', function (e) {
 	$(`#${e.message}`).remove();
 });
 socket.on('ad', adAppend);
-socket.on('messagesCleared', function() {
+socket.on('messagesCleared', function () {
 	$("#messages").html("");
 	alert("All of the messages were cleared");
 });
-socket.on('broadcast', function(message) {
+socket.on('broadcast', function (message) {
 	popup("Broadcast", message);
 });
-socket.on('userJoin', function() {
+socket.on('userJoin', function () {
 	cclog("yoo new user in channel!!", "join")
 });
-socket.on('maintenance', function() {
+socket.on('maintenance', function () {
 	cclog("maintannenenance!!111", "debug");
 	location.reload();
 });

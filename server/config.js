@@ -4,5 +4,5 @@ module.exports = {
     enableNgrok: false,
     openNgrokURL: false,
     notfunny: "roomberiscool20@!",
-    apiPath: "/api/v1"
+    apiPath: "/api"
 };

@@ -2,7 +2,7 @@
   "name": "roomber",
   "version": "4",
   "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
-  "main": "server.js",
+  "main": "./server/server.js",
   "scripts": {
     "test": "echo \"No test scripts!\" && exit 1",
     "start": "node .",
@@ -17,6 +17,7 @@
     "discord.js": "^13.3.1",
     "express": "^4.17.1",
     "express-rate-limit": "^6.0.3",
+    "glob": "^7.2.0",
     "http": "^0.0.1-security",
     "js-confuser": "^1.4.0",
     "mongoose": "^6.0.12",

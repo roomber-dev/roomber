@@ -42,14 +42,14 @@
     <meta property="og:title" content="Roomber">
     <meta property="og:description"
         content="Create a free Roomber account and discover a new messaging app that's better and faster than your normal phone messaging app.">
-        <meta property="og:image" content="https://i.imgur.com/hDx7FNI.png">
+    <meta property="og:image" content="https://i.imgur.com/hDx7FNI.png">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Roomber">
     <meta name="twitter:description"
         content="Create a free Roomber account and discover a new messaging app that's better and faster than your normal phone messaging app.">
-        <meta name="twitter:image" content="https://i.imgur.com/hDx7FNI.png">
+    <meta name="twitter:image" content="https://i.imgur.com/hDx7FNI.png">
     <meta content="#9b34ba" data-react-helmet="true" name="theme-color" />
     <script src="js/platform.js"></script>
     <script src="js/utilities.js"></script>
@@ -95,80 +95,84 @@
 
 <body>
     <div id="body">
-    <div id="loading-back">
-        <img alt="" src="assets/roomber-logo.png" id="loading-image">
-        <div id="fun-fact-container">
-            <p id="fun-fact-title">Did you know</p>
-            <p id="fun-fact"></p>
-        </div>
-    </div>
-
-    <div id="minAdminPanel">
-        <div class="titlebar" data-dragger="true">
-            <div class="title"><i class="megasmall material-icons">security</i>Admin Panel</div>
-            <div class="close">
-                <i class="megasmall material-icons">close</i>
+        <div id="loading-back">
+            <img alt="" src="assets/roomber-logo.png" id="loading-image">
+            <div id="fun-fact-container">
+                <p id="fun-fact-title">Did you know</p>
+                <p id="fun-fact"></p>
             </div>
         </div>
-        <button class="button" id="remove-all-messages"><i class="megasmall material-icons">clear_all</i>Clear
-            Messages</button>
-        <button class="button" id="broadcast"><i class="megasmall material-icons">announcement</i>Broadcast</button>
-        <button class="button" id="full-panel"><i class="megasmall material-icons">security</i>Full Panel</button>
-    </div>
 
-    <div class="topbar-main flex-down">
-        <div id="topbar" class="glass">
-            <div id="topbar-content">
-                <div id="by-the-logo">
-                    <img id="roomber-logo" src="assets/roomber-logo.png">
+        <div id="minAdminPanel">
+            <div class="titlebar" data-dragger="true">
+                <div class="title"><i class="megasmall material-icons">security</i>Admin Panel</div>
+                <div class="close">
+                    <i class="megasmall material-icons">close</i>
                 </div>
-                <div id="servers">
-                    <div class="topbar-sep"></div>
-                    <div id="server-list">
-                        <div title="New server" class="server basic new-server"><p class="no-select"><i class="megasmall material-icons">add</i></p></div>
+            </div>
+            <button class="button" id="remove-all-messages"><i class="megasmall material-icons">clear_all</i>Clear
+                Messages</button>
+            <button class="button" id="broadcast"><i class="megasmall material-icons">announcement</i>Broadcast</button>
+            <button class="button" id="full-panel"><i class="megasmall material-icons">security</i>Full Panel</button>
+        </div>
+
+        <div class="topbar-main flex-down">
+            <div id="topbar" class="glass">
+                <div id="topbar-content">
+                    <div id="by-the-logo">
+                        <img id="roomber-logo" src="assets/roomber-logo.png">
                     </div>
-                    <div class="topbar-sep"></div>
-                </div>
-                <div id="login">
-                    Not logged in
-                </div>
-            </div>
-        </div>
-        <div class="flex">
-            <div id="channels" class="glass">
-                <ul>
-                </ul>
-            </div>
-            <div id="chat-area">
-                <script src="components/minAdminPanel.js"></script>
-                <div id="messages">
-                </div>
-                <div id="message-box" class="glass">
-                    <div class="message-input">
-                        <input id="message" class="glass" placeholder="Message" autocomplete="off" />
-                        <button id="send" class="button"><i class="megasmall material-icons">send</i></button>
+                    <div id="servers">
+                        <div class="topbar-sep"></div>
+                        <div id="server-list">
+                            <div title="New server" class="server basic new-server">
+                                <p class="no-select"><i class="megasmall material-icons">add</i></p>
+                            </div>
+                        </div>
+                        <div class="topbar-sep"></div>
+                    </div>
+                    <div id="login">
+                        Not logged in
                     </div>
                 </div>
             </div>
+            <div class="flex">
+                <div id="channels" class="glass">
+                    <ul>
+                    </ul>
+                </div>
+                <div id="chat-area">
+                    <script src="components/minAdminPanel.js"></script>
+                    <div id="messages">
+                    </div>
+                    <div id="message-box" class="glass">
+                        <div class="message-input">
+                            <input id="message" class="glass" placeholder="Message" autocomplete="off" />
+                            <button id="send" class="button"><i class="megasmall material-icons">send</i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
 
-    <div id="setup-container"></div>
-    <div id="console"><div class="titlebar" data-dragger="true">
-        <div class="title"><i class="megasmall material-icons">bug_report</i>Debug Console
+        <div id="setup-container"></div>
+        <div id="console">
+            <div class="titlebar" data-dragger="true">
+                <div class="title"><i class="megasmall material-icons">bug_report</i>Debug Console
+                </div>
+
+            </div>
         </div>
 
-    </div>
-    </div>
-
-    <script src="components/popup.js"></script>
-    <script src="components/horizontalMenu.js"></script>
-    <script src="components/setup.js"></script>
-    <script src="js/login.js"></script>
-    <script src="js/client.js"></script>
-    <script src="js/communication.js"></script>
-    <script src="js/connectionEvents.js"></script>
-    <script src="components/adminPanel.js"></script>
+        <script src="components/popup.js"></script>
+        <script src="components/horizontalMenu.js"></script>
+        <script src="components/setup.js"></script>
+        <script src="js/ldm.js"></script>
+        <script src="js/login.js"></script>
+        <script src="js/client.js"></script>
+        <script src="js/communication.js"></script>
+        <script src="js/connectionEvents.js"></script>
+        <script src="components/adminPanel.js"></script>
 
     </div>
 </body>
