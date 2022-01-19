@@ -27,14 +27,8 @@ function ifPermissions(permissions, ifTrue) {
 function addMessage(message, scroll = true, before = false) {
 	if (before == false) {
 		$("#messages").append(newMessage(message));
-		$(".message").last().find("img").on("error", function () {
-			$(this).prop("src", "avatars/default.png")
-		});
 	} else {
 		$("#messages").prepend(newMessage(message));
-		$(".message").first().find("img").on("error", function () {
-			$(this).prop("src", "avatars/default.png")
-		});
 	}
 	ldmUpdate();
 	composeMessageContent($(`#${message._id} .msgln`), message.message);

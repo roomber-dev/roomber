@@ -357,7 +357,7 @@ loaded(function () {
 					};
 				}
 				$.post(serverUrl + "/createServer", stuff, function (data) {
-					if (data["error"]) {
+					if (data.error) {
 						p.close();
 						setTimeout(function () {
 							popup("Error", data.error);
@@ -433,14 +433,20 @@ function newMessage(message) {
 		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
 
+	let avatar = get("avatar", "avatars/default.png");
+	let username = get("username", "unknown");
+
+	function get(name, d = "") {
+		return (cache[message.author] && cache[message.author][name]) ? cache[message.author][name] : d;
+	}
 
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
-		    <img src="${cache[message.author].avatar}" class="avatar no-select">
+		    <img src="${avatar}" class="avatar no-select">
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username">${cache[message.author].username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username">${username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([

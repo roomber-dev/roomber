@@ -11,50 +11,37 @@ function setupNotImplemented() {
 }
 
 function setupPickProfilePicture() {
-	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [ {
+	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
 		label: "Reset",
-		click: function(p) {
-			$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png"}, function() {
+		click: function (p) {
+			$.post(serverUrl + "/changeProfile", { session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png" }, function () {
 				$("#setup-pfp img").prop("src", "avatars/default.png");
 				$("#login img").prop("src", "avatars/default.png");
 			});
 			p.close();
 		}
-	},{
+	}, {
 		label: "Cancel",
-		click: function(p) {
+		click: function (p) {
 			p.close();
 		}
 	}, {
 		label: "OK",
-		click: function(p) {
+		click: function (p) {
 			let avatar = $("#avatarInput").val();
-			//testImage(avatar).then(function() {
-				$.post(serverUrl+"/changeProfile", {session: session.session, user: session.user, toChange: "avatar", avatar: avatar}, function(data) {
-					$("#setup-pfp img").prop("src", avatar);
-					$("#login img").prop("src", avatar);
+			$.post(serverUrl + "/changeProfile", { session: session.session, user: session.user, toChange: "avatar", avatar: avatar }, function (data) {
+				if (data.error) {
 					p.close();
-				}).fail(function(data) {
-					popup("Error", data.responseText, [{
-						label: "OK",
-						click: function(p__) {
-							p__.close();
-						}
-					}], false, "red");
-					cclog("Server responded with " + data.status + ": " + data.responseText, "debug");
-				  });
-			}, function() {
-				popup("Error", `Invalid Profile Picture`, [{
-					label: "OK",
-					click: function(p_) {
-						p_.close();
-					}
-				}], false, "red");
-			//})
-
+					setTimeout(function () { popup("Error", data.error, undefined, false, "red"); }, 501);
+					return;
+				}
+				$("#setup-pfp img").prop("src", avatar);
+				$("#login img").prop("src", avatar);
+				p.close();
+			})
 		}
 	}
-]);
+	]);
 }
 
 function setupSetTheme(theme) {
@@ -64,7 +51,7 @@ function setupSetTheme(theme) {
 
 function setupPage(username) {
 	return {
-		1: function() {
+		1: function () {
 			return `
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
@@ -76,7 +63,7 @@ function setupPage(username) {
 				</div>
 			`;
 		},
-		2: function() {
+		2: function () {
 			return `
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
@@ -89,7 +76,7 @@ function setupPage(username) {
 				</div>
 			`;
 		},
-		3: function() {
+		3: function () {
 			return `
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
@@ -114,7 +101,7 @@ function setupPage(username) {
 				</div>
 			`;
 		},
-		4: function() {
+		4: function () {
 			return `
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
@@ -132,7 +119,7 @@ function setupPage(username) {
 function setupClose() {
 	$(".setup-bg").remove();
 	$.post('/setup', {
-		session: session.session, 
+		session: session.session,
 		user: session.user
 	});
 	onSetupFinished(setupTheme);
