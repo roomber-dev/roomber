@@ -415,6 +415,30 @@ function newMessage(message) {
 		|| canEditAndDeleteAny) {
 		extra = getMessageManagementButtons();
 	}
+	if (canEditAndDeleteAny) {
+		extra.push({
+			icon: "gavel",
+			click: function (menuItem) {
+				popup("Ban", `
+					<input type="text" class="textbox" id="ban-reason" placeholder="Ban reason"></input>
+					<input type="date" id="ban-date"></input>
+				`, [{
+					label: "OK",
+					click: function (p) {
+						p.close();
+						$.post(serverUrl + "/ban", {
+							...session,
+							toBan: message.author,
+							reason: $("#ban-reason").val(),
+							date: $("#ban-date").prop("valueAsDate").getTime()
+						}).fail(function (error) {
+							setTimeout(function () { popup("Error", error, undefined, "red"); }, 501);
+						});
+					}
+				}])
+			}
+		});
+	}
 	if (session == {} || message.author != session.user) {
 		extra.push({
 			icon: "person_add",

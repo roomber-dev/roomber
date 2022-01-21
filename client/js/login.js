@@ -1,19 +1,19 @@
 function logOut() {
-    var cookies = document.cookie.split(";");
+	var cookies = document.cookie.split(";");
 
-    for (var i = 0; i < cookies.length; i++) {
-        var cookie = cookies[i];
-        var eqPos = cookie.indexOf("=");
-        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    }
+	for (var i = 0; i < cookies.length; i++) {
+		var cookie = cookies[i];
+		var eqPos = cookie.indexOf("=");
+		var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+		document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+	}
 
-    $.post(serverUrl+"/logout", {
-    	user: session.user,
-    	session: session.session
-    })
+	$.post(serverUrl + "/logout", {
+		user: session.user,
+		session: session.session
+	})
 
-    window.location.reload();
+	window.location.reload();
 }
 
 function logIn() {
@@ -21,20 +21,22 @@ function logIn() {
 	$("#login").append(`<img src="avatars/default.png" alt="" class="avatar" id="avatar-btn">`);
 	$("#login").append('<p class="username">' + session.username + '</p>');
 	$("#login").append('<button id="logout" class="button no-select"><i class="material-icons">exit_to_app</i></button>');
-	$( "#login p.username" ).click(function() {
+	$("#login p.username").click(function () {
 		cclog("copy username", "debug")
 		copyUsername();
-	  });
-	
-	$("#logout").click(function() {
+	});
+
+	socket.emit('auth', session);
+
+	$("#logout").click(function () {
 		popup("Log out", `Are you sure you want to log out?`, [{
 			label: "No",
-			click: function(p) {
+			click: function (p) {
 				p.close();
 			}
 		}, {
 			label: "Yes",
-			click: function(p) {
+			click: function (p) {
 				logOut();
 				p.close();
 			}
@@ -44,10 +46,10 @@ function logIn() {
 
 function reg_err(p, msg) {
 	p.close()
-	setTimeout(function() {
+	setTimeout(function () {
 		popup("Error", msg, [{
 			label: "OK",
-			click: function(popup) {
+			click: function (popup) {
 				popup.close();
 				setTimeout(reg, 500);
 			}
@@ -59,21 +61,21 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 	// pretty fancy right?
 	let username = "a";
 	let usernameInput = $("#reg-username").val();
-	if(usernameInput) username = usernameInput;
-	if([username, $("#reg-email").val(), $("#reg-password").val()].map(function(i) { return i.trim(); } ).includes("")) {
+	if (usernameInput) username = usernameInput;
+	if ([username, $("#reg-email").val(), $("#reg-password").val()].map(function (i) { return i.trim(); }).includes("")) {
 		reg_err(p, "Username, password or email are empty");
 		return;
 	}
 	let u = {};
-	if(has_username == true) {
-		u = {username: $("#reg-username").val()};
+	if (has_username == true) {
+		u = { username: $("#reg-username").val() };
 	}
-	$.post(serverUrl+url, {
+	$.post(serverUrl + url, {
 		...u,
 		email: $("#reg-email").val(),
 		password: $("#reg-password").val()
-	}, function(data) {
-		if(data.error) {
+	}, function (data) {
+		if (data.error) {
 			reg_err(p, data.error);
 			return;
 		}
@@ -84,15 +86,15 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		logIn();
 		p.close();
 		finish();
-	}).fail(function() {reg_err(p, msg)});
+	}).fail(function () { reg_err(p, msg) });
 }
 
 function passVisibilityToggle() {
 	let visibility = false;
-	$(".password-visibility").click(function() {
+	$(".password-visibility").click(function () {
 		visibility = !visibility;
 		$(this).html(visibility ? "visibility" : "visibility_off");
-		$("#pass-flex input").attr("type", 
+		$("#pass-flex input").attr("type",
 			visibility ? "text" : "password");
 	})
 }
@@ -109,9 +111,9 @@ function reg(finish) {
 	popup("Welcome to Roomber!", "Pick an option", [
 		{
 			label: "Register",
-			click: function(p) { 
-				p.close(); 
-				setTimeout(function() {
+			click: function (p) {
+				p.close();
+				setTimeout(function () {
 					popup("Register", `
 						<p>E-mail</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
@@ -122,15 +124,15 @@ function reg(finish) {
 						${regPass()}
 					`, [{
 						label: "Back",
-						click: function(p) {
+						click: function (p) {
 							p.close();
-							setTimeout(function() {
+							setTimeout(function () {
 								reg(finish);
 							}, 501);
 						}
 					}, {
 						label: "OK",
-						click: function(p_) {
+						click: function (p_) {
 							reg_callback(p_, "/register", "This username is already taken", finish);
 						}
 					}]);
@@ -140,9 +142,9 @@ function reg(finish) {
 		},
 		{
 			label: "Log in",
-			click: function(p) {
-				p.close(); 
-				setTimeout(function() {
+			click: function (p) {
+				p.close();
+				setTimeout(function () {
 					popup("Log in", `
 						<p>E-mail</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
@@ -150,15 +152,15 @@ function reg(finish) {
 						${regPass()}
 					`, [{
 						label: "Back",
-						click: function(p) {
+						click: function (p) {
 							p.close();
-							setTimeout(function() {
+							setTimeout(function () {
 								reg(finish);
 							}, 501);
 						}
 					}, {
 						label: "OK",
-						click: function(p_) {
+						click: function (p_) {
 							reg_callback(p_, "/login", "Invalid e-mail or password", finish, false);
 						}
 					}]);
@@ -170,8 +172,8 @@ function reg(finish) {
 }
 
 function checkSetup() {
-	$.post(serverUrl+'/getSetup', {user: session.user}, function(isSetup) {
-		if(isSetup) {
+	$.post(serverUrl + '/getSetup', { user: session.user }, function (isSetup) {
+		if (isSetup) {
 			setup();
 		} else {
 			onSetupFinished();
@@ -182,7 +184,7 @@ function checkSetup() {
 function loginInit() {
 	let id = getCookie("session");
 	let user = getCookie("userid");
-	if(id == "" || user == "") {
+	if (id == "" || user == "") {
 		session = {};
 		reg(checkSetup);
 	} else {

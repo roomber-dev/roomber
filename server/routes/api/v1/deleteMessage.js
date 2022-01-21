@@ -7,7 +7,7 @@ module.exports = require('express').Router({ mergeParams: true })
                 user.hasPermission(req.db, "messages.delete_any", result => {
                     if (result == true) {
                         req.db.Message.deleteOne({ _id: req.body.message }, () => {
-                            io.emit('delete', {
+                            req.io.emit('delete', {
                                 message: req.body.message
                             });
                         })

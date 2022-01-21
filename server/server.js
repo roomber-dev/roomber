@@ -11,19 +11,32 @@ const io = require('socket.io')(server);
 
 app.io = io;
 
-let usersOnline = 0;
+const auth = require('./auth');
 
 io.on('connection', socket => {
-	usersOnline++;
-	sclog(`A user connected (${usersOnline} users)`, "join");
+	sclog(`A user connected`, "join");
+
+	socket.on('auth', session => {
+		auth(db, session.user, session.session, () => {
+			socket.join(session.user);
+		}, user => {
+			socket.emit("ban", {
+				date: user.bannedUntil,
+				reason: user.banReason
+			})
+		})
+	})
 
 	socket.on('disconnect', () => {
-		usersOnline--;
-		sclog(`A user disconnected (${usersOnline} users)`, "leave");
+		sclog(`A user disconnected`, "leave");
 	})
 
 	socket.on('joinChannel', channel => {
 		socket.join(channel);
+	})
+
+	socket.on('leaveChannel', channel => {
+		socket.leave(channel);
 	})
 })
 

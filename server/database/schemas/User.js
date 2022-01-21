@@ -8,7 +8,10 @@ const User = require('mongoose').Schema({
     setup: Boolean,
     avatar: String,
     servers: Array,
-    xtra: Boolean
+    xtra: Boolean,
+    banned: Boolean,
+    bannedUntil: Number,
+    banReason: String
 });
 
 User.methods.hasPermission = function (db, permission, callback) {
@@ -44,7 +47,7 @@ User.methods.hasXtra = function () {
 }
 
 User.methods.hasPermissionAuth = function (db, session, permission, callback) {
-    auth(this._id, session, () => {
+    auth(db, this._id, session, () => {
         db.Permission.find({ name: this.permission }, (err, perm) => {
             if (perm.length) {
                 if (perm[0].permissions.includes(permission)) {

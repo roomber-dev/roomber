@@ -146,6 +146,9 @@ function changeChannel(id, type = "text") {
 	if (type == "dm") {
 		$("#channels ul").html("");
 	}
+	if (channel != "") {
+		socket.emit("leaveChannel", channel);
+	}
 	channel = id;
 	toFetch = 0;
 	fetchingMessages = false;
@@ -169,6 +172,10 @@ function joinServer(id) {
 socket.on('message', function (message) {
 	cacheUser(message.user);
 	addMessage(message);
+});
+socket.on('ban', function(ban) {
+	popup("Ban", `You have been banned from Roomber due to: "${ban.reason}" until ${new Date(ban.date).toLocaleDateString()}`, [], false, "red");
+	$("")
 });
 socket.on('edit', function (e) {
 	const line = $(`#${e.message} .msgln`);
