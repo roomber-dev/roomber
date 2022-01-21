@@ -421,8 +421,13 @@ function newMessage(message) {
 			click: function (menuItem) {
 				popup("Ban", `
 					<input type="text" class="textbox" id="ban-reason" placeholder="Ban reason"></input>
-					<input type="date" id="ban-date"></input>
+					<input type="date" id="ban-date" class="textbox"></input>
 				`, [{
+					label: "Cancel",
+					click: function (p) {
+						p.close();
+					}
+				}, {
 					label: "OK",
 					click: function (p) {
 						p.close();

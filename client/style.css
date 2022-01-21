@@ -307,6 +307,7 @@ body {
 	vertical-align: middle;
 	background-color: rgba(0, 0, 0, 0.1);
 	margin-right: 10px;
+	object-fit: cover;
 }
 
 .timestamp {
@@ -822,4 +823,8 @@ body {
 #console .logline {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+a {
+	color: #0095ba;
 }
