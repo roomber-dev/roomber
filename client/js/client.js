@@ -648,3 +648,64 @@ function warningMessageConsole() {
 		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
 	);
 }
+
+function onScanSuccess(decodedText, decodedResult) {
+    // Handle on success condition with the decoded text or result.
+    //console.log(`Scan result: ${decodedText}`, decodedResult);
+    // ...
+	location.href = decodedText;
+    html5QrcodeScanner.clear();
+    // ^ this will stop the scanner (video feed) and clear the scan area.
+}
+
+function onScanError(errorMessage) {
+    // handle on error condition, with error message
+    cclog(`${errorMessage}`, "error")
+} // https://roomber-app.herokuapp.com/qrlogin?email=neksodebe@gmail.com?password=roombaverycool
+
+function generateBarCode()
+            {
+                var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + `${session.session},${session.user},${getCookie("username")}` + '&amp;size=50x50';
+                return `
+				<img
+				src="${url}" 
+				alt="" 
+				title="Scan this to log in" 
+				width="100%" />
+				`
+            }
+
+
+function qrLoginGenerate() {
+	popup("QR Login", `This is your QR for logging in. DO NOT give it to anybody you don't want accessing your account.<br>${generateBarCode()}`, undefined)
+}
+
+function qrshit() {
+	var html5QrcodeScanner = new Html5QrcodeScanner(
+		"reader", { fps: 10, qrbox: 250 });
+	html5QrcodeScanner.render(function(decodedText) {
+		html5QrcodeScanner.clear();
+		cclog(decodedText, "debug")
+		const bruhstuff = decodedText.split(","); // 0 is session id, 1 is user id, 2 is username
+		//location.href = `https://roomber-app.herokuapp.com/${serverUrl}/qrLogin?${decodedText}`;
+		session.session = bruhstuff[0];
+		session.user = bruhstuff[1]
+		setCookie("session", bruhstuff[0])
+		setCookie("userid", bruhstuff[1])
+		setCookie("username", bruhstuff[2])
+		location.reload();
+	});
+}
+
+function qrLoginOpen() {
+	setTimeout(() => {
+		qrshit();
+	}, 500);
+	popup("Login using a QR code", `<div style="width: 100%" id="reader"></div>`, [{
+		label: "Cancel",
+		click: function(p) {
+			p.close();
+		}
+	}])
+
+}

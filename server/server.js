@@ -45,3 +45,7 @@ const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
 	sclog(`Server running on port ${server.address().port}`, "start");
 })
+
+process.on("uncaughtException", function(err) {
+	sclog(err, "error")
+})
