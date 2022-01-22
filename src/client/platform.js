@@ -1,1 +1,0 @@
-const serverUrl = "api/v1";

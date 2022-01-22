@@ -13,7 +13,7 @@ function logOut() {
 		session: session.session
 	})
 
-	window.location.reload();
+	window.location.href = "";
 }
 
 function logIn() {
@@ -44,8 +44,8 @@ function logIn() {
 	});
 }
 
-function reg_err(p, msg) {
-	p.close()
+function reg_err(p, msg, close = true) {
+	if(close) { p.close() };
 	setTimeout(function () {
 		popup("Error", msg, [{
 			label: "OK",
@@ -57,7 +57,7 @@ function reg_err(p, msg) {
 	}, 500);
 }
 
-function reg_callback(p, url, msg, finish, has_username = true) {
+function reg_callback(p, url, msg, has_username = true) {
 	// pretty fancy right?
 	let username = "a";
 	let usernameInput = $("#reg-username").val();
@@ -82,10 +82,7 @@ function reg_callback(p, url, msg, finish, has_username = true) {
 		setCookie("username", data.username);
 		setCookie("userid", data.user);
 		setCookie("session", data.session);
-		session = data;
-		logIn();
-		p.close();
-		finish();
+		window.location.href = "";
 	}).fail(function () { reg_err(p, msg) });
 }
 
@@ -107,7 +104,7 @@ function regPass() {
 	</div>`;
 }
 
-function reg(finish) {
+function reg() {
 	popup("Welcome to Roomber!", "Pick an option", [
 		{
 			label: "Register",
@@ -127,17 +124,26 @@ function reg(finish) {
 						click: function (p) {
 							p.close();
 							setTimeout(function () {
-								reg(finish);
+								reg();
 							}, 501);
 						}
 					}, {
 						label: "OK",
 						click: function (p_) {
-							reg_callback(p_, "/register", "This username is already taken", finish);
+							reg_callback(p_, "/register", "This username is already taken");
 						}
 					}]);
 					passVisibilityToggle();
 				}, 500);
+			}
+		},
+		{
+			label: "QR code",
+			click: function (p) {
+				p.close();
+				setTimeout(function() {
+					openQRLogin();
+				}, 501);
 			}
 		},
 		{
@@ -155,13 +161,13 @@ function reg(finish) {
 						click: function (p) {
 							p.close();
 							setTimeout(function () {
-								reg(finish);
+								reg();
 							}, 501);
 						}
 					}, {
 						label: "OK",
 						click: function (p_) {
-							reg_callback(p_, "/login", "Invalid e-mail or password", finish, false);
+							reg_callback(p_, "/login", "Invalid e-mail or password", false);
 						}
 					}]);
 					passVisibilityToggle();
@@ -186,7 +192,7 @@ function loginInit() {
 	let user = getCookie("userid");
 	if (id == "" || user == "") {
 		session = {};
-		reg(checkSetup);
+		reg();
 	} else {
 		session = {
 			session: id,

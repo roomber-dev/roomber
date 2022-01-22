@@ -243,25 +243,6 @@ loaded(function () {
 		$("#message").val("");
 	})
 
-	jQuery.fn.single_double_click = function (single_click_callback, double_click_callback, timeout) {
-		return this.each(function () {
-			var clicks = 0, self = this;
-			jQuery(this).click(function (event) {
-				clicks++;
-				if (clicks == 1) {
-					setTimeout(function () {
-						if (clicks == 1) {
-							single_click_callback.call(self, event);
-						} else {
-							double_click_callback.call(self, event);
-						}
-						clicks = 0;
-					}, timeout || 300);
-				}
-			});
-		});
-	}
-
 	$("#roomber-logo").single_double_click(function () {
 		cclog("clicked logo", "debug");
 	}, function () {
@@ -309,6 +290,9 @@ loaded(function () {
 	});
 	$("#by-the-logo").append('<button class="button" id="ldm"><i class="megasmall material-icons">opacity</i></button>');
 	$("#ldm").click(ldmToggle);
+
+	$("#by-the-logo").append('<button class="button" id="showqr"><i class="megasmall material-icons">vpn_key</i></button>');
+	$("#showqr").click(popupQR);
 
 	function j() {
 		popup("Join server", `
@@ -612,31 +596,14 @@ function easterEg() {
 	}, 10000);
 }
 
-
-let keysPressed = {}
-
-/*document.addEventListener('keydown', (event) => {
-	keysPressed[event.key] = true;
-
-	
-		console.log("easter eg activatged!!")
-		easterEg();
-});*/
-
-/*document.addEventListener('keyup', (event) => {
-	delete keysPressed[event.key];
-});*/
-
-setTimeout(() => {
+setTimeout(function() {
 	let i = 0;
-	let intrv = setInterval(() => {
+	let intrv = setInterval(function() {
 		if (i > 2) return clearInterval(this);
 		warningMessageConsole();
 		i++
 	}, 500);
 }, 2000);
-
-
 
 function warningMessageConsole() {
 	console.log(
@@ -647,65 +614,4 @@ function warningMessageConsole() {
 		"%cIf someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?",
 		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
 	);
-}
-
-function onScanSuccess(decodedText, decodedResult) {
-    // Handle on success condition with the decoded text or result.
-    //console.log(`Scan result: ${decodedText}`, decodedResult);
-    // ...
-	location.href = decodedText;
-    html5QrcodeScanner.clear();
-    // ^ this will stop the scanner (video feed) and clear the scan area.
-}
-
-function onScanError(errorMessage) {
-    // handle on error condition, with error message
-    cclog(`${errorMessage}`, "error")
-} // https://roomber-app.herokuapp.com/qrlogin?email=neksodebe@gmail.com?password=roombaverycool
-
-function generateBarCode()
-            {
-                var url = 'https://api.qrserver.com/v1/create-qr-code/?data=' + `${session.session},${session.user},${getCookie("username")}` + '&amp;size=50x50';
-                return `
-				<img
-				src="${url}" 
-				alt="" 
-				title="Scan this to log in" 
-				width="100%" />
-				`
-            }
-
-
-function qrLoginGenerate() {
-	popup("QR Login", `This is your QR for logging in. DO NOT give it to anybody you don't want accessing your account.<br>${generateBarCode()}`, undefined)
-}
-
-function qrshit() {
-	var html5QrcodeScanner = new Html5QrcodeScanner(
-		"reader", { fps: 10, qrbox: 250 });
-	html5QrcodeScanner.render(function(decodedText) {
-		html5QrcodeScanner.clear();
-		cclog(decodedText, "debug")
-		const bruhstuff = decodedText.split(","); // 0 is session id, 1 is user id, 2 is username
-		//location.href = `https://roomber-app.herokuapp.com/${serverUrl}/qrLogin?${decodedText}`;
-		session.session = bruhstuff[0];
-		session.user = bruhstuff[1]
-		setCookie("session", bruhstuff[0])
-		setCookie("userid", bruhstuff[1])
-		setCookie("username", bruhstuff[2])
-		location.reload();
-	});
-}
-
-function qrLoginOpen() {
-	setTimeout(() => {
-		qrshit();
-	}, 500);
-	popup("Login using a QR code", `<div style="width: 100%" id="reader"></div>`, [{
-		label: "Cancel",
-		click: function(p) {
-			p.close();
-		}
-	}])
-
 }

@@ -338,7 +338,6 @@ body {
 .message .horizontalMenu {
 	justify-self: flex-end;
 	align-self: flex-start;
-	margin: 6px;
 	transition: 0.25s width, 0.25s opacity;
 	opacity: 0;
 	width: 0;
@@ -827,4 +826,33 @@ body {
 
 a {
 	color: #0095ba;
+}
+
+/* QR Code Reader */
+#reader button {
+	color: white;
+	background: rgba(0,0,0,0.3);
+	border: none;
+	padding: 5px;
+	border-radius: 6px;
+	border: 1px solid rgba(255,255,255,0.5);
+}
+
+#reader a {
+	text-decoration: none !important;
+	color: gray;
+	font-size: 12px;
+}
+
+#reader img {
+	filter: invert();
+}
+
+.qrcode {
+	width: 60%;
+	image-rendering: crisp-edges;
+	margin-top: 16px;
+	border-radius: 16px;
+	padding: 8px;
+	background: white;
 }

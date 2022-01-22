@@ -118,7 +118,7 @@ function setupPage(username) {
 
 function setupClose() {
 	$(".setup-bg").remove();
-	$.post('/setup', {
+	$.post(serverUrl + '/setup', {
 		session: session.session,
 		user: session.user
 	});
