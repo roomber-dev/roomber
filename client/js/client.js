@@ -243,7 +243,7 @@ loaded(function () {
 		$("#message").val("");
 	})
 
-	$("#roomber-logo").single_double_click(function () {
+	$("#roomber-logo").single_double_click(function() {}, function () { // someever are you stupid, the first function is for single click and the second one is for double click
 		new Audio('assets/ROOMBAH.wav').play();
 	});
 
