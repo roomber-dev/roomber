@@ -172,6 +172,7 @@ function joinServer(id) {
 socket.on('message', function (message) {
 	cacheUser(message.user);
 	addMessage(message);
+	playMessageSound();
 });
 socket.on('ban', function(ban) {
 	popup("Ban", `You have been banned from Roomber due to: "${ban.reason}" until ${new Date(ban.date).toLocaleDateString()}`, [], false, "red");

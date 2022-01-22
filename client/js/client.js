@@ -5,9 +5,9 @@ $(document).ready(function () {
 			click: function (p) {
 				setCookie("cookies", "true")
 				p.close();
-				setTimeout(() => {
+				setTimeout(function() {
 					loginInit();
-				}, 1000);
+				}, 501);
 			}
 		}]);
 	} else {
