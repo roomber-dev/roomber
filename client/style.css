@@ -345,7 +345,7 @@ body {
 
 .message:hover .horizontalMenu {
 	opacity: 1;
-	width: fit-content;
+	min-width: 102px;
 }
 
 .message .horizontalMenuItem {

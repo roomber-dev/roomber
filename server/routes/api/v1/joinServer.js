@@ -1,9 +1,9 @@
 const auth = require('../../../auth');
+const sclog = require('../../../sclog');
 
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/joinServer', (req, res) => {
         auth(req.db, req.body.user, req.body.session, () => {
-            sclog("auth works", "debug");
             req.db.Server.find({ _id: req.body.server }, (err, server) => {
                 if (err) {
                     return sclog(err, "error");
@@ -15,6 +15,7 @@ module.exports = require('express').Router({ mergeParams: true })
                             res.send({ error: "You are already in this server!" });
                             return;
                         }
+                        console.log("pushing");
                         user.servers.push(req.body.server);
                         user.save(err => {
                             if (err) {

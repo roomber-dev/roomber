@@ -4,6 +4,7 @@
 	border-radius: 4px;
 	backdrop-filter: blur(30px);
 	display: flex;
+	flex-wrap: wrap;
 }
 
 .horizontalMenuItem {

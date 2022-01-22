@@ -244,10 +244,8 @@ loaded(function () {
 	})
 
 	$("#roomber-logo").single_double_click(function () {
-		cclog("clicked logo", "debug");
-	}, function () {
 		new Audio('assets/ROOMBAH.wav').play();
-	})
+	});
 
 	$("#message").keypress(function (e) {
 		var key = e.which;
@@ -306,9 +304,9 @@ loaded(function () {
 		}, {
 			label: "OK",
 			click: function (p) {
+				const id = $("#serveridtextbox").val();
 				setTimeout(function () {
-					console.log($(`#serveridtextbox`));
-					joinServer($("#serveridtextbox").val());
+					joinServer(id);
 				}, 501);
 				p.close();
 			}
@@ -481,7 +479,7 @@ function newMessage(message) {
 
 function addChat(chat) {
 	$("#channels ul").append(`
-		<li class="dm ellipsis-overflow" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
+		<li class="dm ellipsis-overflow" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar || 'avatars/default.png'}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
 	`);
 }
 
