@@ -577,7 +577,7 @@ function composeMessageContent(message, messageText) {
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 	const attachment = message.parent().parent().parent().find(".attachment");
-	if (attachment) {
+	if (attachment && attachment.attr("src")) {
 		const s = attachment.attr("src").split("/");
 		attachment.on("error", function () {
 			attachment.parent().html(`<div class="attachment" style="padding: 4px; border: 1px solid rgba(0,0,0,0.1);"><i class="megasmall material-icons">description</i>${s[s.length - 1]}</div>`);
