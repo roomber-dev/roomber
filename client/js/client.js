@@ -472,7 +472,7 @@ function newMessage(message) {
 	let attachmentHtml = "";
 
 	if(message.attachment) {
-		attachmentHtml = `<a href="${message.attachment}" target="blank"><img src="${message.attachment}" id="attachment"></a>`;		
+		attachmentHtml = `<a href="${message.attachment}" class="attachment-link" target="blank"><img src="${message.attachment}" class="attachment"></a>`;		
 	}
 
 	let avatar = get("avatar", "avatars/default.png");
@@ -576,6 +576,10 @@ function composeMessageContent(message, messageText) {
 		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo no-select"></div>');
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
+	const attachment = message.parent().parent().parent().find(".attachment");
+	if(attachment[0] && attachment[0].naturalWidth == 0) {
+		attachment.parent().html(`<div class="attachment" style="padding: 4px; border: 1px solid rgba(0,0,0,0.1);"><i class="megasmall material-icons">description</i>test.txt</div>`);
+	}
 }
 
 function getChats() {

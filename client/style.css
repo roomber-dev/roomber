@@ -879,10 +879,18 @@ a {
 	padding: 2px;
 }
 
-#attachment {
+.attachment-link {
+	text-decoration: none;
+}
+
+.attachment {
 	width: 25%;
 	border: 6px solid rgba(0,0,0,0.5);
 	border-radius: 12px;
 	margin-top: 5px;
 	background: rgba(0,0,0,0.4);
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
