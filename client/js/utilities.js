@@ -49,20 +49,10 @@ function makeDrag(element) {
 	};
 };
 
-/**
- * Returns a random number between min (inclusive) and max (exclusive)
- */
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 }
 
-/**
- * Returns a random integer between min (inclusive) and max (inclusive).
- * The value is no lower than min (or the next integer greater than min
- * if min isn't an integer) and no greater than max (or the next integer
- * lower than max if max isn't an integer).
- * Using Math.round() will give you a non-uniform distribution!
- */
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
@@ -130,7 +120,6 @@ const propertyCSS = {
 };
 
 function decodeSaveCustomizationCode(code = String, load = false) {
-	// cbw-30;sbh-15;bg-"BASE64ENCODEDURL";fs-11;ff-"BASE64ENCODEDFONTNAME"
 	const result = {};
 
 	{
@@ -169,18 +158,7 @@ function decodeSaveCustomizationCode(code = String, load = false) {
 	return result;
 }
 
-/**
- * 
- * Console.logs a very cool and organized looking text.
- * 
- * Categories:
- * 
- * debug, join, leave, start, error, warning
- * 
- * @param {*} message 
- * @param {*} type 
- */
-function cclog(message, type, timestamp = true, list = false) {
+function cclog(message, type, timestamp = true) {
 	const category = {
 		debug: function (text) {
 			return [`%c[DEBUG] %c${text}`, 'color: #0096FF', 'color: white']
@@ -206,82 +184,20 @@ function cclog(message, type, timestamp = true, list = false) {
 		load: function (text) {
 			return [`%c[LOAD] %c${text}`, 'color: #0096FF', 'color: white']
 		}
-	} // #4e03fc
-	if (list) {
-		return [
-			"debug",
-			"join",
-			"leave",
-			"start",
-			"error",
-			"warning",
-			"loading",
-			"load"
-		]
-	} else {
-			const d = new Date();
-			const ts = d.toLocaleString();
-		logs.push(`[${ts}] [${type.toUpperCase()}] ${message}`);
-		if(type.toLowerCase() == "error") errors.push(`[${ts}] [${type.toUpperCase()}] ${message}`);
-		htmlConsoleInsert(message, type);
-		console.log(...category[type](message));
 	}
 }
 
-window.onerror = function (error, url, line) {
-	//controller.sendLog({acc:'error', data:'ERR:'+error+' URL:'+url+' L:'+line});
-	cclog("Error occured at " + url + ":" + line + " " + error, "error");
-	return true;
-};
-
-function htmlConsoleInsert(text, searchFor) { // yup i did the unnecessary because i was bored + no other ideas + fun
-	$("#console").append(`
-		${htmlConsoleFormatText(text, searchFor)}
-	`)
-}
-
-function htmlConsoleFormatText(text, searchFor = String) { // im sorry someever i couldn't use regex
-
-	return `<span class="logline"> <b class="prefix ${searchFor} no-select">${searchFor.toUpperCase()}</b> ${text} </span><br><br>`;
-
-}
-
 function generateUID() {
-	// I generate the UID from two parts here 
-	// to ensure the random number provide enough bits.
-	var firstPart = (Math.random() * 46656) | 0;
-	var secondPart = (Math.random() * 46656) | 0;
-	firstPart = ("000" + firstPart.toString(36)).slice(-3);
-	secondPart = ("000" + secondPart.toString(36)).slice(-3);
-	return firstPart + secondPart;
+	return uuidv4().substr(0,6);
 }
 
-function showConsole() {
-	$("#console").css("display", "block");
-	makeDrag(document.getElementById("console"))
+function urlToBlob(src) {
+	const byteCharacters = atob(src);
+	const byteNumbers = new Array(byteCharacters.length);
+	for (let i = 0; i < byteCharacters.length; i++) {
+	    byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	const byteArray = new Uint8Array(byteNumbers);
+	const blob = new Blob([byteArray], {type: 'image/png'});
+	return URL.createObjectURL(blob);
 }
-
-function testImage(url, timeoutT) {
-    return new Promise(function(resolve, reject) {
-      var timeout = timeoutT || 5000;
-      var timer, img = new Image();
-      img.onerror = img.onabort = function() {
-          clearTimeout(timer);
-      	  reject("error");
-      };
-      img.onload = function() {
-           clearTimeout(timer);
-           resolve("success");
-      };
-      timer = setTimeout(function() {
-          // reset .src to invalid URL so it stops previous
-          // loading, but doens't trigger new load
-          img.src = "//!!!!/noexist.jpg";
-          reject("timeout");
-      }, timeout); 
-      img.src = url;
-    });
-}
-
-
-        

@@ -11,37 +11,7 @@ function setupNotImplemented() {
 }
 
 function setupPickProfilePicture() {
-	popup("Pick a profile picture", `Type in a URL to the image<br> <input class="textbox" type="text" placeholder="Image URL" id="avatarInput"/>`, [{
-		label: "Reset",
-		click: function (p) {
-			$.post(serverUrl + "/changeProfile", { session: session.session, user: session.user, toChange: "avatar", avatar: "avatars/default.png" }, function () {
-				$("#setup-pfp img").prop("src", "avatars/default.png");
-				$("#login img").prop("src", "avatars/default.png");
-			});
-			p.close();
-		}
-	}, {
-		label: "Cancel",
-		click: function (p) {
-			p.close();
-		}
-	}, {
-		label: "OK",
-		click: function (p) {
-			let avatar = $("#avatarInput").val();
-			$.post(serverUrl + "/changeProfile", { session: session.session, user: session.user, toChange: "avatar", avatar: avatar }, function (data) {
-				if (data.error) {
-					p.close();
-					setTimeout(function () { popup("Error", data.error, undefined, false, "red"); }, 501);
-					return;
-				}
-				$("#setup-pfp img").prop("src", avatar);
-				$("#login img").prop("src", avatar);
-				p.close();
-			})
-		}
-	}
-	]);
+	uploadWidget.open();
 }
 
 function setupSetTheme(theme) {
