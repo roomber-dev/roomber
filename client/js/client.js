@@ -227,9 +227,33 @@ loaded(function () {
 		$("#loading-back").remove();
 	});
 
+	let attachment = "";
+
+	onAttachment(function(url) {
+		attachment = url;
+		$("#attachment-indicator").css({display: "flex"});
+	});
+
+	$("#remove-attachment").click(function() {
+		$("#attachment-indicator").css({display: "none"});
+		attachment = "";
+	});
+
+	$("#attach").click(function () {
+		attachmentWidget.open();
+	});
+
 	$("#send").click(function () {
 		if ($("#message").val().trim() == "") {
 			return;
+		}
+		let attachmentObject = {};
+		if(attachment) {
+			attachmentObject = {
+				attachment: attachment
+			};
+			attachment = "";
+			$("#attachment-indicator").css({display: "none"});
 		}
 		sendMessage({
 			session: session.session,
@@ -237,13 +261,14 @@ loaded(function () {
 				author: session.user,
 				message: $("#message").val(),
 				timestamp: new Date().getTime(),
-				channel: channel
+				channel: channel,
+				...attachmentObject
 			}
 		});
 		$("#message").val("");
 	})
 
-	$("#roomber-logo").single_double_click(function() {}, function () { // someever are you stupid, the first function is for single click and the second one is for double click
+	$("#roomber-logo").single_double_click(function() {}, function () {
 		new Audio('assets/ROOMBAH.wav').play();
 	});
 
@@ -444,6 +469,12 @@ function newMessage(message) {
 		xtraHtml = '<div class="xtraBadge">xtra</div>';
 	}
 
+	let attachmentHtml = "";
+
+	if(message.attachment) {
+		attachmentHtml = `<a href="${message.attachment}" target="blank"><img src="${message.attachment}" id="attachment"></a>`;		
+	}
+
 	let avatar = get("avatar", "avatars/default.png");
 	let username = get("username", "unknown");
 
@@ -472,6 +503,7 @@ function newMessage(message) {
 			        <div class="timestamp">${ts}</div>
 			    </div>
 			    <div class="embeds"></div>
+			    ${attachmentHtml}
 			</div>
 		</div>
 	</div>`;

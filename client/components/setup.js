@@ -11,7 +11,7 @@ function setupNotImplemented() {
 }
 
 function setupPickProfilePicture() {
-	uploadWidget.open();
+	pfpWidget.open();
 }
 
 function setupSetTheme(theme) {

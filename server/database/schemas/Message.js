@@ -6,5 +6,6 @@ module.exports = require('mongoose').Schema({
     flagged: Boolean,
     removed: Boolean,
     channel: String,
-    chat: String
+    chat: String,
+    attachment: String
 })
