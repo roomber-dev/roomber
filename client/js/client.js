@@ -5,7 +5,7 @@ $(document).ready(function () {
 			click: function (p) {
 				setCookie("cookies", "true")
 				p.close();
-				setTimeout(function() {
+				setTimeout(function () {
 					loginInit();
 				}, 501);
 			}
@@ -229,13 +229,13 @@ loaded(function () {
 
 	let attachment = "";
 
-	onAttachment(function(url) {
+	onAttachment(function (url) {
 		attachment = url;
-		$("#attachment-indicator").css({display: "flex"});
+		$("#attachment-indicator").css({ display: "flex" });
 	});
 
-	$("#remove-attachment").click(function() {
-		$("#attachment-indicator").css({display: "none"});
+	$("#remove-attachment").click(function () {
+		$("#attachment-indicator").css({ display: "none" });
 		attachment = "";
 	});
 
@@ -248,12 +248,12 @@ loaded(function () {
 			return;
 		}
 		let attachmentObject = {};
-		if(attachment) {
+		if (attachment) {
 			attachmentObject = {
 				attachment: attachment
 			};
 			attachment = "";
-			$("#attachment-indicator").css({display: "none"});
+			$("#attachment-indicator").css({ display: "none" });
 		}
 		sendMessage({
 			session: session.session,
@@ -268,7 +268,7 @@ loaded(function () {
 		$("#message").val("");
 	})
 
-	$("#roomber-logo").single_double_click(function() {}, function () {
+	$("#roomber-logo").single_double_click(function () { }, function () {
 		new Audio('assets/ROOMBAH.wav').play();
 	});
 
@@ -471,8 +471,8 @@ function newMessage(message) {
 
 	let attachmentHtml = "";
 
-	if(message.attachment) {
-		attachmentHtml = `<a href="${message.attachment}" class="attachment-link" target="blank"><img src="${message.attachment}" class="attachment"></a>`;		
+	if (message.attachment) {
+		attachmentHtml = `<a href="${message.attachment}" class="attachment-link" target="blank"><img src="${message.attachment}" class="attachment"></a>`;
 	}
 
 	let avatar = get("avatar", "avatars/default.png");
@@ -577,10 +577,12 @@ function composeMessageContent(message, messageText) {
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 	const attachment = message.parent().parent().parent().find(".attachment");
-        const s = attachment.attr("src").split("/");
-	attachment.on("error", function() {
-		attachment.parent().html(`<div class="attachment" style="padding: 4px; border: 1px solid rgba(0,0,0,0.1);"><i class="megasmall material-icons">description</i>${s[s.length - 1]}</div>`);
-	});
+	const s = attachment.attr("src").split("/");
+	if (attachment) {
+		attachment.on("error", function () {
+			attachment.parent().html(`<div class="attachment" style="padding: 4px; border: 1px solid rgba(0,0,0,0.1);"><i class="megasmall material-icons">description</i>${s[s.length - 1]}</div>`);
+		});
+	}
 }
 
 function getChats() {
@@ -631,9 +633,9 @@ function easterEg() {
 	}, 10000);
 }
 
-setTimeout(function() {
+setTimeout(function () {
 	let i = 0;
-	let intrv = setInterval(function() {
+	let intrv = setInterval(function () {
 		if (i > 2) return clearInterval(this);
 		warningMessageConsole();
 		i++
