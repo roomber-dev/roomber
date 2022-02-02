@@ -3,13 +3,13 @@
 	background: rgba(27,27,27,0.5);
 	border-radius: 4px;
 	backdrop-filter: blur(30px);
-	display: flex;
-	flex-wrap: wrap;
+	display: grid;
+	grid-template-columns: auto auto auto;
 }
 
 .horizontalMenuItem {
-	width: 24px;
-	height: 24px;
+	width: 22px;
+	height: 22px;
 	background: red;
 	margin: 4px;
 	background: rgba(27,27,27,0.7);

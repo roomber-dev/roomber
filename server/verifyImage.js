@@ -10,7 +10,7 @@ module.exports = function (user, url, callback) {
 
     fetch(url)
         .then(res => res.blob())
-        .then(async blob => await blob.arrayBuffer())
+        .then(blob => blob.arrayBuffer())
         .then(buffer => [...new Uint8Array(buffer)]
             .slice(0, 4)
             .map(x => x.toString(16).padStart(2, '0'))
@@ -23,7 +23,7 @@ module.exports = function (user, url, callback) {
                 if (hex == magic.gif) {
                     return callback("Only cool people that bought Roomber Xtra can set their PFP as a GIF!");
                 }
-                callback();
+                return callback();
             }
             callback(invalidImage);
         })

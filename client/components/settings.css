@@ -1,0 +1,208 @@
+
+.settings {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background: linear-gradient(to bottom, #0095BA, #9B34BA);
+	display: none;
+	flex-direction: column;
+}
+
+.settings heading {
+	padding: 18px;
+	display: flex;
+	align-items: center;
+	font-weight: bold;
+}
+
+.settings heading #title {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	font-size: 16px;
+}
+
+.settings heading i.large {
+	margin: 8px 14px 6px 6px;
+	font-size: 2.3rem;
+}
+
+.settings heading #close {
+	background: transparent;
+	padding: 2px;
+	border-radius: 50%;
+	transition: 0.2s background;
+	flex-basis: 34px;
+	height: 34px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.settings heading #close:hover {
+	background: rgba(0,0,0,0.15);
+}
+
+.settings section {
+	background: rgba(0, 0, 0, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.5);
+	box-sizing: border-box;
+	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+	border-radius: 8px;
+	margin: 5px 28px 28px 28px;
+	flex: 1;
+	display: flex;
+}
+
+.settings aside {
+	flex-basis: 177px;
+	border-right: 1px solid rgba(255, 255, 255, 0.5);
+	height: 90%;
+	align-self: center;
+	padding: 12px;
+}
+
+.settings .category {
+	display: flex;
+	align-items: center;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	margin-left: 8px;
+}
+
+.settings .category p {
+	overflow: hidden;
+	text-overflow: clip;
+	width: 200px;
+}
+
+.settings aside img {
+	width: 20px;
+	margin-right: 8px;
+}
+
+.settings aside i {
+	font-size: 1.2rem;
+	margin-right: 8px;
+	transform: scale(120%);
+}
+
+.settings #content {
+	flex: 1;
+	margin: 35px;
+}
+
+.settings #profile-user {
+	margin-top: 11px;
+	display: flex;
+}
+
+.settings .profile-username {
+	background: rgba(0,0,0,0.3);
+	padding: 11px;
+	border-radius: 10px;
+	font-weight: bold;
+	height: fit-content;
+}
+
+.settings .profile-username i {
+	margin-left: 5px;
+}
+
+.settings #profile-avatar {
+	width: 113px;
+	margin-top: 45px;
+	position: relative;
+}
+
+.settings #profile-avatar img {
+	width: 100%;
+	border-radius: 50%;
+}
+
+.settings #profile-avatar #hover {
+	background: rgba(0,0,0,0.5);
+	opacity: 0;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 113px;
+	height: 113px;
+	border-radius: 50%;
+	transition: 0.3s opacity;
+	z-index: 2;
+}
+
+.settings #profile-avatar #hover img {
+	width: 35%;
+	border-radius: 0;
+}
+
+.settings #profile-avatar #hover:hover {
+	opacity: 1;
+}
+
+.settings #profile-xtra {
+	background: linear-gradient(to bottom, #EBFF00, #FF9900);
+	color: black;
+	padding: 7px;
+	margin-left: 10px;
+	font-size: 12px;
+	border-radius: 5px;
+	height: fit-content;
+	font-weight: bold;
+}
+
+.settings #account-qr {
+	flex: 1;
+}
+
+.settings #account-profile img {
+	width: 60px;
+	height: 60px;
+	border-radius: 50%;
+}
+
+.settings #account-profile {
+	height: 60px;
+	margin-left: 11px;
+	margin-top: 8px;
+	padding-bottom: 16px;
+}
+
+.settings #account-profile i {
+	margin-left: 7px;
+}
+
+.settings #account-profile .profile-username {
+	margin-left: 15px;
+}
+
+.settings #account-title {
+	margin-bottom: 16px;
+}
+
+.settings #account-content .label {
+	font-weight: bold;
+}
+
+.settings #account-content .input {
+	background: rgba(0, 0, 0, 0.25);
+	border-radius: 8px;
+	padding: 6px 9px;
+	margin-left: 8px;
+	width: 306px;
+}
+
+.settings #account-credentials .text-field {
+	margin-bottom: 10px;
+	justify-content: space-between;
+	font-size: 16px;
+}
+
+.settings #account-credentials {
+	display: flex;
+}

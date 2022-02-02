@@ -8,7 +8,7 @@ module.exports = require('express').Router({ mergeParams: true })
                 profile[req.body.toChange](user, req.body[req.body.toChange], err => {
                     if (err) res.send(err);
                     else res.sendStatus(200);
-                });
+                }, req.db);
             });
         })
     })

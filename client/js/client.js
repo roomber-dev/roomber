@@ -48,9 +48,11 @@ function chatScrollDown() {
 	}
 }
 
-function getAvatar(onAvatar) {
-	$.post(serverUrl + "/profile", { user: session.user }, function (data) {
-		onAvatar(data.avatar);
+profile = {};
+function getProfile(onProfile) {
+	$.post(serverUrl + "/getProfile", {...session}, function (data) {
+		profile = data.profile;
+		onProfile(data.profile);
 	});
 }
 
@@ -117,6 +119,62 @@ function addServer(server) {
 
 function channelClick(id) {
 	changeChannel(id);
+	if(servers[currentServer].owner == session.user) {
+		$(".selected-channel").html(`<div id="selected-container">${$("#channels #" + id).html()}<button class="button edit-channel"><i class="megasmall material-icons">edit</i></button><button class="button delete-channel"><i class="megasmall material-icons">delete_forever</i></button></div>`);
+	}
+	$(".edit-channel").click(function() {
+		popup("", `
+			Channel name</br>
+			<input type="text" class="textbox" id="channel-name">
+		`, [{
+			label: "Cancel",
+			click: function(p) {p.close();}
+		}, {
+			label: "OK",
+			click: function(p) {
+				p.close();
+				const name = $("#channel-name").val();
+				setTimeout(function() {
+					$.post(serverUrl + "/editChannel", {
+						...session,
+						server: servers[currentServer]._id,
+						channel: id,
+						name: name
+					}, function(data) {
+						if(data.error) {
+							popup("Error", data.error, undefined, false, "red")
+							return;
+						}
+						$(`#channels #${id} div`).last().text(name);
+						$(`#selected-container div`).last().text(name);
+					})
+				}, 501);
+			}
+		}]);
+	})
+	$(".delete-channel").click(function() {
+		popup("Delete channel", "Are you sure?", [{
+			label: "No",
+			click: function(p) {p.close();}
+		}, {
+			label: "Yes",
+			click: function(p) {
+				p.close();
+				setTimeout(function() {
+					$.post(serverUrl + "/deleteChannel", {
+						...session,
+						server: servers[currentServer]._id,
+						channel: id
+					}, function(data) {
+						if(data.error) {
+							popup("Error", data.error, undefined, false, "red");
+							return;
+						}
+					});
+				}, 501);
+			}
+		}], false, "red")
+	})
 	if (!$("#channels #" + id).hasClass("active")) {
 		$("#channels li").removeClass("active");
 		$("#channels #" + id).addClass("active");
@@ -167,6 +225,64 @@ function removeLoadingAnimation(server) {
 	});
 }
 
+function serverSettings(callback) {
+	let pic = "";
+	popup("", `
+		<div style="text-align: center;">
+		<a href="#" class="pick-server-pic"><img src="assets/pick-image.png" class="picked-server-pic" style="width: 35%; border-radius: 50%"></a></br>
+		<input class="textbox" id="server-name" placeholder="Server Name" style="width: 80%;"></input>
+		</div>
+	`, [{
+		label: "OK",
+		click: function(p) {
+			p.close();
+			const name = $("#server-name").val();
+			setTimeout(function() {
+				const object = {name: name};
+				if(pic) {
+					object.picture = pic;
+				}
+				callback(object);
+			}, 501);
+		}
+	}, {
+		label: "Cancel",
+		click: function(p) {
+			p.close();
+		}
+	}])
+	$(".pick-server-pic").click(function() {
+		onUpload(function(src) {
+			$(".picked-server-pic").attr("src", src);
+			pic = src;
+		})
+		openUpload("serverPictures");
+	})
+}
+
+function changeServerSettings(index) {
+	serverSettings(function(settings) {
+		$.post(serverUrl + "/editServer", {...session, ...settings, server: servers[index]._id}, function(data) {
+			if(data.error) {
+				popup("Error", data.error, undefined, false, "red");
+				return;
+			}
+			servers[index] = {
+				...servers[index],
+				...settings
+			};
+			const server = servers[index];
+			const active = $(`#server-list #${server._id}`).hasClass("active");
+			const activeClass = active ? "active" : "";
+			if (server.picture) {
+				$(`#server-list #${server._id}`).replaceWith(`<img id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${index})" alt="${server["name"]}" class="server ${activeClass}" src="${server["picture"]}"/>`)
+			} else {
+				$(`#server-list #${server._id}`).replaceWith(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${index})" alt="${server["name"]}" class="server basic ${activeClass}"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`)
+			}
+		})
+	});
+}
+
 function openServer(index) {
 	$("#messages").html("");
 	let server = servers[index];
@@ -177,6 +293,10 @@ function openServer(index) {
 		$("#server-list #" + server._id).addClass("active");
 	}
 	$("#channels ul").html("");
+	$("#channels ul").append(`
+			<div class="no-select server-name">${server.name}</div>
+			<div class="no-select selected-channel"></div>
+		`);
 	server.channels.forEach(function (channel, i) {
 		$("#channels ul").append(`
 			<li id="${channel._id}"><div class="hash no-select">#</div><div class="no-select ellipsis-overflow">${channel.name}</div></li>
@@ -188,13 +308,71 @@ function openServer(index) {
 			channelClick(channel._id);
 		}
 	})
+	$("#channels ul").append(`<div id="server-buttons"></div>`)
 	if (server["owner"] && server.owner == session.user) {
-		$("#channels ul").append(`
-			<li onclick="createChannel(${index})"><div class="hash no-select">+</div><div class="no-select create-channel">Create channel</div></li>
+		$("#channels ul #server-buttons").append(`
+			<button class="button" onclick="createChannel(${index})"><div class="hash no-select"><i class="megasmall material-icons">add</i></div></button>
 		`);
+		$("#channels ul #server-buttons").append(`
+			<button class="button" onclick="changeServerSettings(${index})"><div class="hash no-select"><i class="megasmall material-icons">settings</i></div></button>
+		`);
+		$("#channels ul #server-buttons").append(`
+			<button class="button delete-server"><div class="hash no-select"><i class="megasmall material-icons">delete_forever</i></div></button>
+		`);
+		$(".delete-server").click(function() {
+			popup("Delete server", "Are you sure?", [{
+				label: "No",
+				click: function(p) {p.close();}
+			}, {
+				label: "Yes",
+				click: function(p) {
+					p.close();
+					setTimeout(function() {
+						$.post(serverUrl + "/deleteServer", {
+							...session,
+							server: servers[currentServer]._id
+						}, function(data) {
+							if(data.error) {
+								popup("Error", data.error, undefined, false, "red");
+								return;
+							}
+						});
+					}, 501);
+				}
+			}], false, "red")
+		})
+	} else {
+		$("#channels ul #server-buttons").append(`
+			<button class="button leave-server"><div class="hash no-select"><i class="megasmall material-icons">exit_to_app</i></div></button>
+		`);
+		$(".leave-server").click(function() {
+			popup("Leave server", "Are you sure?", [{
+				label: "No",
+				click: function(p) {p.close();}
+			}, {
+				label: "Yes",
+				click: function(p) {
+					p.close();
+					setTimeout(function() {
+						$.post(serverUrl + "/leaveServer", {
+							...session,
+							server: servers[currentServer]._id
+						}, function(data) {
+							if(data.error) {
+								popup("Error", data.error, undefined, false, "red");
+								return;
+							}
+							$(`#server-list #${servers[currentServer]._id}`).remove();
+							servers.splice(currentServer, 1);
+							openServer(0);
+						});
+					}, 501);
+				}
+			}], false, "red")
+		})
 	}
-	$("#channels ul").append(`
-		<li onclick="popup('Server ID', 'The server id is <b>${server._id}</b>')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div><div class="no-select create-channel">View ID</div></li>
+	$("#channels ul #server-buttons").append(`
+		<button class="button" onclick="popup('Server ID', 'The server id is <b>${server._id}</b>')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);
 }
 
@@ -210,10 +388,7 @@ function onSetupFinished(t) {
 
 	$.post(serverUrl + '/getServers', { ...session }, function (servers) {
 		servers.forEach(addServer);
-		getAvatar(function (avatar) {
-			$("#login img").prop("src", avatar);
-			fireLoaded();
-		})
+		fireLoaded();
 	});
 
 	if (getCookie("theme") != "") {
@@ -314,7 +489,7 @@ loaded(function () {
 	$("#by-the-logo").append('<button class="button" id="ldm"><i class="megasmall material-icons">opacity</i></button>');
 	$("#ldm").click(ldmToggle);
 
-	$("#by-the-logo").append('<button class="button" id="showqr"><i class="megasmall material-icons">vpn_key</i></button>');
+	$("#by-the-logo").append('<button class="button" id="showqr"><i class="megasmall material-icons">fingerprint</i></button>');
 	$("#showqr").click(popupQR);
 
 	function j() {
@@ -339,42 +514,21 @@ loaded(function () {
 	}
 
 	function createServer() {
-		popup("Create a new server", `
-			<div class="create-server-popup">
-			<input class="textbox" placeholder="Server Name"></input><br/>
-			<input class="textbox" placeholder="Server Picture. Leave empty for default one"></input>
-			</div>
-		`, [{
-			label: "Back",
-			click: function (p) {
-				p.close();
-				setTimeout(newServerPopup, 501);
-			}
-		}, {
-			label: "OK",
-			click: function (p) {
-				let stuff = {
-					...session,
-					name: $(".create-server-popup .textbox").first().val()
-				};
-				if ($(".create-server-popup .textbox").last().val() != "") {
-					stuff = {
-						...stuff, picture:
-							$(".create-server-popup .textbox").last().val()
-					};
+		serverSettings(function(settings) {
+			$.post(serverUrl + "/createServer", {
+				...session,
+				...settings
+			}, function (data) {
+				if (data.error) {
+					p.close();
+					setTimeout(function () {
+						popup("Error", data.error);
+					}, 501);
+				} else {
+					addServer(data);
 				}
-				$.post(serverUrl + "/createServer", stuff, function (data) {
-					if (data.error) {
-						p.close();
-						setTimeout(function () {
-							popup("Error", data.error);
-						}, 501);
-					} else {
-						addServer(data);
-					}
-				})
-			}
-		}]);
+			})
+		})
 	}
 
 	function newServerPopup() {
@@ -466,7 +620,7 @@ function newMessage(message) {
 		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
 	}
 	if (cache[message.author] && cache[message.author]["xtra"]) {
-		xtraHtml = '<div class="xtraBadge">xtra</div>';
+		xtraHtml = '<div class="xtraBadge">XTRA</div>';
 	}
 
 	let attachmentHtml = "";
@@ -488,7 +642,7 @@ function newMessage(message) {
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username">${username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username ellipsis-overflow">${username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([
@@ -511,7 +665,7 @@ function newMessage(message) {
 
 function addChat(chat) {
 	$("#channels ul").append(`
-		<li class="dm ellipsis-overflow" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar || 'avatars/default.png'}" class="avatar"/><div class="no-select username">${chat.recipient.username}</div></li>
+		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar || 'avatars/default.png'}" class="avatar"/><div class="no-select username ellipsis-overflow">${chat.recipient.username}</div></li>
 	`);
 }
 

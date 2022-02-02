@@ -16,32 +16,35 @@ function logOut() {
 	window.location.href = "";
 }
 
+function logoutPopup() {
+	popup("Log out", `Are you sure you want to log out?`, [{
+		label: "No",
+		click: function (p) {
+			p.close();
+		}
+	}, {
+		label: "Yes",
+		click: function (p) {
+			logOut();
+			p.close();
+		}
+	}]);
+}
+
 function logIn() {
 	$("#login").text("");
 	$("#login").append(`<img src="avatars/default.png" alt="" class="avatar" id="avatar-btn">`);
-	$("#login").append('<p class="username">' + session.username + '</p>');
-	$("#login").append('<button id="logout" class="button no-select"><i class="material-icons">exit_to_app</i></button>');
+	$("#login").append('<p class="username ellipsis-overflow">' + profile.username + '</p>');
+	$("#login").append('<button id="settings" class="button"><i class="material-icons">settings</i></button>');
 	$("#login p.username").click(function () {
-		cclog("copy username", "debug")
 		copyUsername();
 	});
 
 	socket.emit('auth', session);
 
-	$("#logout").click(function () {
-		popup("Log out", `Are you sure you want to log out?`, [{
-			label: "No",
-			click: function (p) {
-				p.close();
-			}
-		}, {
-			label: "Yes",
-			click: function (p) {
-				logOut();
-				p.close();
-			}
-		}]);
-	});
+	$("#settings").click(function() {
+		openSettings();
+	})
 }
 
 function reg_err(p, msg, close = true) {
@@ -79,9 +82,8 @@ function reg_callback(p, url, msg, has_username = true) {
 			reg_err(p, data.error);
 			return;
 		}
-		setCookie("username", data.username);
-		setCookie("userid", data.user);
 		setCookie("session", data.session);
+		setCookie("userid", data.user);
 		window.location.href = "";
 	}).fail(function () { reg_err(p, msg) });
 }
@@ -189,17 +191,17 @@ function checkSetup() {
 
 function loginInit() {
 	let id = getCookie("session");
-	let user = getCookie("userid");
-	if (id == "" || user == "") {
+	let uid = getCookie("userid");
+	if (id == "" || uid == "") {
 		session = {};
 		reg();
 	} else {
-		session = {
-			session: id,
-			username: getCookie("username"),
-			user: user
-		};
-		logIn();
-		checkSetup();
+		session = {session: id, user: uid};
+		getProfile(function(profile) {
+			session.username = profile.username; // For backwards compatibility
+			logIn();
+			$("#login img").prop("src", profile.avatar);
+			checkSetup();
+		})
 	}
 }

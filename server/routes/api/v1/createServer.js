@@ -13,24 +13,21 @@ module.exports = require('express').Router({ mergeParams: true })
                 if (count > 0) {
                     res.sendStatus(409);
                 } else {
-                    req.db.User.find({ _id: req.body.user }, (err, [user]) => {
-                        var server = new req.db.Server({
-                            name: req.body.name,
-                            channels: [],
-                            owner: req.body.user,
-                            users: [req.body.user]
-                        });
+                    var server = new req.db.Server({
+                        name: req.body.name,
+                        channels: [],
+                        owner: req.body.user,
+                        users: [req.body.user]
+                    });
 
-                        function success(server) {
-                            server.save(err => {
-                                if (!err) res.send(server);
-                            })
+                    function success(server) {
+                        server.save(err => {
+                            if (!err) res.send(server);
+                        })
+                    }
 
-                            user.servers.push(server._id);
-                            user.save();
-                        }
-
-                        if (req.body.picture) {
+                    if (req.body.picture) {
+                        req.db.User.findOne({ _id: req.body.user }, (err, user) => {
                             verifyImage(user, req.body.picture, err => {
                                 if (err) {
                                     res.send({ error: err });
@@ -38,10 +35,10 @@ module.exports = require('express').Router({ mergeParams: true })
                                     success(server);
                                 }
                             })
-                            return;
-                        }
-                        success(server);
-                    })
+                        })
+                        return;
+                    }
+                    success(server);
                 }
             })
         })

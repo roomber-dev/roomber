@@ -5,5 +5,6 @@ module.exports = {
     openNgrokURL: false,
     notfunny: "roomberiscool20@!",
     apiPath: "/api",
-    maintenance: false
+    maintenance: false,
+    gitToken: "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"
 };

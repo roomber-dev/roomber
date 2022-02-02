@@ -7,7 +7,6 @@ const User = require('mongoose').Schema({
     permission: String,
     setup: Boolean,
     avatar: String,
-    servers: Array,
     xtra: Boolean,
     banned: Boolean,
     bannedUntil: Number,

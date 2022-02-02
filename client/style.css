@@ -131,8 +131,9 @@ body {
 }
 
 #channels {
-	width: 200px;
+	width: 270px;
 	background: rgba(0, 0, 0, 0.6);
+	position: absolute;
 }
 
 .light #channels {
@@ -142,7 +143,7 @@ body {
 #chat-area #messages {
 	position: absolute;
 	top: 56px;
-	left: 200px;
+	left: 270px;
 	right: 0;
 	bottom: 50px;
 	overflow-y: scroll;
@@ -201,7 +202,7 @@ body {
 	position: absolute;
 	bottom: 0;
 	right: 0;
-	left: 202px;
+	left: 272px;
 	height: 40px;
 }
 
@@ -294,6 +295,7 @@ body {
 	margin: 0 5px 0 0;
 	display: inline-block;
 	background-color: rgba(0, 0, 0, 0.2);
+	max-width: 300px;
 }
 
 .light .username {
@@ -340,12 +342,10 @@ body {
 	align-self: flex-start;
 	transition: 0.25s width, 0.25s opacity;
 	opacity: 0;
-	width: 0;
 }
 
 .message:hover .horizontalMenu {
 	opacity: 1;
-	min-width: 102px;
 }
 
 .message .horizontalMenuItem {
@@ -370,14 +370,39 @@ body {
 	border: 1px solid rgba(0,0,0,0.3);
 }
 
+@-webkit-keyframes loading-sweep {
+    0%{background-position:81% 0%}
+    50%{background-position:20% 100%}
+    100%{background-position:81% 0%}
+}
+@-moz-keyframes loading-sweep {
+    0%{background-position:81% 0%}
+    50%{background-position:20% 100%}
+    100%{background-position:81% 0%}
+}
+@-o-keyframes loading-sweep {
+    0%{background-position:81% 0%}
+    50%{background-position:20% 100%}
+    100%{background-position:81% 0%}
+}
+@keyframes loading-sweep {
+    0%{background-position:81% 0%}
+    50%{background-position:20% 100%}
+    100%{background-position:81% 0%}
+}
+
 #loading-back {
 	position: absolute;
 	left: 0;
 	top: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(0,0,0,0.7);
-	backdrop-filter: blur(20px);
+	background: linear-gradient(31deg, #006A85, #c500ff);
+    background-size: 300% 300%;
+    -webkit-animation: loading-sweep 10s ease infinite;
+    -moz-animation: loading-sweep 10s ease infinite;
+    -o-animation: loading-sweep 10s ease infinite;
+    animation: loading-sweep 10s ease infinite;
 	z-index: 10;
 }
 
@@ -491,7 +516,7 @@ body {
 
 .xtraBadge {
 	margin-left: 7px;
-	text-transform: capitalize;
+	text-transform: uppercase;
 	color: black;
 	font-weight: bolder;
 	border-radius: 4px;
@@ -513,9 +538,9 @@ body {
 	align-items: center;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 620px) {
 	#channels {
-		display: none;
+		left: -100%;
 	}
 
 	#chat-area #messages, #message-box {
@@ -587,7 +612,6 @@ body {
 }
 
 #servers {
-	flex: 1;
 	display: flex;
 }
 
@@ -865,13 +889,14 @@ a {
 	z-index: 2;
 	position: absolute;
 	bottom: 54px;
-	margin-left: 10px;
+	margin-right: 20px;
 	background: rgba(0,0,0,0.9);
 	padding: 5px;
 	border-radius: 8px;
 	display: none;
 	justify-content: center;
 	align-items: center;
+	right: 0;
 }
 
 #remove-attachment {
@@ -894,3 +919,58 @@ a {
 	justify-content: center;
 	align-items: center;
 }
+
+.server-name {
+	font-size: 16px;
+	font-weight: bold;
+	margin: 10px;
+}
+
+.selected-channel {
+	display: flex;
+	justify-content: center;
+	width: 100%;
+}
+
+#selected-container {
+	display: flex;
+	flex-direction: row-reverse;
+	width: 90%;
+	font-size: 16px;
+}
+
+.selected-channel .ellipsis-overflow {
+	flex: 1;
+}
+
+.selected-channel .no-select {
+	margin-top: 6px;
+}
+
+.selected-channel button {
+	margin: 4px;
+	padding: 2px;
+}
+
+#server-buttons {
+	display: flex;
+	margin-left: 5px;
+	justify-content: center;
+	align-items: center;
+}
+
+#server-buttons button {
+	margin: 5px;
+	text-align: center;
+	width: 40px;
+	height: 40px;
+}
+
+#server-buttons button i {
+	margin-top: 3px;
+}
+
+.full-width {width: 100%}
+
+.justify-center {justify-content: center;}
+.align-center {align-items: center;}

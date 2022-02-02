@@ -198,6 +198,27 @@ socket.on('messagesCleared', function () {
 socket.on('broadcast', function (message) {
 	popup("Broadcast", message);
 });
+socket.on('deleteServer', function(server) {
+	$(`#server-list #${server}`).remove();
+	if(server == servers[currentServer]._id) {
+		servers.splice(currentServer, 1);
+		openServer(0);
+	}
+});
+socket.on('deleteChannel', function(c) {
+	if(c.server == servers[currentServer]._id) {
+		let found = -1;
+		servers[currentServer].channels.forEach(function(channel, i) {
+			if(channel._id == c.channel) {
+				found = i;
+			}
+		})
+		if(found > -1) {
+			servers[currentServer].channels.splice(found, 1);
+		}
+		openServer(currentServer);
+	} 
+});
 socket.on('userJoin', function () {
 	cclog("yoo new user in channel!!", "join")
 });
