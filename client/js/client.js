@@ -404,6 +404,8 @@ function onSetupFinished(t) {
 	if (getCookie("theme") != "") {
 		theme = getCookie("theme");
 		updateTheme();
+	} else {
+		theme = "gradient";
 	}
 }
 
