@@ -1,13 +1,6 @@
 function generateQR(password)
 {
-    const url = `https://api.qrserver.com/v1/create-qr-code/?data=${password},${session.user},${getCookie("username")}&amp;size=50x50`;
-    return `
-		<img
-		src="${url}" 
-		alt="" 
-		title="Scan this to log in" 
-		class="qrcode" />
-	`;
+    return `https://api.qrserver.com/v1/create-qr-code/?data=${password},${session.user},${getCookie("username")}&amp;size=50x50`;
 }
 
 
@@ -21,7 +14,10 @@ function popupQR() {
 			p.close();
 			const password = $("#qr-pass").val();
 			$.post(serverUrl + "/validatePassword", {user: session.user, password: password}, function() {
-				setTimeout(function() { popup("QR Login", `This is your QR code. Don't give it to anybody. You don't want people to access your account, right... right?<br><div style="text-align: center;">${generateQR(password)}</div>`); }, 501);
+				setTimeout(function() {
+					$(".settings #qr-image img").attr("src", generateQR(password))
+					$(".settings #qr-image").css({filter: "none"})
+				}, 501);
 			}).fail(function(err) {
 				setTimeout(function() { popup("Error", "Invalid password", undefined, false, "red"); }, 501);
 			});

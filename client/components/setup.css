@@ -106,9 +106,11 @@
 	flex-direction: column;
 	font-weight: bold;
 	align-items: center;
+	margin-bottom: 10px;
 }
 
 #setup-themes {
 	display: flex;
 	align-self: center;
+	flex-wrap: wrap;
 }

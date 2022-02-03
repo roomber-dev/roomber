@@ -9,7 +9,7 @@ const materialIcon = (icon, props = "") => `
 `
 
 const svgIcon = icon => `
-<img src="assets/icons/${icon}.svg" alt="" class="no-select">
+<img src="assets/icons/${icon}.svg" alt="" class="no-select svg">
 `
 
 const settingsCategory = (icon, name, id) => `
@@ -100,6 +100,7 @@ const changeEmail = () => popup(
 						label: "OK",
 						click: p => {
 							const email = $("#email").val()
+							p.close()
 							setTimeout(() => {
 								$.post(serverUrl + "/changeEmail", {
 									user: session.user,
@@ -158,14 +159,37 @@ const categoryContent = () => settingsCategories({
 				</div>
 			</div>
 			<div id="account-qr" class="flex flex-down">
-				<div id="qr-image" class="flex full-width"></div>
-				<div id="qr-label"></div>
+				<div id="qr-image" onclick="popupQR()">
+					<img src="assets/fake-qr.png">
+				</div>
+				<div id="qr-label">Your QR</div>
 			</div>
 		</div>
 	</div>
 	`,
 	appearance: () => `
-		Appearance
+		<div class="flex flex-down align-center justify-center">
+			<h1 style="margin-bottom: 35px;">Appearance</h1>
+			<div id="setup-themes">
+				<div class="setup-theme">
+					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
+					<p>Landscape</p>
+				</div>
+				<div class="setup-theme">
+					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
+					<p>Gradient</p>
+				</div>
+				<div class="setup-theme">
+					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
+					<p>Dark</p>
+				</div>
+				<div class="setup-theme">
+					<img src="../assets/light-preview.png" onclick="setTheme('light')">
+					<p>Light</p>
+				</div>
+			</div>
+			<button class="button" id="ldm" onclick="ldmToggle()" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> LDM</button>
+		</div>
 	`,
 	notifs: () => `
 		Not implemented
@@ -177,12 +201,20 @@ const categoryContent = () => settingsCategories({
 		Not implemented
 	`,
 	about: () => `
-		Not implemented
+		<div class="flex flex-down align-center justify-center">
+			<img src="assets/roomberfull2.png" style="width: 60%;">
+			<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
+			<div style="opacity: 0.9; text-align: center;">
+				<p>Developed by neksodebe and SomeEver</p>
+				<p>Designed by OlxsiU and Kacper Karolak</p>
+				<p>Sound design by Kacper Karolak</p>
+			</div>
+		</div>
 	`,
 })
 
 const settings = () => `
-<div class="settings">
+<div class="settings ${theme}">
 	<heading>
 		<div id="title" class="no-select">
 			<i class="large material-icons">settings</i> Settings
@@ -196,9 +228,9 @@ const settings = () => `
 			${settingsCategory(materialIcon("account_circle"), "User Profile", "profile")}
 			${settingsCategory(svgIcon("person_shield"), "Account & Security", "account")}
 			${settingsCategory(materialIcon("palette"), "Appearance", "appearance")}
-			${settingsCategory(svgIcon("notifications_circle"), "Notifications", "notifs")}
-			${settingsCategory(materialIcon("translate"), "Language", "language")}
-			${settingsCategory(materialIcon("volume_up"), "Audio & Video", "audio_video")}
+			<!--${settingsCategory(svgIcon("notifications_circle"), "Notifications", "notifs")}-->
+			<!--${settingsCategory(materialIcon("translate"), "Language", "language")}-->
+			<!--$${settingsCategory(materialIcon("volume_up"), "Audio & Video", "audio_video")}-->
 			${settingsCategory(svgIcon("roomber"), "About Roomber", "about")}
 		</aside>
 		<div id="content">

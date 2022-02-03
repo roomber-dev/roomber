@@ -27,3 +27,4 @@ module.exports = (api, maintenance, database) => express()
         return express.static(__dirname + '/../client')(req, res, next);
     })
     .use(api, router)
+    .use("/invite", require("./routes/invite"))

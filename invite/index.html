@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Roomber | Server Invite</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			font-family: 'Noto Sans';
+		}
+		body {
+			background: linear-gradient(to bottom, #9b34ba, #0095ba);
+			width: 100vw;
+			height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		#main {
+			background: rgba(0,0,0,0.4);
+			width: 50%;
+			height: 80%;
+			border-radius: 12px;
+			color: white;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			text-align: center;
+			font-size: 24px;
+		}
+		img {
+			width: 200px;
+			border-radius: 50%;
+			margin-bottom: 20px;
+		}
+		.basic-server {
+			width: 200px;
+			background: linear-gradient(to bottom, #9b34ba, #0095ba);
+			border-radius: 50%;
+			height: 200px;
+			margin-bottom: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			font-size: 48px;
+		}
+		h1 {margin-bottom: 60px}
+		p {margin-bottom: 30px}
+		button {
+			background: rgba(0,0,0,0.7);
+			color: white;
+			padding: 10px 20px;
+			border: none;
+			border-radius: 10px;
+			font-size: 24px;
+		}
+	</style>
+	<script>
+		const server = new URLSearchParams(window.location.search).get("s")
+		function getCookie(cname) {
+			let name = cname + "=";
+			let decodedCookie = decodeURIComponent(document.cookie);
+			let ca = decodedCookie.split(';');
+			for (let i = 0; i < ca.length; i++) {
+				let c = ca[i];
+				while (c.charAt(0) == ' ') {
+					c = c.substring(1);
+				}
+				if (c.indexOf(name) == 0) {
+					return c.substring(name.length, c.length);
+				}
+			}
+			return "";
+		}
+		function setCookie(cname, cvalue) {
+			const d = new Date();
+			d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
+			let expires = "expires=" + d.toUTCString();
+			document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		}
+		if(getCookie("session") != "") {
+			session = {
+				session: getCookie("session"),
+				user: getCookie("userid")
+			}
+		} else {
+			window.location.href = "/"
+		}
+		const serverInfo = fetch("/api/v1/server?id=" + server)
+			.then(res => res.json())
+			.then(res => {
+				document.querySelector("body #main p").innerHTML = res.name
+				if(res.picture) {
+					document.querySelector("body #main img").src = res.picture
+				} else {
+					document.querySelector("body #main #img-container").innerHTML = `
+						<div class="basic-server">${res.name.at(0).toUpperCase()}</div>
+					`
+				}
+			})
+	</script>
+</head>
+<body>
+	<div id="main">
+		<h1>You have been invited to</h1>
+		<div id="img-container"><img src=""></div>
+		<p>Server</p>
+		<button>Join</button>
+	</div>
+	<script>
+		document.querySelector("body #main button").addEventListener("click", () => {
+			fetch("/api/v1/joinServer", {
+				method: "POST",
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({
+					...session,
+					server: server
+				})
+			}).then(_ => {
+				setCookie("server", server)
+				window.location.href = "/"
+			})
+		})
+	</script>
+</body>
+</html>

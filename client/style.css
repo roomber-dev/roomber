@@ -300,6 +300,7 @@ body {
 
 .light .username {
 	background-color: rgba(0, 0, 0, 0.1);
+	color: black;
 }
 
 .avatar {
@@ -657,6 +658,7 @@ body {
 
 .server.new-server i {
 	padding-top: 2px;
+	color: white;
 }
 
 .server.active {

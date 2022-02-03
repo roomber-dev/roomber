@@ -94,9 +94,14 @@ function updateTheme() {
 }
 
 function setTheme(_theme) {
+	const oldTheme = theme;
 	theme = _theme;
 	updateTheme();
 	setCookie("theme", _theme);
+	if($(".settings").html()) {
+		$(".settings").removeClass(oldTheme);
+		$(".settings").addClass(theme);
+	}
 }
 
 function addServer(server) {
@@ -283,6 +288,10 @@ function changeServerSettings(index) {
 	});
 }
 
+function serverInvitePopup(link) {
+	popup('Server Invite', `The server invite is: <a href="${link}">${link}</a>`)
+}
+
 function openServer(index) {
 	$("#messages").html("");
 	let server = servers[index];
@@ -371,8 +380,9 @@ function openServer(index) {
 			}], false, "red")
 		})
 	}
+	const link = `http://roomber-app.herokuapp.com/invite?s=${server._id}`
 	$("#channels ul #server-buttons").append(`
-		<button class="button" onclick="popup('Server ID', 'The server id is <b>${server._id}</b>')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
+		<button class="button" onclick="serverInvitePopup('${link}')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);
 }
 
@@ -401,6 +411,13 @@ loaded(function () {
 	$("#loading-back").fadeOut(1000, function () {
 		$("#loading-back").remove();
 	});
+
+	$.get(serverUrl + "/version", function(v) {
+		version = {
+			number: v,
+			text: `v4.${v / 10}`
+		}
+	})
 
 	let attachment = "";
 
@@ -486,15 +503,11 @@ loaded(function () {
 		$("#messages").html("");
 		getChats();
 	});
-	$("#by-the-logo").append('<button class="button" id="ldm"><i class="megasmall material-icons">opacity</i></button>');
-	$("#ldm").click(ldmToggle);
-
-	$("#by-the-logo").append('<button class="button" id="showqr"><i class="megasmall material-icons">fingerprint</i></button>');
-	$("#showqr").click(popupQR);
 
 	function j() {
 		popup("Join server", `
-			<input type="text" placeholder="Server ID" id="serveridtextbox" class="textbox"/>
+			Server Invite or ID
+			<input type="text" placeholder="" id="serveridtextbox" class="textbox"/>
 		`, [{
 			label: "Back",
 			click: function (p) {
@@ -504,7 +517,10 @@ loaded(function () {
 		}, {
 			label: "OK",
 			click: function (p) {
-				const id = $("#serveridtextbox").val();
+				let id = $("#serveridtextbox").val();
+				if(id.includes("?s=")) {
+					id = id.split("?s=")[1]
+				}
 				setTimeout(function () {
 					joinServer(id);
 				}, 501);

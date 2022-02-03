@@ -6,7 +6,6 @@
 	width: 100%;
 	height: 100%;
 	z-index: 1;
-	background: linear-gradient(to bottom, #0095BA, #9B34BA);
 	display: none;
 	flex-direction: column;
 }
@@ -57,12 +56,25 @@
 	display: flex;
 }
 
+.light .settings section {
+	background: rgba(255, 255, 255, 0.6);
+	border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.light .svg {
+	filter: invert(100%);
+}
+
 .settings aside {
 	flex-basis: 177px;
 	border-right: 1px solid rgba(255, 255, 255, 0.5);
 	height: 90%;
 	align-self: center;
 	padding: 12px;
+}
+
+.light .settings aside {
+	border-right: 1px solid rgba(0, 0, 0, 0.5);
 }
 
 .settings .category {
@@ -106,6 +118,10 @@
 	border-radius: 10px;
 	font-weight: bold;
 	height: fit-content;
+}
+
+.light .profile-username {
+	background: rgba(255, 255, 255, 0.3);
 }
 
 .settings .profile-username i {
@@ -155,11 +171,6 @@
 	height: fit-content;
 	font-weight: bold;
 }
-
-.settings #account-qr {
-	flex: 1;
-}
-
 .settings #account-profile img {
 	width: 60px;
 	height: 60px;
@@ -197,6 +208,10 @@
 	width: 306px;
 }
 
+.light .settings #account-content .input {
+	background: rgba(255, 255, 255, 0.25);
+}
+
 .settings #account-credentials .text-field {
 	margin-bottom: 10px;
 	justify-content: space-between;
@@ -205,4 +220,28 @@
 
 .settings #account-credentials {
 	display: flex;
+	width: 408px;
+}
+
+.settings #account-content #qr-image {
+	display: flex;
+	margin-bottom: 16px;
+	margin-top: 24px;
+	margin-right: 16px;
+	filter: blur(10px);
+}
+
+.settings #account-qr #qr-label {
+	text-align: center;
+}
+
+.settings #account-qr #qr-image img {
+	width: 200px;
+	border-radius: 5px;
+	border: 5px solid white;
+}
+
+.settings #account-qr {
+	align-items: center;
+	flex: 1;
 }
