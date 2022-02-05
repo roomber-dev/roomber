@@ -25,7 +25,6 @@ class Roomber {
 
 			socket.on('auth', session => {
 				auth(this.db, session.user, session.session, () => {
-					console.log(session.user)
 					socket.join(session.user);
 				}, user => {
 					socket.emit("ban", {

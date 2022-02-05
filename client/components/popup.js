@@ -25,7 +25,7 @@ function removePopup(id) {
     }
 }
 
-function popup(title, text, buttons = [{ label: "OK", click: function (popup) { popup.close() } }], blink = false, color = "") {
+function popup(title, text, buttons = [{ label: "OK", click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
     popups++
     let id = `popup-${popups}`;
     let t = title;
@@ -50,6 +50,7 @@ function popup(title, text, buttons = [{ label: "OK", click: function (popup) { 
     $("#body").append(html);
     let popupElement = document.getElementById(id);
     let popupText = document.querySelector(`#${id} .popup-text`);
+    let popupTitle = document.querySelector(`#${id} .popup-main h4`);
     let content = document.querySelector(`#${id} .popup-content`);
     let blur = document.querySelector(`#${id} .popup-blur`);
     content.style = "animation: 0.5s popup-before;";
@@ -60,7 +61,12 @@ function popup(title, text, buttons = [{ label: "OK", click: function (popup) { 
     }, 500);
 
     if (blink) {
-        popupText.style = '    -moz-transition:all 0.5s ease-in-out; -webkit-transition:all 0.5s ease-in-out; -o-transition:all 0.5s ease-in-out; -ms-transition:all 0.5s ease-in-out; transition:all 0.5s ease-in-out;  -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
+        popupTitle.style = '-moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
+    }
+    if (sizeblink) {
+        setTimeout(() => {
+            content.style = '-moz-animation:blinksize normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blinksize normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blinksize normal 1.5s infinite ease-in-out; /* IE */ animation:blinksize normal 1.5s infinite ease-in-out; /* Opera */'
+        }, 501);
     }
     let footer = document.querySelector(`#${id} .popup-footer`);
     popupButtons[popups] = {};

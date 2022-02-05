@@ -510,6 +510,18 @@ body {
 @-ms-keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
 @keyframes blink60 {0%{opacity:1;} 50%{opacity:0.6;} 100%{opacity:1;}}
 
+@keyframes blinksize {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.1);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
+
 .msgUrl {
 	color: rgb(32, 147, 255);
 }
