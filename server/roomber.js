@@ -25,12 +25,46 @@ class Roomber {
 
 			socket.on('auth', session => {
 				auth(this.db, session.user, session.session, () => {
+					console.log(session.user)
 					socket.join(session.user);
 				}, user => {
 					socket.emit("ban", {
 						date: user.bannedUntil,
 						reason: user.banReason
 					})
+				})
+			})
+
+			const authed = (user) => this.io.sockets.adapter.rooms.has(user)
+
+			socket.on('newCall', data => {
+				if(!authed(data.user) || !authed(data.otherUser)) {
+					return
+				}
+				const call = new this.db.Call({
+					users: [
+						data.user,
+						data.otherUser
+					],
+					caller: data.user
+				})
+				call.save(err => {
+					if(err) sclog(err, "error")
+					else {
+						call.users.forEach(user => this.io.to(user).emit("callStarted", {call: call}))
+					}
+				})
+			})
+
+			socket.on('endCall', data => {
+				if(!authed(data.user)) {
+					return
+				}
+				this.db.Call.deleteOne({_id: data.call._id}, (err, _) => {
+					if(err) sclog(err, "error")
+					else {
+						data.call.users.forEach(user => this.io.to(user).emit("callEnded"))
+					}
 				})
 			})
 
