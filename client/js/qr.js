@@ -1,3 +1,4 @@
+// languages done here
 function generateQR(password)
 {
     return `https://api.qrserver.com/v1/create-qr-code/?data=${password},${session.user},${getCookie("username")}&amp;size=50x50`;
@@ -5,11 +6,11 @@ function generateQR(password)
 
 
 function popupQR() {
-	popup("QR", `You are about to show confidential information. Please enter your password<br><input type="password" class="textbox" placeholder="Password" id="qr-pass"></input>`, [{
-		label: "Cancel",
+	popup(langdata["qr.show.title"], `${langdata["qr.show.content"]}<br><input type="password" class="textbox" placeholder="Password" id="qr-pass"></input>`, [{
+		label: langdata["popup.buttons.cancel"],
 		click: function(p) {p.close();}
 	}, {
-		label: "OK",
+		label: langdata["popup.buttons.ok"],
 		click: function(p) {
 			p.close();
 			const password = $("#qr-pass").val();
@@ -19,7 +20,7 @@ function popupQR() {
 					$(".settings #qr-image").css({filter: "none"})
 				}, 501);
 			}).fail(function(err) {
-				setTimeout(function() { popup("Error", "Invalid password", undefined, false, "red"); }, 501);
+				setTimeout(function() { popup(langdata["popup.title.error"], langdata["qr.show.error.invalid"], undefined, false, "red"); }, 501);
 			});
 		}
 	}])
@@ -45,13 +46,13 @@ function scanQR(p) {
 			setCookie("userid", data.user);
 			setCookie("session", data.session);
 			window.location.href = "";
-		}).fail(function () { reg_err(undefined, "Something went wrong. Try logging in using your email and password", false) });
+		}).fail(function () { reg_err(undefined, langdata["qr.scan.error"], false) });
 	});
 }
 
 function openQRLogin() {
-	const p = popup("Login using a QR code", `<div style="width: 100%;" id="reader"></div>`, [{
-		label: "Cancel",
+	const p = popup(langdata["qr.scan.title"], `<div style="width: 100%;" id="reader"></div>`, [{
+		label: langdata["popup.buttons.cancel"],
 		click: function(p) {
 			p.close();
 			setTimeout(function() {

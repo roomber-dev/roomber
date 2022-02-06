@@ -1,8 +1,9 @@
+// languages done here!
 const incomingCall = call => `
     <div id="incoming-call">
-        Call from ${getCallees(call).map(callee => cache[callee].username).join(", ")}
-        <button onclick="pickUpCall()">Pick up</button>
-        <button onclick="endCall()">Decline</button>
+       ${formatLangText(langdata["incomingcall.title"], [getCallees(call).map(callee => cache[callee].username).join(", ")])}
+        <button onclick="pickUpCall()">${langdata["popup.buttons.pickup"]}</button>
+        <button onclick="endCall()">${langdata["popup.buttons.decline"]}</button>
     </div>
 `
 

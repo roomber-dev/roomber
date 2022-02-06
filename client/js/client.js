@@ -1,7 +1,9 @@
-$(document).ready(function () {
+// languages done here!
+
+function startingStuff() {
 	if (getCookie("cookies") == "") {
-		popup("Cookies", `By visiting and using this website you agree for the usage of cookies.`, [{
-			label: "I agree",
+		popup(langdata["cookies.title"], langdata["cookies.content"], [{
+			label: langdata["popup.buttons.iagree"],
 			click: function (p) {
 				setCookie("cookies", "true")
 				p.close();
@@ -13,6 +15,14 @@ $(document).ready(function () {
 	} else {
 		loginInit();
 	}
+}
+$(document).ready(function () {
+	if(getCookie("lang") != "") {
+		loadLanguage(getCookie("lang"), startingStuff);
+	} else {
+		loadLanguage("en-US", startingStuff);
+	}
+
 
 });
 
@@ -20,6 +30,7 @@ canEditAndDeleteAny = false;
 toFetch = 0;
 fetchingMessages = false;
 servers = [];
+
 
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
@@ -61,10 +72,10 @@ function getMessageManagementButtons() {
 		{
 			icon: "create",
 			click: function (menuItem) {
-				popup("Edit message", `
+				popup(langdata["message.edit.popup.title"], `
 					<input type="text" name="message" id="editMessage" placeholder="New message" class="textbox"/>
 				`, [{
-					label: "OK",
+					label: langdata["popup.buttons.ok"],
 					click: function (popup) {
 						let id = menuItem.getMessage().attr("id");
 						let newMessage = $("#editMessage").val();
@@ -72,7 +83,7 @@ function getMessageManagementButtons() {
 						popup.close();
 					}
 				}, {
-					label: "Cancel",
+					label: langdata["popup.buttons.cancel"],
 					click: function (popup) {
 						popup.close();
 					}
@@ -128,14 +139,14 @@ function channelClick(id) {
 		$(".selected-channel").html(`<div id="selected-container">${$("#channels #" + id).html()}<button class="button edit-channel"><i class="megasmall material-icons">edit</i></button><button class="button delete-channel"><i class="megasmall material-icons">delete_forever</i></button></div>`);
 	}
 	$(".edit-channel").click(function() {
-		popup("", `
-			Channel name</br>
+		popup(langdata["channel.edit.title"], `
+			${langdata["channel.edit.content"]}</br>
 			<input type="text" class="textbox" id="channel-name">
 		`, [{
-			label: "Cancel",
+			label: langdata["popup.buttons.cancel"],
 			click: function(p) {p.close();}
 		}, {
-			label: "OK",
+			label: langdata["popup.buttons.ok"],
 			click: function(p) {
 				p.close();
 				const name = $("#channel-name").val();
@@ -147,7 +158,7 @@ function channelClick(id) {
 						name: name
 					}, function(data) {
 						if(data.error) {
-							popup("Error", data.error, undefined, false, "red")
+							popup(langdata["popup.title.error"], data.error, undefined, false, "red")
 							return;
 						}
 						$(`#channels #${id} div`).last().text(name);
@@ -158,11 +169,11 @@ function channelClick(id) {
 		}]);
 	})
 	$(".delete-channel").click(function() {
-		popup("Delete channel", "Are you sure?", [{
-			label: "No",
+		popup(langdata["channel.delete.title"], langdata["popup.content.areyousure"], [{
+			label: langdata["popup.buttons.no"],
 			click: function(p) {p.close();}
 		}, {
-			label: "Yes",
+			label: langdata["popup.buttons.yes"],
 			click: function(p) {
 				p.close();
 				setTimeout(function() {
@@ -172,7 +183,7 @@ function channelClick(id) {
 						channel: id
 					}, function(data) {
 						if(data.error) {
-							popup("Error", data.error, undefined, false, "red");
+							popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 							return;
 						}
 					});
@@ -188,13 +199,13 @@ function channelClick(id) {
 
 function createChannel(index) {
 	const server = servers[index];
-	popup("Create channel", `
+	popup(langdata["channel.create.title"], `
 		<input class="textbox" id="create-channel-name" placeholder="Channel name"></input>
 	`, [{
-		label: "Cancel",
+		label: langdata["popup.buttons.cancel"],
 		click: function (p) { p.close(); }
 	}, {
-		label: "OK",
+		label: langdata["popup.buttons.ok"],
 		click: function (p) {
 			let name = $("#create-channel-name").val();
 			p.close();
@@ -203,7 +214,7 @@ function createChannel(index) {
 				server: server._id, name: name
 			}, function (data) {
 				if (data["error"]) {
-					setTimeout(function () { popup("Error", data.error); }, 501);
+					setTimeout(function () { popup(langdata["popup.title.error"], data.error); }, 501);
 					return;
 				}
 				servers[index]["channels"].push({
@@ -238,7 +249,7 @@ function serverSettings(callback) {
 		<input class="textbox" id="server-name" placeholder="Server Name" style="width: 80%;"></input>
 		</div>
 	`, [{
-		label: "OK",
+		label: langdata["popup.buttons.ok"],
 		click: function(p) {
 			p.close();
 			const name = $("#server-name").val();
@@ -251,7 +262,7 @@ function serverSettings(callback) {
 			}, 501);
 		}
 	}, {
-		label: "Cancel",
+		label: langdata["popup.buttons.cancel"],
 		click: function(p) {
 			p.close();
 		}
@@ -269,7 +280,7 @@ function changeServerSettings(index) {
 	serverSettings(function(settings) {
 		$.post(serverUrl + "/editServer", {...session, ...settings, server: servers[index]._id}, function(data) {
 			if(data.error) {
-				popup("Error", data.error, undefined, false, "red");
+				popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 				return;
 			}
 			servers[index] = {
@@ -289,7 +300,7 @@ function changeServerSettings(index) {
 }
 
 function serverInvitePopup(link) {
-	popup('Server Invite', `The server invite is: <a href="${link}">${link}</a>`)
+	popup('Server Invite', formatLangText(langdata["server.invite.content"], [`<a href="${link}">${link}</a>`]))
 }
 
 function openServer(index) {
@@ -329,11 +340,11 @@ function openServer(index) {
 			<button class="button delete-server"><div class="hash no-select"><i class="megasmall material-icons">delete_forever</i></div></button>
 		`);
 		$(".delete-server").click(function() {
-			popup("Delete server", "Are you sure?", [{
-				label: "No",
+			popup(langdata["server.delete.title"], langdata["popup.content.areyousure"], [{
+				label: langdata["popup.buttons.no"],
 				click: function(p) {p.close();}
 			}, {
-				label: "Yes",
+				label: langdata["popup.buttons.yes"],
 				click: function(p) {
 					p.close();
 					setTimeout(function() {
@@ -355,11 +366,11 @@ function openServer(index) {
 			<button class="button leave-server"><div class="hash no-select"><i class="megasmall material-icons">exit_to_app</i></div></button>
 		`);
 		$(".leave-server").click(function() {
-			popup("Leave server", "Are you sure?", [{
-				label: "No",
+			popup(langdata["server.leave.title"], langdata["popup.content.areyousure"], [{
+				label: langdata["popup.buttons.no"],
 				click: function(p) {p.close();}
 			}, {
-				label: "Yes",
+				label: langdata["popup.buttons.yes"],
 				click: function(p) {
 					p.close();
 					setTimeout(function() {
@@ -368,7 +379,7 @@ function openServer(index) {
 							server: servers[currentServer]._id
 						}, function(data) {
 							if(data.error) {
-								popup("Error", data.error, undefined, false, "red");
+								popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 								return;
 							}
 							$(`#server-list #${servers[currentServer]._id}`).remove();
@@ -507,8 +518,8 @@ loaded(function () {
 	});
 
 	function j() {
-		popup("Join server", `
-			Server Invite or ID
+		popup(langdata["server.join.title"],`
+			${langdata["server.join.content"]}
 			<input type="text" placeholder="" id="serveridtextbox" class="textbox"/>
 		`, [{
 			label: "Back",
@@ -540,7 +551,7 @@ loaded(function () {
 				if (data.error) {
 					p.close();
 					setTimeout(function () {
-						popup("Error", data.error);
+						popup(langdata["popup.title.error"], data.error);
 					}, 501);
 				} else {
 					addServer(data);
@@ -550,19 +561,19 @@ loaded(function () {
 	}
 
 	function newServerPopup() {
-		let p_ = popup("New server", `
+		let p_ = popup(langdata["server.new.title"], `
 			<div class="new-server-popup">
 			<button class="new-server-btn button">
 				<i class="large material-icons">group_add</i>
-				Join Server
+				${langdata["server.new.join.title"]}
 			</button>
 			<button class="new-server-btn button">
 				<i class="large material-icons">add_circle</i>	
-				Create Server
+				${langdata["server.new.create.title"]}
 			</button>
 			</div>
 		`, [{
-			label: "Cancel",
+			label: langdata["popup.buttons.cancel"],
 			click: function (p) {
 				p.close();
 			}
@@ -598,16 +609,16 @@ function newMessage(message) {
 		extra.push({
 			icon: "gavel",
 			click: function (menuItem) {
-				popup("Ban", `
-					<input type="text" class="textbox" id="ban-reason" placeholder="Ban reason"></input>
+				popup(langdata["user.ban.title"], `
+					<input type="text" class="textbox" id="ban-reason" placeholder="${langdata["user.ban.reason"]}"></input>
 					<input type="date" id="ban-date" class="textbox"></input>
 				`, [{
-					label: "Cancel",
+					label: langdata["popup.buttons.cancel"],
 					click: function (p) {
 						p.close();
 					}
 				}, {
-					label: "OK",
+					label: langdata["popup.buttons.ok"],
 					click: function (p) {
 						p.close();
 						$.post(serverUrl + "/ban", {
@@ -635,7 +646,7 @@ function newMessage(message) {
 	}
 
 	if (message.flagged) {
-		flagHtml = '<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="This message might be inappropriate">warning</i>';
+		flagHtml = `<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="${langdata["message.inappropriate"]}">warning</i>`;
 	}
 	if (cache[message.author] && cache[message.author]["xtra"]) {
 		xtraHtml = '<div class="xtraBadge">XTRA</div>';
@@ -816,11 +827,11 @@ setTimeout(function () {
 
 function warningMessageConsole() {
 	console.log(
-		"%cStop!",
+		"%c"+(langdata["warning.hacker.title"] || "Stop!"),
 		"color:red;font-family:system-ui;font-size:4rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
 	console.log(
-		"%cIf someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?",
+		"%c"+(langdata["warning.hacker.content"] || "If someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?"),
 		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
 	);
 }

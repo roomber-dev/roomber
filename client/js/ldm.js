@@ -1,3 +1,4 @@
+// no languages needed
 ldmOn = getCookie("ldm") === 'true';
 
 function ldmToggle() {

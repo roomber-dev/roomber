@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> <!-- languages added here! -->
 <html lang="en">
 
 <head>
@@ -57,6 +57,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery/2.12.3/cloudinary-jquery.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
     <!-- <script src="js/localData.js"></script> -->
+    <script src="js/lang.js"></script>
     <script src="js/serverUrl.js"></script>
     <!-- <script src="js/update.js"></script> -->
     <script src="js/utilities.js"></script>
@@ -108,22 +109,21 @@
         <div id="loading-back">
             <img alt="" src="assets/roomber-logo.png" id="loading-image">
             <div id="fun-fact-container">
-                <p id="fun-fact-title">Did you know</p>
+                <p id="fun-fact-title" data-lcontent="loading.funfact.title">Did you know</p>
                 <p id="fun-fact"></p>
             </div>
         </div>
 
         <div id="minAdminPanel">
             <div class="titlebar" data-dragger="true">
-                <div class="title"><i class="megasmall material-icons">security</i>Admin Panel</div>
+                <div class="title"><i class="megasmall material-icons">security</i><span data-lcontent="adminpanel.min.title">Admin Panel</span></div>
                 <div class="close">
                     <i class="megasmall material-icons">close</i>
                 </div>
             </div>
-            <button class="button" id="remove-all-messages"><i class="megasmall material-icons">clear_all</i>Clear
-                Messages</button>
-            <button class="button" id="broadcast"><i class="megasmall material-icons">announcement</i>Broadcast</button>
-            <button class="button" id="full-panel"><i class="megasmall material-icons">security</i>Full Panel</button>
+            <button class="button" id="remove-all-messages"><i class="megasmall material-icons">clear_all</i><span data-lcontent="adminpanel.min.clear_all">Clear Messages</span></button>
+            <button class="button" id="broadcast"><i class="megasmall material-icons">announcement</i><span data-lcontent="adminpanel.min.broadcast">Broadcast</span></button>
+            <button class="button" id="full-panel"><i class="megasmall material-icons">security</i><span data-lcontent="adminpanel.min.fullpanel">Full Panel</span></button>
         </div>
 
         <div class="topbar-main flex-down">
@@ -155,7 +155,7 @@
                     <script src="components/minAdminPanel.js"></script>
                     <div id="messages">
                     </div>
-                    <div id="attachment-indicator">1 attachment <button class="button" id="remove-attachment"><i class="megasmall material-icons">close</i></button></div>
+                    <div id="attachment-indicator" data-lcontent="messagebox.attachmentindicator">1 attachment <button class="button" id="remove-attachment"><i class="megasmall material-icons">close</i></button></div>
                     <div id="message-box" class="glass">
                         <div class="message-input">
                             <input id="message" class="glass" placeholder="Message" autocomplete="off" />
@@ -168,13 +168,6 @@
         </div>
 
         <div id="setup-container"></div>
-        <div id="console">
-            <div class="titlebar" data-dragger="true">
-                <div class="title"><i class="megasmall material-icons">bug_report</i>Debug Console
-                </div>
-
-            </div>
-        </div>
 
         <script src="components/popup.js"></script>
         <script src="js/image.js"></script>

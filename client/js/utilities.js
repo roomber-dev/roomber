@@ -1,3 +1,4 @@
+// languages not needed here
 loadedEvents = [];
 const logs = [];
 const errors = [];

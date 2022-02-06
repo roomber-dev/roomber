@@ -1,5 +1,5 @@
 cache = {};
-
+// languages done here!
 channel = "";
 
 function ifPermission(permission, ifTrue) {
@@ -39,7 +39,7 @@ function addMessage(message, scroll = true, before = false) {
 async function adAppend(scroll = true) {
 	const id = uuidv4();
 	$("#messages").append(await newAdMessage(id));
-	composeMessageContent($(`#${id} .msgln`), "Buy Roomber Xtra for an ad-free experience and lots of cool perks to make you stand out and have more fun! :sunglasses:");
+	composeMessageContent($(`#${id} .msgln`), langdata["message.ad"]);
 
 	scroll && chatScrollDown();
 }
@@ -104,7 +104,7 @@ function getMessages(before = false, scroll = false) {
 function sendMessage(message) {
 	$.post(serverUrl + '/messages', message, function (data) {
 		if (data.error) {
-			popup("Error", data.error, undefined, false, "red");
+			popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 		}
 	})
 }
@@ -118,12 +118,12 @@ function editMessage(message, newMessage) {
 	}, function (data) {
 		if (data.error) {
 			setTimeout(function () {
-				popup("Error", data.error, undefined, false, "red");
+				popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 			}, 500);
 		}
 	}).fail(function () {
 		setTimeout(function () {
-			popup("Error", "You can only edit your own messages!", undefined, false, "red");
+			popup(langdata["popup.title.error"], langdata["message.edit.error"], undefined, false, "red");
 		}, 500);
 	});
 }
@@ -135,7 +135,7 @@ function deleteMessage(message) {
 		message: message
 	}).fail(function () {
 		setTimeout(function () {
-			popup("Error", "You can only delete your own messages!", undefined, false, "red");
+			popup(langdata["popup.title.error"], langdata["message.delete.error"], undefined, false, "red");
 		}, 500);
 	});
 }
@@ -161,7 +161,7 @@ function changeChannel(id, type = "text") {
 function joinServer(id) {
 	$.post(serverUrl + "/joinServer", { ...session, server: id }, function (data) {
 		if (data.error) {
-			popup("Error", data.error);
+			popup(langdata["popup.title.error"], data.error);
 			return;
 		}
 		cclog("joined server " + data.name, "debug");
@@ -175,7 +175,7 @@ socket.on('message', function (message) {
 	playMessageSound();
 });
 socket.on('ban', function(ban) {
-	popup("Ban", `You have been banned from Roomber due to: "${ban.reason}" until ${new Date(ban.date).toLocaleDateString()}`, [], false, "red");
+	popup(langdata["user.ban.title"], formatLangText(langdata["user.ban.content"], [ban.reason, new Date(ban.date).toLocaleDateString()]), [], false, "red");
 	$("")
 });
 socket.on('edit', function (e) {
@@ -193,10 +193,10 @@ socket.on('delete', function (e) {
 socket.on('ad', adAppend);
 socket.on('messagesCleared', function () {
 	$("#messages").html("");
-	alert("All of the messages were cleared");
+	alert(langdata["messages.all_cleared"]);
 });
 socket.on('broadcast', function (message) {
-	popup("Broadcast", message);
+	popup(langdata["broadcast.title"], message);
 });
 socket.on('deleteServer', function(server) {
 	$(`#server-list #${server}`).remove();
@@ -219,10 +219,10 @@ socket.on('deleteChannel', function(c) {
 		openServer(currentServer);
 	} 
 });
-socket.on('userJoin', function () {
+/*socket.on('userJoin', function () {
 	cclog("yoo new user in channel!!", "join")
 });
 socket.on('maintenance', function () {
 	cclog("maintannenenance!!111", "debug");
 	location.reload();
-});
+});*/

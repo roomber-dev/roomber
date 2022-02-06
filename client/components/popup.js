@@ -1,5 +1,6 @@
 let popups = 0;
 var popupButtons = [];
+// languages done here!
 
 function removePopup(id) {
     if (id > popups) return;
@@ -25,7 +26,7 @@ function removePopup(id) {
     }
 }
 
-function popup(title, text, buttons = [{ label: "OK", click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
+function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
     popups++
     let id = `popup-${popups}`;
     let t = title;
@@ -97,7 +98,7 @@ function popup(title, text, buttons = [{ label: "OK", click: function (popup) { 
 };
 
 function alert(message) {
-    popup("Alert", message);
+    popup(langdata["alert.title"], message);
 }
 
 // goodbye repeat() you know for loops exist right?

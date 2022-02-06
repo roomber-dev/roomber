@@ -1,4 +1,4 @@
-
+// languages done here
 const styles = {
   palette: {
     window: "#1B1B1B",
@@ -39,7 +39,7 @@ pfpWidget = cloudinary.createUploadWidget({
       avatar: src
     }, function(data) {
       if(data.error) {
-        popup("Error", data.error, undefined, false, "red");
+        popup(langdata["popup.title.error"], data.error, undefined, false, "red");
         return;
       }
       $("#setup-pfp img").attr("src", src);

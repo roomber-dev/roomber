@@ -48,7 +48,7 @@ disconnected = false;
 
 socket.on('disconnect', function() {
 	disconnected = true;
-	errorpopupid = popup("Error", "The connection has been lost. Please hold on for a second, that could mean we are rolling out a Roomber update!", [], true, "red");
+	errorpopupid = popup(langdata["popup.title.error"], langdata["disconnected.content"], [], false, "red", true);
 	console.log(
 		"%cConnection lost.",
 		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"

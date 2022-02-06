@@ -1,14 +1,14 @@
 $("#minAdminPanel .close").click(function() {
     $("#minAdminPanel").css("display", "none")
 })
-
+// languages done here!
 $().ready(function() {
     const adminPanel = $("#minAdminPanel")
     adminPanel.css("display","none");
     adminPanel.css("top", window.innerHeight - adminPanel.height() - adminPanel.css("padding-bottom").replace("px","") * 2);
 
     $("#remove-all-messages").click(function() {
-        popup("Remove all messages","Are you sure?",[{
+        popup(langdata["adminpanel.min.clear_all.popup.title"],langdata["popup.content.areyousure"],[{
             label: "Yes",
             click: function(p) {
                 p.close();
@@ -31,8 +31,8 @@ $().ready(function() {
     });
 
     $("#broadcast").click(function() {
-        popup("Broadcast", `
-            Enter the broadcast message<br>
+        popup(langdata["adminpanel.min.broadcast.popup.title"], `
+            ${langdata["adminpanel.min.broadcast.popup.content"]}<br>
             <input type="text" class="textbox" id="broadcast-msg"></input>
         `, [{
             label: "OK",
@@ -46,7 +46,7 @@ $().ready(function() {
                         message: msg
                     }, function(data) {
                         if(data.error) {
-                            popup("Error", data.error, undefined, false, "red");
+                            popup(langdata["popup.title.error"], data.error, undefined, false, "red");
                         }
                     });
                 },500);

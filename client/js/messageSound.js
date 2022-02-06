@@ -1,4 +1,4 @@
-
+// languages not needed here
 const messageSound = new Audio("assets/message.mp3");
 
 function playMessageSound() {

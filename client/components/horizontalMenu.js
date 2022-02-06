@@ -1,6 +1,6 @@
 let horizontalMenuButtons = [];
 let menus = 0;
-
+// no languages needed here
 function horizontalMenuAddButtons(menu, buttons, a = true) {
 	let buttonsHTML = "";
 	buttons.forEach(function(button) {

@@ -40,7 +40,7 @@ socket.on("callStarted", call => {
 
 socket.on("callEnded", () => {
     currentCall = null
-    console.log("Call ended/declined")
+    cclog("Call ended/declined", "debug")
     hideIncomingCall()
 })
 
