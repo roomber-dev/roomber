@@ -1,6 +1,6 @@
 {
   "name": "roomber",
-  "version": "4.0.0",
+  "version": "4",
   "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
   "main": "./server/server.js",
   "scripts": {
