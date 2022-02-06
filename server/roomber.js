@@ -45,11 +45,15 @@ class Roomber {
 						data.user,
 						data.otherUser
 					],
-					caller: data.user
+					caller: data.user,
+					inCall: [
+						data.user
+					]
 				})
 				call.save(err => {
 					if(err) sclog(err, "error")
 					else {
+						socket.join(`CALL-${call._id}`)
 						call.users.forEach(user => this.io.to(user).emit("callStarted", {call: call}))
 					}
 				})
@@ -62,7 +66,27 @@ class Roomber {
 				this.db.Call.deleteOne({_id: data.call._id}, (err, _) => {
 					if(err) sclog(err, "error")
 					else {
+						this.io.sockets.clients(data.call._id).forEach(s => s.leave(data.call._id))
 						data.call.users.forEach(user => this.io.to(user).emit("callEnded"))
+					}
+				})
+			})
+
+			socket.on('pickUpCall', data => {
+				if(!authed(data.user)) {
+					return
+				}
+				this.db.Call.findOne({_id: data.call._id}, (err, call) => {
+					if(call) {
+						if(!call.inCall.includes(data.user)) {
+							call.inCall.push(data.user)
+							call.save(err_ => {
+								if(!err) {
+									socket.join(`CALL-${call._id}`)
+									this.io.to(`CALL-${call._id}`).emit("newCallee", {call: call})
+								}
+							})
+						}
 					}
 				})
 			})

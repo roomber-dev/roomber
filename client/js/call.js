@@ -18,6 +18,19 @@ function endCall() {
     }
 }
 
+function pickUpCall() {
+    if(currentCall != null) {
+        socket.emit("pickUpCall", {
+            user: session.user,
+            call: currentCall
+        })
+    }
+}
+
+socket.on("newCallee", call => {
+    console.log("newCallee", call)
+})
+
 socket.on("callStarted", call => {
     currentCall = call.call
     if(currentCall.caller != session.user) {

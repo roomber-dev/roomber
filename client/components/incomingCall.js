@@ -1,6 +1,8 @@
 const incomingCall = call => `
     <div id="incoming-call">
         Call from ${getCallees(call).map(callee => cache[callee].username).join(", ")}
+        <button onclick="pickUpCall()">Pick up</button>
+        <button onclick="endCall()">Decline</button>
     </div>
 `
 

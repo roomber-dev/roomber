@@ -1,4 +1,5 @@
 module.exports = require('mongoose').Schema({
     users: Array,
-    caller: String
+    caller: String,
+    inCall: Array
 })
