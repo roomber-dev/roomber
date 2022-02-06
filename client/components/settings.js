@@ -203,10 +203,13 @@ const categoryContent = () => settingsCategories({
 	<h1>${langdata["settings.category.lang"]}</h1>
 	<label for="cars">${langdata["settings.category.lang.title"]}:</label>
 	<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
-    	<option value="en-US">English | US</option>
-    	<option value="en-GB">English | GB</option>
-    	<option value="pl-PL">Polski | Polish</option>
-		<option value="me-OW">Meow | Meow</option>
+    	
+        <option value="en-US">English (United States)</option>
+    	<option value="en-GB">English (United Kingdom)</option>
+    	<option value="pl-PL">Polski (Polska)</option>
+        <option value="ru-RU">Русский (Россия)</option>
+        <option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
+	
   	</select>
 </div>
 
