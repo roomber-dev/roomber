@@ -11,7 +11,7 @@ module.exports = require('express').Router({ mergeParams: true })
                         if (channel_.length) {
                             res.send(channel_[0]._id);
                         } else {
-                            var channel = new Channel({
+                            var channel = new req.db.Channel({
                                 type: "chat",
                                 chatParticipants: [req.body.user, req.body.recipient]
                             });
