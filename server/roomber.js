@@ -66,7 +66,7 @@ class Roomber {
 				this.db.Call.deleteOne({_id: data.call._id}, (err, _) => {
 					if(err) sclog(err, "error")
 					else {
-						this.io.sockets.clients(data.call._id).forEach(s => s.leave(data.call._id))
+						this.io.in(`CALL-${data.call._id}`).socketsLeave(`CALL-${data.call._id}`)
 						data.call.users.forEach(user => this.io.to(user).emit("callEnded"))
 					}
 				})
@@ -83,7 +83,7 @@ class Roomber {
 							call.save(err_ => {
 								if(!err) {
 									socket.join(`CALL-${call._id}`)
-									this.io.to(`CALL-${call._id}`).emit("newCallee", {call: call})
+									this.io.to(`CALL-${call._id}`).emit("newCallee", {call: call, callee: data.user})
 								}
 							})
 						}

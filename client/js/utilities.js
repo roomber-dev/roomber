@@ -186,6 +186,7 @@ function cclog(message, type, timestamp = true) {
 			return [`%c[LOAD] %c${text}`, 'color: #0096FF', 'color: white']
 		}
 	}
+	console.log(...category[type](message))
 }
 
 function generateUID() {

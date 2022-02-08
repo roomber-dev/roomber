@@ -300,7 +300,7 @@ function changeServerSettings(index) {
 }
 
 function serverInvitePopup(link) {
-	popup('Server Invite', formatLangText(langdata["server.invite.content"], [`<a href="${link}">${link}</a>`]))
+	popup(langdata["server.invite.title"], formatLangText(langdata["server.invite.content"], [`<a href="${link}">${link}</a>`]))
 }
 
 function openServer(index) {
