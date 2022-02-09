@@ -47,7 +47,7 @@
     "setup.pages.4.title": "Roomber đã sẵn sàng!",
     "setup.pages.4.button": "Bắt đầu khởi động Roomber",
     "settings.title": "Cài đặt",
-    "settings.category.userprofile": "Cài Đặt Người DÙng",
+    "settings.category.userprofile": "Cài Đặt Người Dùng",
     "settings.category.accountnsecurity": "Tài Khoản & Bảo Mật",
     "settings.category.accountnsecurity.email": "E-mail",
     "settings.category.accountnsecurity.password": "Mật Khẩu",
@@ -106,6 +106,8 @@
     "popup.title.success": "Thành công",
     "popup.title.error": "Lỗi",
     "popup.content.areyousure": "Bạn có chắc?",
+    "status.on": "BẬT",
+    "status.off": "TẮT",
     "alert.title": "Cảnh báo",
     "warning.hacker.title": "Vui lòng dừng lại",
     "warning.hacker.content": "Chúng tôi nghi ngờ bạn đang cố tình xâm nhập vào các tài khoản\nVui lòng dừng tất cả các hành động lại"

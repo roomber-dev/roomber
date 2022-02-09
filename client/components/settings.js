@@ -125,6 +125,8 @@ const changeEmail = () => popup(
 		}
 	}])
 
+
+
 const categoryContent = () => settingsCategories({
 	profile: () => `
 		<div class="flex flex-down full-width align-center">
@@ -192,7 +194,7 @@ const categoryContent = () => settingsCategories({
 					<p>${langdata["settings.category.appearance.light"]}</p>
 				</div>
 			</div>
-			<button class="button" id="ldm" onclick="ldmToggle()" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> ${langdata["settings.category.appearance.ldm"]}</button>
+			<button class="button" id="ldm" onclick="ldmToggle();" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> <span>${langdata["settings.category.appearance.ldm"]}: ${langdata["status."+(ldmOn ? "on" : "off")]}</span></button>
 		</div>
 	`,
 	notifs: () => `
@@ -209,6 +211,7 @@ const categoryContent = () => settingsCategories({
     	<option value="pl-PL">Polski (Polska)</option>
         <option value="ru-RU">Русский (Россия)</option>
         <option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
+		<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
 	
   	</select>
 </div>

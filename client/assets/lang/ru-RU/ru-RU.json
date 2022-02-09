@@ -106,6 +106,8 @@
     "popup.title.success": "Успех",
     "popup.title.error": "Ошибка",
     "popup.content.areyousure": "Вы уверены?",
+    "status.on": "ВКЛ",
+    "status.off": "ВЫКЛ",
     "alert.title": "Alert",
     "warning.hacker.title": "Стоять!",
     "warning.hacker.content": "Если вас попросили что-то сюда написать, то со 101% шансом вас пытаются обмануть и украсть ваш аккаунт..."

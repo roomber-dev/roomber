@@ -106,6 +106,8 @@
     "popup.title.success": "Sukces",
     "popup.title.error": "Błąd",
     "popup.content.areyousure": "Czy jesteś pewien?",
+    "status.on": "WŁ.",
+    "status.off": "WYŁ.",
     "alert.title": "Uwaga",
     "warning.hacker.title": "Stop!",
     "warning.hacker.content": "Jeśli ktoś powiedział Ci żeby coś tutaj wkleić, jest 101% szansa, że to oszustwo.\nPozwolenie tym brudnym hakerom na dostęp do Twojego konta to nie jest to czego chcesz, co nie?"

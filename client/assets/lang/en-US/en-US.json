@@ -106,6 +106,8 @@
     "popup.title.success": "Success",
     "popup.title.error": "Error",
     "popup.content.areyousure": "Are you sure?",
+    "status.on": "ON",
+    "status.off": "OFF",
     "alert.title": "Alert",
     "warning.hacker.title": "Stop!",
     "warning.hacker.content": "If someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?"

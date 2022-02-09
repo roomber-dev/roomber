@@ -2,7 +2,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./routes/createRouter.js')()
 
-const betaCode = "587162";
+const betaCode = "184927";
 
 module.exports = (api, maintenance, database) => express()
     .use(bodyParser.urlencoded({ extended: true }))
