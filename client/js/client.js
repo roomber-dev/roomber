@@ -643,6 +643,12 @@ function newMessage(message) {
 				})
 			}
 		});
+		extra.push({
+			icon: "call",
+			click: function (menuItem) {
+				newCall(menuItem.getMessage().data("author"))
+			}
+		});
 	}
 
 	if (message.flagged) {

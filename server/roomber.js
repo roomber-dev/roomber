@@ -20,6 +20,8 @@ class Roomber {
 
 		this.app.io = this.io;
 
+		const callPeers = {}
+
 		this.io.on('connection', socket => {
 			sclog(`A user connected`, "join");
 
@@ -34,61 +36,28 @@ class Roomber {
 				})
 			})
 
-			const authed = (user) => this.io.sockets.adapter.rooms.has(user)
-
-			socket.on('newCall', data => {
-				if(!authed(data.user) || !authed(data.otherUser)) {
-					return
-				}
-				const call = new this.db.Call({
-					users: [
-						data.user,
-						data.otherUser
-					],
-					caller: data.user,
-					inCall: [
-						data.user
-					]
-				})
-				call.save(err => {
-					if(err) sclog(err, "error")
-					else {
-						socket.join(`CALL-${call._id}`)
-						call.users.forEach(user => this.io.to(user).emit("callStarted", {call: call}))
-					}
+			socket.on('peer', data => {
+				auth(this.db, data.user, data.session, () => {
+					callPeers[data.user] = data.peer
 				})
 			})
 
-			socket.on('endCall', data => {
-				if(!authed(data.user)) {
-					return
+			socket.on('getPeer', (peer, callback) => {
+				if(callPeers[peer]) {
+					callback({
+						status: "ok",
+						peer: callPeers[peer]
+					})
+				} else {
+					callback({
+						status: "err",
+						error: "Peer not found"
+					})
 				}
-				this.db.Call.deleteOne({_id: data.call._id}, (err, _) => {
-					if(err) sclog(err, "error")
-					else {
-						this.io.in(`CALL-${data.call._id}`).socketsLeave(`CALL-${data.call._id}`)
-						data.call.users.forEach(user => this.io.to(user).emit("callEnded"))
-					}
-				})
 			})
 
-			socket.on('pickUpCall', data => {
-				if(!authed(data.user)) {
-					return
-				}
-				this.db.Call.findOne({_id: data.call._id}, (err, call) => {
-					if(call) {
-						if(!call.inCall.includes(data.user)) {
-							call.inCall.push(data.user)
-							call.save(err_ => {
-								if(!err) {
-									socket.join(`CALL-${call._id}`)
-									this.io.to(`CALL-${call._id}`).emit("newCallee", {call: call, callee: data.user})
-								}
-							})
-						}
-					}
-				})
+			socket.on('leaveCall', callee => {
+				this.io.emit('calleeLeave', callee)
 			})
 
 			socket.on('disconnect', () => {
