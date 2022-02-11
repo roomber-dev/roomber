@@ -1,5 +1,4 @@
 let langdata;
-// this is literally the language file of course languages are done here
 
 function loadLanguage(language, callback = function() {}) {
     $.getJSON(`../assets/lang/${language}/${language}.json`, function (langfile) {
