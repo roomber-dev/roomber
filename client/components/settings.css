@@ -248,3 +248,77 @@
 	align-items: center;
 	flex: 1;
 }
+
+.audio-heading {
+	height: 40px;
+	display: flex;
+	align-items: center;
+}
+
+.audio-heading i {
+	margin-top: 2px;
+	margin-right: 5px;
+}
+
+.audio-volume {
+	display: flex;
+	margin-left: 50px;
+	margin-right: 50px;
+	flex-direction: column;
+}
+
+.audio-volume .inputs {
+	display: flex;
+}
+
+.audio-input {
+	margin: 20px;
+}
+
+.audio-input .input {
+	display: flex;
+	height: 38px;
+	align-items: center;
+}
+
+.audio-input .input i {
+	margin-right: 8px;
+}
+
+.mic-test {
+	display: flex;
+	flex-direction: column;
+}
+
+.mic-test .button-bar {
+	display: flex;
+	margin-top: 15px;
+	align-items: center;
+}
+
+.mic-test button {
+	width: 114px;
+	margin-right: 14px;
+}
+
+.mic-test button i {
+	margin-right: 4px;
+}
+
+.mic-test .bar {
+	background: rgba(0, 0, 0, 0.1);
+	height: 23px;
+	border-radius: 5px;
+	flex: 1;
+}
+
+.mic-test .bar .progress {
+	position: relative;
+	top: 0;
+	left: 0;
+	height: 23px;
+	background: linear-gradient(90deg, #FF5C00 0%, #FFE600 50.52%, rgba(0,0,0,0) 300%);
+	border-radius: 4px 0px 0px 4px;
+	width: 0%;
+	max-width: 100%;
+}

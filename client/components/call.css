@@ -66,6 +66,16 @@
     margin: 5px;
 }
 
+#call-mute {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    background-color: white;
+    color: black;
+    margin: 5px;
+}
+
 #in-call {
     position: absolute;
     top: 50%;
@@ -92,6 +102,7 @@
     border-bottom-left-radius: 16px;
     border-bottom-right-radius: 16px;
     padding: 8px;
+    display: flex;
 }
 
 #call-main {
