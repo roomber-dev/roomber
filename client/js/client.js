@@ -391,7 +391,7 @@ function openServer(index) {
 			}], false, "red")
 		})
 	}
-	const link = `http://roomber-app.herokuapp.com/invite?s=${server._id}`
+	const link = `https://roomber-app.herokuapp.com/invite?s=${server._id}`
 	$("#channels ul #server-buttons").append(`
 		<button class="button" onclick="serverInvitePopup('${link}')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);

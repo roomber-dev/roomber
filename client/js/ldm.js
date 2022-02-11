@@ -1,4 +1,4 @@
-// no languages needed
+// no languages needed?? I SEE SOME FUCKING LANGUAGES USED HERE
 ldmOn = getCookie("ldm") === 'true';
 
 function ldmToggle() {
