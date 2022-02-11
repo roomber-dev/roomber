@@ -15,11 +15,10 @@ module.exports = require('express').Router({ mergeParams: true })
                         return;
                     }
 
-                    req.db.Message.find({ author: req.body.deleter, _id: req.body.message }, (err, msg) => {
-                        if (msg.length) {
-                            var message = msg[0];
-                            message.removed = true;
-                            message.save(err_ => {
+                    req.db.Message.findOne({ author: req.body.deleter, _id: req.body.message }, (err, msg) => {
+                        if (msg) {
+                            msg.removed = true;
+                            msg.save(err_ => {
                                 if (err_) {
                                     console.log(err_);
                                     res.sendStatus(500);

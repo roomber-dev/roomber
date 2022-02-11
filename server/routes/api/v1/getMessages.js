@@ -3,7 +3,10 @@ module.exports = require('express').Router({ mergeParams: true })
         if (req.body.fetch) {
             req.db.Channel.countDocuments({ _id: req.body.channel }, (err, count) => {
                 if (count > 0) {
-                    req.db.Message.find({ channel: req.body.channel }).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
+                    req.db.Message.find({ 
+                        channel: req.body.channel, 
+                        removed: false 
+                    }).sort({ _id: -1 }).skip(Number(req.body.fetch)).limit(50).exec((err, messages) => {
                         if (!messages.length) {
                             res.send({ error: "No messages found" });
                             return;
