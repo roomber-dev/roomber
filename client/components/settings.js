@@ -124,7 +124,34 @@ const changeEmail = () => popup(
 			}, 501)
 		}
 	}])
-
+/**
+ * example of usage:
+ * 
+ * ```
+ * 		getDevices().forEach((value, index) => {
+			var deviceInfo = value;
+			var option = document.createElement('option');
+			option.value = deviceInfo.deviceId;
+			if (deviceInfo.kind === 'audioinput') {
+		
+		
+			} else if (deviceInfo.kind === 'audiooutput') {
+		
+		
+			} else if (deviceInfo.kind === 'videoinput') {
+		
+			}
+		})
+	```
+ * @returns Array of devices
+ */
+const getDevices = () => {
+	let susy;
+	navigator.mediaDevices.enumerateDevices().then(function(deviceInfos) {
+		susy = deviceInfos;
+  })
+  return susy;
+}
 
 
 const categoryContent = () => settingsCategories({
