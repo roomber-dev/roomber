@@ -317,8 +317,9 @@
 	top: 0;
 	left: 0;
 	height: 23px;
-	background: linear-gradient(90deg, #FF5C00 0%, #FFE600 50.52%, rgba(0,0,0,0) 300%);
-	border-radius: 4px 0px 0px 4px;
-	width: 0%;
-	max-width: 100%;
+	mask-image: linear-gradient(to right, black 0%, transparent 0%);
+	-webkit-mask-image: linear-gradient(to right, black 0%, transparent 0%);
+	mask-mode: alpha;
+	background: linear-gradient(90deg, lime 0%, yellow 50%, red 100%, rgba(0,0,0,0) 300%);
+	border-radius: 4px 4px 4px 4px;
 }

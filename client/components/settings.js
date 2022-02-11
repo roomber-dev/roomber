@@ -140,8 +140,17 @@ let testingAudio = false
 
 let testInterval = 0
 
-const getAudioDevice = () => getCookie("audioDevice") || audioDevices[0].deviceId || ""
+const getAudioDevice = () => {
+	if(getCookie("audioDevice")) {
+		return getCookie("audioDevice");
+	} else if(audioDevices[0]) {
+		return audioDevices[0].deviceId;
+	} else {
+		return "";	
+	}
 
+	return null;
+}
 const toggleMicTest = () => {
 	testingAudio = !testingAudio
 	if(!testingAudio) {
@@ -153,7 +162,9 @@ const toggleMicTest = () => {
 		window.testStream.getTracks().forEach(track => track.stop())
 		$(".mic-test .label").text("Start Test")
 		$(".mic-test .bar .progress").css({
-			width: `0%`
+			"mask-image": `linear-gradient(to right, black 0%, transparent 0%)`,
+			"-webkit-mask-image": `linear-gradient(to right, black 0%, transparent 0%)`,
+
 		})
 		delete window.testStream
 		return
@@ -181,7 +192,8 @@ const toggleMicTest = () => {
 			sum += 120
 			sum = -sum
 			$(".mic-test .bar .progress").css({
-				width: `${sum / (analyser.maxDecibels / 100)}%`
+				"mask-image": `linear-gradient(to right, black ${sum / (analyser.maxDecibels / 100)}%, transparent ${sum / ((analyser.maxDecibels + 10) / 100)}%)`,
+				"-webkit-mask-image": `linear-gradient(to right, black ${sum / (analyser.maxDecibels / 100)}%, transparent ${sum / ((analyser.maxDecibels + 10) / 100)}%)`
 			})
 		}, 30)
 		testAudio.addEventListener('loadedmetadata', () => {
@@ -192,8 +204,20 @@ const toggleMicTest = () => {
 
 let audioDevices = []
 // get media for device labels
+
+let options = {};
+
+if(getAudioDevice()) {
+	options = {
+		deviceId: getAudioDevice()
+	}
+} else {
+	options = {
+		deviceId: ""
+	}
+}
 navigator.mediaDevices.getUserMedia({
-	audio: { deviceId: getAudioDevice() }
+	audio: options
 }).then(audio => {
 	navigator.mediaDevices.enumerateDevices().then(devices => {
 		console.log(devices)
