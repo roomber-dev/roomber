@@ -56,7 +56,7 @@ body, #body {
 	font-size: 20px;
 	font-family: 'Noto Sans';
 	color: white;
-	overflow: hidden;
+	overflow: clip;
 }
 
 body {
@@ -988,3 +988,70 @@ a {
 
 .justify-center {justify-content: center;}
 .align-center {align-items: center;}
+
+input[type="range"] {
+	background: rgba(0, 0, 0, 0.15);
+	border-radius: 5px;
+	height: 10px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 13px;
+	height: 27px;
+	border-radius: 10px;
+	background-color: white;
+	border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+	-moz-appearance: none;
+	width: 13px;
+	height: 27px;
+	border-radius: 10px;
+	background-color: white;
+	border: none;
+}
+
+input[type="range"]::-ms-thumb {
+	-moz-appearance: none;
+	width: 13px;
+	height: 27px;
+	border-radius: 10px;
+	background-color: white;
+	border: none;
+}
+
+input[type="range"]::-moz-range-progress {
+	-moz-appearance: none;
+	height: 10px;
+	background: #C4C4C4;
+	border-radius: 8px 0px 0px 8px;
+}
+
+input[type="range"]::-ms-fill-lower {
+	height: 10px;
+	background: #C4C4C4;
+	border-radius: 8px 0px 0px 8px;
+}
+
+input[type=range]::-webkit-slider-runnable-track  {
+	-webkit-appearance: none;
+	box-shadow: none;
+	border: none;
+	background: transparent;
+}
+
+input[type=range]::-moz-range-track  {
+	-moz-appearance: none;
+	box-shadow: none;
+	border: none;
+	background: transparent;
+}
+
+input[type=range]::-ms-track  {
+	-ms-track: none;
+	box-shadow: none;
+	border: none;
+	background: transparent;
+}

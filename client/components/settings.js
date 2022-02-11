@@ -124,35 +124,87 @@ const changeEmail = () => popup(
 			}, 501)
 		}
 	}])
-/**
- * example of usage:
- * 
- * ```
- * 		getDevices().forEach((value, index) => {
-			var deviceInfo = value;
-			var option = document.createElement('option');
-			option.value = deviceInfo.deviceId;
-			if (deviceInfo.kind === 'audioinput') {
-		
-		
-			} else if (deviceInfo.kind === 'audiooutput') {
-		
-		
-			} else if (deviceInfo.kind === 'videoinput') {
-		
-			}
-		})
-	```
- * @returns Array of devices
- */
-const getDevices = () => {
-	let susy;
-	navigator.mediaDevices.enumerateDevices().then(function(deviceInfos) {
-		susy = deviceInfos;
-  })
-  return susy;
+
+const setInputVolume = () => {
+	setCookie("inputVolume", $("#input-volume").val())
 }
 
+const setOutputVolume = () => {
+	setCookie("outputVolume", $("#output-volume").val())
+	testAudio.volume = Number(getCookie("inputVolume")) || 0.5
+}
+
+let testAudio = new Audio()
+
+let testingAudio = false
+
+let testInterval = 0
+
+const getAudioDevice = () => getCookie("audioDevice") || audioDevices[0].deviceId || ""
+
+const toggleMicTest = () => {
+	testingAudio = !testingAudio
+	if(!testingAudio) {
+		clearInterval(testInterval)
+		testAudio.pause()
+		testAudio.remove()
+		testAudio = new Audio()
+		testAudio.volume = Number(getCookie("inputVolume")) || 0.5
+		window.testStream.getTracks().forEach(track => track.stop())
+		$(".mic-test .label").text("Start Test")
+		$(".mic-test .bar .progress").css({
+			width: `0%`
+		})
+		delete window.testStream
+		return
+	}
+	$(".mic-test .label").text("Stop Test")
+	navigator.mediaDevices.getUserMedia({
+		audio: true,
+		deviceId: getAudioDevice()
+	}).then(stream => {
+		window.testStream = stream
+		testAudio.srcObject = stream
+		const audioCtx = new AudioContext()
+        const analyser = audioCtx.createAnalyser()
+        analyser.fftSize = 2048
+        const audioSrc = audioCtx.createMediaStreamSource(stream)
+        audioSrc.connect(analyser)
+        const data = new Float32Array(analyser.frequencyBinCount)
+		testInterval = setInterval(() => {
+			analyser.getFloatFrequencyData(data)
+			let sum = 0
+			data.forEach(i => {
+				sum += i
+			})
+			sum /= data.length // average volume 5/500 => 1/100
+			sum += 120
+			sum = -sum
+			$(".mic-test .bar .progress").css({
+				width: `${sum / (analyser.maxDecibels / 100)}%`
+			})
+		}, 30)
+		testAudio.addEventListener('loadedmetadata', () => {
+			testAudio.play()
+		})
+	})
+}
+
+let audioDevices = []
+// get media for device labels
+navigator.mediaDevices.getUserMedia({
+	audio: { deviceId: getAudioDevice() }
+}).then(audio => {
+	navigator.mediaDevices.enumerateDevices().then(devices => {
+		console.log(devices)
+		audioDevices = devices
+		audio.getTracks().forEach(track => track.stop())
+	})
+})
+
+const setAudioDevice = () => {
+	setCookie("audioDevice", $("#device").val())
+}
 
 const categoryContent = () => settingsCategories({
 	profile: () => `
@@ -171,34 +223,34 @@ const categoryContent = () => settingsCategories({
 		</div>
 	`,
 	account: () => `
-	<div class="flex flex-down align-center">
-		<h1 id="account-title">${langdata["settings.category.accountnsecurity"]}</h1>
-		<div id="account-content" class="flex full-width">
-			<div id="account-user" class="flex flex-down">
-				<div id="account-profile" class="flex full-width align-center">
-					<img src="${profile.avatar || "avatars/default.png"}" alt="">
-					<div class="profile-username">${profile.username}</div>
-					${materialIcon("exit_to_app", 'onclick="logoutPopup()"')}
-				</div>
-				<div id="account-credentials" class="flex-down">
-					<div class="flex align-center text-field" onclick="changeEmail()">
-						<div class="label">${langdata["settings.category.accountnsecurity.email"]}</div>
-						<div class="input no-select">${profile.email}</div>
+		<div class="flex flex-down align-center">
+			<h1 id="account-title">${langdata["settings.category.accountnsecurity"]}</h1>
+			<div id="account-content" class="flex full-width">
+				<div id="account-user" class="flex flex-down">
+					<div id="account-profile" class="flex full-width align-center">
+						<img src="${profile.avatar || "avatars/default.png"}" alt="">
+						<div class="profile-username">${profile.username}</div>
+						${materialIcon("exit_to_app", 'onclick="logoutPopup()"')}
 					</div>
-					<div class="flex align-center text-field" onclick="changePassword()">
-						<div class="label">${langdata["settings.category.accountnsecurity.password"]}</div>
-						<div class="input no-select">*******</div>
+					<div id="account-credentials" class="flex-down">
+						<div class="flex align-center text-field" onclick="changeEmail()">
+							<div class="label">${langdata["settings.category.accountnsecurity.email"]}</div>
+							<div class="input no-select">${profile.email}</div>
+						</div>
+						<div class="flex align-center text-field" onclick="changePassword()">
+							<div class="label">${langdata["settings.category.accountnsecurity.password"]}</div>
+							<div class="input no-select">*******</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div id="account-qr" class="flex flex-down">
-				<div id="qr-image" onclick="popupQR()">
-					<img src="assets/fake-qr.png">
+				<div id="account-qr" class="flex flex-down">
+					<div id="qr-image" onclick="popupQR()">
+						<img src="assets/fake-qr.png">
+					</div>
+					<div id="qr-label">${langdata["settings.category.accountnsecurity.urqr"]}</div>
 				</div>
-				<div id="qr-label">${langdata["settings.category.accountnsecurity.urqr"]}</div>
 			</div>
 		</div>
-	</div>
 	`,
 	appearance: () => `
 		<div class="flex flex-down align-center justify-center">
@@ -228,24 +280,64 @@ const categoryContent = () => settingsCategories({
 		Not implemented
 	`,
 	language: () => `
-	<div class="flex flex-down full-width align-center">
-	<h1>${langdata["settings.category.lang"]}</h1>
-	<label for="cars">${langdata["settings.category.lang.title"]}:</label>
-	<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
-    	
-        <option value="en-US">English (United States)</option>
-    	<option value="en-GB">English (United Kingdom)</option>
-    	<option value="pl-PL">Polski (Polska)</option>
-        <option value="ru-RU">Русский (Россия)</option>
-        <option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
-		<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
-	
-  	</select>
-</div>
-
+		<div class="flex flex-down full-width align-center">
+			<h1>${langdata["settings.category.lang"]}</h1>
+			<label for="langpicker">${langdata["settings.category.lang.title"]}:</label>
+			<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
+				<option value="en-US">English (United States)</option>
+				<option value="en-GB">English (United Kingdom)</option>
+				<option value="pl-PL">Polski (Polska)</option>
+				<option value="ru-RU">Русский (Россия)</option>
+				<option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
+				<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
+			</select>
+		</div>
 	`,
 	audio_video: () => `
-		Not implemented
+		<div class="audio-heading">${materialIcon("volume_up")}<b>Audio</b></div>
+		<div class="audio-volume">
+			<div class="inputs">
+				<div class="audio-input">
+					Input device<br/>
+					<select id="device" name="device" class="textbox" onchange="setAudioDevice()">
+						${audioDevices
+							.filter(device => device.kind == "audioinput")
+							.map(device => ({
+								label: device.label,
+								id: device.deviceId
+							}))
+							.map(({label, id}) => 
+								`<option value="${id}">${label}</option>`)
+							.join("\n")}
+					</select>
+				</div>
+				<div class="audio-input">
+					Input volume<br/>
+					<div class="input">
+						${materialIcon("volume_up")}
+						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("inputVolume") || 0.5)}" class="volume-slider" id="input-volume" onchange="setInputVolume()">
+					</div>
+				</div>
+				<div class="audio-input">
+					Output volume<br/>
+					<div class="input">
+						${materialIcon("volume_up")}
+						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("outputVolume") || 0.5)}" class="volume-slider" id="output-volume" onchange="setOutputVolume()">
+					</div>
+				</div>
+			</div>
+			<div class="mic-test">
+				<div class="audio-heading"><b>Microphone test</b></div>
+				Say something to play it back
+				<div class="button-bar">
+					<button class="button" onclick="toggleMicTest()">${materialIcon("mic")}<div class="label">Start Test</div></button>
+					<div class="bar">
+						<div class="progress">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	`,
 	about: () => `
 		<div class="flex flex-down align-center justify-center">
@@ -277,7 +369,7 @@ const settings = () => `
 			${settingsCategory(materialIcon("palette"), "settings.category.appearance", "appearance")}
 			<!--${settingsCategory(svgIcon("notifications_circle"), "settings.category.notifs", "notifs")}-->
 			${settingsCategory(materialIcon("translate"), "settings.category.lang", "language")}
-			<!--${settingsCategory(materialIcon("volume_up"), "settings.category.audionvideo", "audio_video")}-->
+			${settingsCategory(materialIcon("volume_up"), "settings.category.audionvideo", "audio_video")}
 			${settingsCategory(svgIcon("roomber"), "settings.category.about", "about")}
 		</aside>
 		<div id="content">
@@ -291,9 +383,8 @@ const updateSettings = () => {
 	$(".settings").remove();
 	$("#body").append(settings())
 	$(".settings").css("display", "flex")
-	if(settingsState.category == "language") {
-		$('select#langpicker.textbox').val(getCookie('lang'))
-	}
+	$('select#langpicker.textbox').val(getCookie('lang') || "en-US")
+	$(".audio-input select#device").val(getAudioDevice())
 }
 
 const closeSettings = () => {

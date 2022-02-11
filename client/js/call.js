@@ -7,6 +7,9 @@ myAudio.muted = true
 const declineSound = new Audio("assets/Call_Decline.mp3")
 const outcoming = new Audio("assets/OutcomingCall.mp3")
 
+const audioContext = new AudioContext()
+const gainNode = audioContext.createGain()
+
 loaded(() => {
     peer = new Peer()
 
@@ -27,8 +30,14 @@ loaded(() => {
             showIncomingCall(() => {
                 console.log("Answering call")
                 navigator.mediaDevices.getUserMedia({
-                    audio: true
-                }).then(stream => {
+                    audio: { deviceId: getAudioDevice() }
+                }).then(userStream => {
+                    audioSource = audioContext.createMediaStreamSource(userStream),
+                    audioDestination = audioContext.createMediaStreamDestination();
+                    audioSource.connect(gainNode);
+                    gainNode.connect(audioDestination);
+                    gainNode.gain.value = Number(getCookie("inputVolume")) * 2 || 1
+                    stream = audioDestination.stream
                     console.log("Answered call")
                     console.log("Got user audio, stream:", stream)
                     call.answer(stream)
@@ -70,9 +79,14 @@ function newCall(id) {
             }, ({ profile }) => {
                 window.otherCalleeProfile = profile
                 navigator.mediaDevices.getUserMedia({
-                    audio: true
-                }).then(stream => {
-                    console.log("Got user audio, stream:", stream)
+                    audio: { deviceId: getAudioDevice() }
+                }).then(userStream => {
+                    audioSource = audioContext.createMediaStreamSource(userStream),
+                    audioDestination = audioContext.createMediaStreamDestination();
+                    audioSource.connect(gainNode);
+                    gainNode.connect(audioDestination);
+                    gainNode.gain.value = Number(getCookie("inputVolume")) * 2 || 1
+                    stream = audioDestination.stream
                     addStream(myAudio, stream)
                     console.log("Calling", response.peer)
                     const call = peer.call(response.peer, stream, {
@@ -102,10 +116,6 @@ function newCall(id) {
     })
 }
 
-function pickUpCall() {
-    console.log("Pick up call")
-}
-
 function endCall() {
     console.log("End call")
     window.currentCall.close()
@@ -132,3 +142,15 @@ socket.on('calleeLeave', callee => {
         endCall()
     }
 })
+
+let muted = false
+
+function mute() {
+    gainNode.gain.value = 0
+    muted = true
+}
+
+function unmute() {
+    gainNode.gain.value = Number(getCookie("inputVolume")) * 2 || 1
+    muted = false
+}
