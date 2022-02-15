@@ -7,7 +7,7 @@ const incomingCall = caller => `
             ${window.otherCalleeProfile.username}
         </div>
         <div class="buttons">
-            <button onclick="pickupCallback()" style="--col: #388E3C;">${materialIcon("call")}</button>
+            <button onclick="pickupCallback()" style="--col: #388E3C;" class="pickup-button">${materialIcon("call")}</button>
             <button onclick="hideIncomingCall()" style="--col: #D32F2F;">${materialIcon("call_end")}</button>
         </div>
     </div>
@@ -24,9 +24,9 @@ const showIncomingCall = cb => {
 }
 
 const hideIncomingCall = () => {
-    if($("#incoming-call").html()) {
+    if ($("#incoming-call").html()) {
         $("#incoming-call").remove()
-        if(incomingCallAudio.played) {
+        if (incomingCallAudio.played) {
             incomingCallAudio.currentTime = 0
             incomingCallAudio.pause()
         }

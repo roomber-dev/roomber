@@ -81,7 +81,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 500px;
+    min-width: 500px;
     height: 350px;
     background: rgba(0, 0, 0, 0.6);
     border-radius: 16px;
@@ -117,4 +117,10 @@
     height: 100px;
     margin: 20px;
     border-radius: 50%;
+}
+
+#call-main video {
+    width: 200px;
+    border-radius: 10px;
+    margin-right: 20px;
 }
