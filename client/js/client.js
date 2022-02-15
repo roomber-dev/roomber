@@ -17,7 +17,7 @@ function startingStuff() {
 	}
 }
 $(document).ready(function () {
-	if(getCookie("lang") != "") {
+	if (getCookie("lang") != "") {
 		loadLanguage(getCookie("lang"), startingStuff);
 	} else {
 		loadLanguage("en-US", startingStuff);
@@ -61,7 +61,7 @@ function chatScrollDown() {
 
 profile = {};
 function getProfile(onProfile) {
-	$.post(serverUrl + "/getProfile", {...session}, function (data) {
+	$.post(serverUrl + "/getProfile", { ...session }, function (data) {
 		profile = data.profile;
 		onProfile(data.profile);
 	});
@@ -109,7 +109,7 @@ function setTheme(_theme) {
 	theme = _theme;
 	updateTheme();
 	setCookie("theme", _theme);
-	if($(".settings").html()) {
+	if ($(".settings").html()) {
 		$(".settings").removeClass(oldTheme);
 		$(".settings").addClass(theme);
 	}
@@ -135,29 +135,29 @@ function addServer(server) {
 
 function channelClick(id) {
 	changeChannel(id);
-	if(servers[currentServer].owner == session.user) {
+	if (servers[currentServer].owner == session.user) {
 		$(".selected-channel").html(`<div id="selected-container">${$("#channels #" + id).html()}<button class="button edit-channel"><i class="megasmall material-icons">edit</i></button><button class="button delete-channel"><i class="megasmall material-icons">delete_forever</i></button></div>`);
 	}
-	$(".edit-channel").click(function() {
+	$(".edit-channel").click(function () {
 		popup(langdata["channel.edit.title"], `
 			${langdata["channel.edit.content"]}</br>
 			<input type="text" class="textbox" id="channel-name">
 		`, [{
 			label: langdata["popup.buttons.cancel"],
-			click: function(p) {p.close();}
+			click: function (p) { p.close(); }
 		}, {
 			label: langdata["popup.buttons.ok"],
-			click: function(p) {
+			click: function (p) {
 				p.close();
 				const name = $("#channel-name").val();
-				setTimeout(function() {
+				setTimeout(function () {
 					$.post(serverUrl + "/editChannel", {
 						...session,
 						server: servers[currentServer]._id,
 						channel: id,
 						name: name
-					}, function(data) {
-						if(data.error) {
+					}, function (data) {
+						if (data.error) {
 							popup(langdata["popup.title.error"], data.error, undefined, false, "red")
 							return;
 						}
@@ -168,21 +168,21 @@ function channelClick(id) {
 			}
 		}]);
 	})
-	$(".delete-channel").click(function() {
+	$(".delete-channel").click(function () {
 		popup(langdata["channel.delete.title"], langdata["popup.content.areyousure"], [{
 			label: langdata["popup.buttons.no"],
-			click: function(p) {p.close();}
+			click: function (p) { p.close(); }
 		}, {
 			label: langdata["popup.buttons.yes"],
-			click: function(p) {
+			click: function (p) {
 				p.close();
-				setTimeout(function() {
+				setTimeout(function () {
 					$.post(serverUrl + "/deleteChannel", {
 						...session,
 						server: servers[currentServer]._id,
 						channel: id
-					}, function(data) {
-						if(data.error) {
+					}, function (data) {
+						if (data.error) {
 							popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 							return;
 						}
@@ -250,12 +250,12 @@ function serverSettings(callback) {
 		</div>
 	`, [{
 		label: langdata["popup.buttons.ok"],
-		click: function(p) {
+		click: function (p) {
 			p.close();
 			const name = $("#server-name").val();
-			setTimeout(function() {
-				const object = {name: name};
-				if(pic) {
+			setTimeout(function () {
+				const object = { name: name };
+				if (pic) {
 					object.picture = pic;
 				}
 				callback(object);
@@ -263,12 +263,12 @@ function serverSettings(callback) {
 		}
 	}, {
 		label: langdata["popup.buttons.cancel"],
-		click: function(p) {
+		click: function (p) {
 			p.close();
 		}
 	}])
-	$(".pick-server-pic").click(function() {
-		onUpload(function(src) {
+	$(".pick-server-pic").click(function () {
+		onUpload(function (src) {
 			$(".picked-server-pic").attr("src", src);
 			pic = src;
 		})
@@ -277,9 +277,9 @@ function serverSettings(callback) {
 }
 
 function changeServerSettings(index) {
-	serverSettings(function(settings) {
-		$.post(serverUrl + "/editServer", {...session, ...settings, server: servers[index]._id}, function(data) {
-			if(data.error) {
+	serverSettings(function (settings) {
+		$.post(serverUrl + "/editServer", { ...session, ...settings, server: servers[index]._id }, function (data) {
+			if (data.error) {
 				popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 				return;
 			}
@@ -339,20 +339,20 @@ function openServer(index) {
 		$("#channels ul #server-buttons").append(`
 			<button class="button delete-server"><div class="hash no-select"><i class="megasmall material-icons">delete_forever</i></div></button>
 		`);
-		$(".delete-server").click(function() {
+		$(".delete-server").click(function () {
 			popup(langdata["server.delete.title"], langdata["popup.content.areyousure"], [{
 				label: langdata["popup.buttons.no"],
-				click: function(p) {p.close();}
+				click: function (p) { p.close(); }
 			}, {
 				label: langdata["popup.buttons.yes"],
-				click: function(p) {
+				click: function (p) {
 					p.close();
-					setTimeout(function() {
+					setTimeout(function () {
 						$.post(serverUrl + "/deleteServer", {
 							...session,
 							server: servers[currentServer]._id
-						}, function(data) {
-							if(data.error) {
+						}, function (data) {
+							if (data.error) {
 								popup("Error", data.error, undefined, false, "red");
 								return;
 							}
@@ -365,20 +365,20 @@ function openServer(index) {
 		$("#channels ul #server-buttons").append(`
 			<button class="button leave-server"><div class="hash no-select"><i class="megasmall material-icons">exit_to_app</i></div></button>
 		`);
-		$(".leave-server").click(function() {
+		$(".leave-server").click(function () {
 			popup(langdata["server.leave.title"], langdata["popup.content.areyousure"], [{
 				label: langdata["popup.buttons.no"],
-				click: function(p) {p.close();}
+				click: function (p) { p.close(); }
 			}, {
 				label: langdata["popup.buttons.yes"],
-				click: function(p) {
+				click: function (p) {
 					p.close();
-					setTimeout(function() {
+					setTimeout(function () {
 						$.post(serverUrl + "/leaveServer", {
 							...session,
 							server: servers[currentServer]._id
-						}, function(data) {
-							if(data.error) {
+						}, function (data) {
+							if (data.error) {
 								popup(langdata["popup.title.error"], data.error, undefined, false, "red");
 								return;
 							}
@@ -425,7 +425,7 @@ loaded(function () {
 		$("#loading-back").remove();
 	});
 
-	$.get(serverUrl + "/version", function(v) {
+	$.get(serverUrl + "/version", function (v) {
 		version = {
 			number: v,
 			text: `v4.${v / 10}`
@@ -512,13 +512,11 @@ loaded(function () {
 		setupPickProfilePicture();
 	});
 	$("#by-the-logo #dm-btn").click(function () {
-		$("#channels ul").html("");
-		$("#messages").html("");
 		getChats();
 	});
 
 	function j() {
-		popup(langdata["server.join.title"],`
+		popup(langdata["server.join.title"], `
 			${langdata["server.join.content"]}
 			<input type="text" placeholder="" id="serveridtextbox" class="textbox"/>
 		`, [{
@@ -531,7 +529,7 @@ loaded(function () {
 			label: "OK",
 			click: function (p) {
 				let id = $("#serveridtextbox").val();
-				if(id.includes("?s=")) {
+				if (id.includes("?s=")) {
 					id = id.split("?s=")[1]
 				}
 				setTimeout(function () {
@@ -543,7 +541,7 @@ loaded(function () {
 	}
 
 	function createServer() {
-		serverSettings(function(settings) {
+		serverSettings(function (settings) {
 			$.post(serverUrl + "/createServer", {
 				...session,
 				...settings
@@ -646,7 +644,13 @@ function newMessage(message) {
 		extra.push({
 			icon: "call",
 			click: function (menuItem) {
-				newCall(menuItem.getMessage().data("author"))
+				newCall(menuItem.getMessage().data("author"), false)
+			}
+		});
+		extra.push({
+			icon: "video_call",
+			click: function (menuItem) {
+				newCall(menuItem.getMessage().data("author"), true)
 			}
 		});
 	}
@@ -776,6 +780,8 @@ function composeMessageContent(message, messageText) {
 
 function getChats() {
 	$.post(serverUrl + "/chats", session, function (chats) {
+		$("#channels ul").html("");
+		$("#messages").html("");
 		chats.forEach(addChat);
 	});
 }
@@ -833,11 +839,11 @@ setTimeout(function () {
 
 function warningMessageConsole() {
 	console.log(
-		"%c"+(langdata["warning.hacker.title"] || "Stop!"),
+		"%c" + (langdata["warning.hacker.title"] || "Stop!"),
 		"color:red;font-family:system-ui;font-size:4rem;-webkit-text-stroke: 1px black;font-weight:bold"
 	);
 	console.log(
-		"%c"+(langdata["warning.hacker.content"] || "If someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?"),
+		"%c" + (langdata["warning.hacker.content"] || "If someone told you to Copy & Paste something here, there's a 101% chance you're being scammed.\nLetting those dirty hackers access your account is not what you want, right?"),
 		"color:white;font-family:system-ui;font-size:1rem;-webkit-text-stroke: 0.5px black;font-weight:bold"
 	);
 }

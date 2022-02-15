@@ -7,11 +7,9 @@ const inCall = () => `
             </div>
         </div>
         <div id="call-main">
-            <img src="${profile.avatar}">
         </div>
         <div id="call-footer">
             <button id="call-end" onclick="endCall()">${materialIcon("call_end")}</button>
-            <button id="call-mute" onclick="${muted ? "unmute" : "mute"}()">${materialIcon(muted ? "mic" : "mic_off")}</button>
         </div>
     </div>
 `
