@@ -173,6 +173,7 @@ socket.on('message', function (message) {
 	cacheUser(message.user);
 	addMessage(message);
 	playMessageSound();
+	pushNotification(message.user, message.message)
 });
 socket.on('ban', function(ban) {
 	popup(langdata["user.ban.title"], formatLangText(langdata["user.ban.content"], [ban.reason, new Date(ban.date).toLocaleDateString()]), [], false, "red");

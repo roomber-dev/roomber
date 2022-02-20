@@ -1,5 +1,6 @@
 // no languages needed?? I SEE SOME FUCKING LANGUAGES USED HERE
-ldmOn = getCookie("ldm") === 'true';
+// chill out someever when i first added languages they were not needed here, jeez
+let ldmOn = getCookie("ldm") === 'true';
 
 function ldmToggle() {
     ldmOn = !ldmOn;

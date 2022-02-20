@@ -31,5 +31,8 @@
   },
   "engines": {
     "node": "16.13.1"
+  },
+  "devDependencies": {
+    "javascript-obfuscator": "^4.0.0"
   }
 }

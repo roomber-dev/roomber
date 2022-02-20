@@ -1,5 +1,7 @@
 // languages added here!
 const settingsState = {};
+let changelog = {};
+let changelogHidden = true; // bc beta bc style broken
 
 const setSettingsCategory = category => settingsState.category = category
 const settingsCategories = categories => categories[settingsState.category]()
@@ -12,19 +14,25 @@ const svgIcon = icon => `
 <img src="assets/icons/${icon}.svg" alt="" class="no-select svg">
 `
 
-const settingsCategory = (icon, lcontentid, id) => `
-<div class="category no-select" id="${id}" onclick="settingsState.category = '${id}'; updateSettings();">
-	${icon}
-	<p data-lcontent="${lcontentid}">${settingsState.category == id ? `<b>${langdata[lcontentid]}</b>` : langdata[lcontentid]}</p>
-</div>
-`
+const settingsCategory = (icon, lcontentid, id, hidden) => {
+	if (hidden == true) {
+		return "";
+	} else {
+	return `
+		<div class="category no-select" id="${id}" onclick="settingsState.category = '${id}'; updateSettings();">
+			${icon}
+			<p data-lcontent="${lcontentid}" style="font-weight: ${settingsState.category == id ? `bold` : `none `}">${langdata[lcontentid]}</p>
+		</div>
+	`;
+	}
+}
 
 const pickLang = () => {
 	setLanguage($("#langpicker").val());
 }
 
 const changeUsername = () => popup(
-	langdata["changeusername.popup.title"], 
+	langdata["changeusername.popup.title"],
 	`<input type="text" class="textbox" id="new-username">`,
 	[{
 		label: langdata["popup.buttons.cancel"],
@@ -40,10 +48,10 @@ const changeUsername = () => popup(
 					toChange: "username",
 					username: username
 				}, data => {
-					if(data.error) return popup(langdata["popup.title.error"], data.error, undefined, false, "red")
+					if (data.error) return popup(langdata["popup.title.error"], data.error, undefined, false, "red")
 					session.username = username
 					profile.username = username
-					if(cache[session.user])
+					if (cache[session.user])
 						cache[session.user].username = username
 					$("#login .username").text(username)
 					$(".profile-username div").text(username)
@@ -53,7 +61,7 @@ const changeUsername = () => popup(
 	}])
 
 const changePassword = () => popup(
-	langdata["changepass.popup.title"], 
+	langdata["changepass.popup.title"],
 	`${langdata["changepass.popup.prompt"]}<br>
 	<input type="password" class="textbox" id="old-password"><br>
 	${langdata["changepass.popup.prompt2"]}<br>
@@ -80,7 +88,7 @@ const changePassword = () => popup(
 	}])
 
 const changeEmail = () => popup(
-	langdata["changeemail.popup.title"], 
+	langdata["changeemail.popup.title"],
 	`${langdata["changeemail.popup.prompt"]}<br>
 	<input type="password" class="textbox" id="password">`,
 	[{
@@ -141,19 +149,19 @@ let testingAudio = false
 let testInterval = 0
 
 const getAudioDevice = () => {
-	if(getCookie("audioDevice")) {
+	if (getCookie("audioDevice")) {
 		return getCookie("audioDevice");
-	} else if(audioDevices[0]) {
+	} else if (audioDevices[0]) {
 		return audioDevices[0].deviceId;
 	} else {
-		return "";	
+		return "";
 	}
 
 	return null;
 }
 const toggleMicTest = () => {
 	testingAudio = !testingAudio
-	if(!testingAudio) {
+	if (!testingAudio) {
 		clearInterval(testInterval)
 		testAudio.pause()
 		testAudio.remove()
@@ -177,11 +185,11 @@ const toggleMicTest = () => {
 		window.testStream = stream
 		testAudio.srcObject = stream
 		const audioCtx = new AudioContext()
-        const analyser = audioCtx.createAnalyser()
-        analyser.fftSize = 2048
-        const audioSrc = audioCtx.createMediaStreamSource(stream)
-        audioSrc.connect(analyser)
-        const data = new Float32Array(analyser.frequencyBinCount)
+		const analyser = audioCtx.createAnalyser()
+		analyser.fftSize = 2048
+		const audioSrc = audioCtx.createMediaStreamSource(stream)
+		audioSrc.connect(analyser)
+		const data = new Float32Array(analyser.frequencyBinCount)
 		testInterval = setInterval(() => {
 			analyser.getFloatFrequencyData(data)
 			let sum = 0
@@ -207,7 +215,7 @@ let audioDevices = []
 
 let options = {};
 
-if(getAudioDevice()) {
+if (getAudioDevice()) {
 	options = {
 		deviceId: getAudioDevice()
 	}
@@ -297,7 +305,7 @@ const categoryContent = () => settingsCategories({
 					<p>${langdata["settings.category.appearance.light"]}</p>
 				</div>
 			</div>
-			<button class="button" id="ldm" onclick="ldmToggle();" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> <span>${langdata["settings.category.appearance.ldm"]}: ${langdata["status."+(ldmOn ? "on" : "off")]}</span></button>
+			<button class="button" id="ldm" onclick="ldmToggle();" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> <span>${langdata["settings.category.appearance.ldm"]}: ${langdata["status." + (ldmOn ? "on" : "off")]}</span></button>
 		</div>
 	`,
 	notifs: () => `
@@ -325,14 +333,14 @@ const categoryContent = () => settingsCategories({
 					Input device<br/>
 					<select id="device" name="device" class="textbox" onchange="setAudioDevice()">
 						${audioDevices
-							.filter(device => device.kind == "audioinput")
-							.map(device => ({
-								label: device.label,
-								id: device.deviceId
-							}))
-							.map(({label, id}) => 
-								`<option value="${id}">${label}</option>`)
-							.join("\n")}
+			.filter(device => device.kind == "audioinput")
+			.map(device => ({
+				label: device.label,
+				id: device.deviceId
+			}))
+			.map(({ label, id }) =>
+				`<option value="${id}">${label}</option>`)
+			.join("\n")}
 					</select>
 				</div>
 				<div class="audio-input">
@@ -363,6 +371,21 @@ const categoryContent = () => settingsCategories({
 			</div>
 		</div>
 	`,
+	changelog: () => `
+	<div class="flex flex-down align-center justify-center">
+	<img src="assets/roomberfull2.png" style="width: 60%;">
+	<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
+	<h3 style="margin-bottom: 3px;">${langdata["settings.category.changelog"]} (BETA)</h2>
+	<div style="opacity: 0.9; text-align: center;">
+	<div id="changelog-content" class="coolslider">
+
+		${changelogShit("New features", changelog.newfeatures, [0, 255, 0])}
+		${changelogShit("Updates", changelog.updates, [255, 0, 0])}
+		${changelogShit("Patches", changelog.patches, [255, 0, 255])}
+		</div>
+	</div>
+</div>
+	`,
 	about: () => `
 		<div class="flex flex-down align-center justify-center">
 			<img src="assets/roomberfull2.png" style="width: 60%;">
@@ -371,6 +394,7 @@ const categoryContent = () => settingsCategories({
 				<p>${langdata["settings.category.about.line1"]}</p>
 				<p>${langdata["settings.category.about.line2"]}</p>
 				<p>${langdata["settings.category.about.line3"]}</p>
+				${langdata["settings.category.about.line4"] ? `<p>${langdata["settings.category.about.line4"]}</p>` : ""}
 			</div>
 		</div>
 	`,
@@ -394,6 +418,7 @@ const settings = () => `
 			<!--${settingsCategory(svgIcon("notifications_circle"), "settings.category.notifs", "notifs")}-->
 			${settingsCategory(materialIcon("translate"), "settings.category.lang", "language")}
 			${settingsCategory(materialIcon("volume_up"), "settings.category.audionvideo", "audio_video")}
+			${settingsCategory(materialIcon("library_books"), "settings.category.changelog", "changelog", changelogHidden)} <!-- this is a beta feature! -->
 			${settingsCategory(svgIcon("roomber"), "settings.category.about", "about")}
 		</aside>
 		<div id="content">
@@ -409,7 +434,13 @@ const updateSettings = () => {
 	$(".settings").css("display", "flex")
 	$('select#langpicker.textbox').val(getCookie('lang') || "en-US")
 	$(".audio-input select#device").val(getAudioDevice())
+	$(".settings #title").single_double_click(function(){}, function() {
+		changelogHidden = !changelogHidden;
+		updateSettings();
+	});
 }
+
+
 
 const closeSettings = () => {
 	$(".settings").fadeOut(300, () => {
@@ -418,10 +449,56 @@ const closeSettings = () => {
 }
 
 const openSettings = () => {
+	$.getJSON(serverUrl + "/changelog", data => {
+		changelog = data;
+	})
 	setSettingsCategory("profile")
 	$("#body").append(settings())
 	$(".settings")
 		.css("display", "flex")
 		.hide()
 		.fadeIn(300)
+	$(".settings #title").single_double_click(function () {
+		cclog("single", "debug")
+	}, function () {
+		cclog("double", "debug")
+		changelogHidden = !changelogHidden;
+		updateSettings();
+	});
 }
+
+const changelogShit = (title, data, colorRGB) => {
+
+	let startinghtml = `<p class="changelogcategorytitleshit" style="background-color: rgba(${colorRGB.toString()}, 0.5); border-bottom: solid rgb(${colorRGB.toString()}) 4px;">${title}</p>`
+	let html = startinghtml;
+
+	data.forEach((element, index) => {
+		html += `<span class="newfeature-title">${element.title}</span><span class="newfeature-desc">${element.desc}</span><br>${element.image ? `<img class='attachment changelogattach' src='${element.image}'></img>` : ""}${index + 1 >= data.length ? "" : "<div class='sep-horiz'></div>"}`
+	})
+	return html;
+}
+
+/* 
+my attempt on fixing emojis
+
+const styleSheets = Array.from(document.styleSheets).filter(
+	  (styleSheet) => !styleSheet.href || styleSheet.href.startsWith(window.location.origin)
+	);
+styleSheets.forEach(function(key, index) {
+	let href = styleSheets[index].href;
+	if(href) {
+  if(href == "https://f358-84-208-218-154.ngrok.io/twemoji-amazing.css") {
+		Object.keys(styleSheets[index+1].cssRules).map(function(key2, index2) {
+		console.log(styleSheets[index+1].cssRules[index2+1].selectorText);
+				console.log(index)
+				console.log(styleSheets[index2-1].cssRules)
+		   if(styleSheets[index].cssRules[index2-1].selectorText) {
+
+				console.log("POOSAY")
+			}
+		})
+	}
+	console.log(href)
+	}
+});
+*/

@@ -101,4 +101,25 @@ function alert(message) {
     popup(langdata["alert.title"], message);
 }
 
+function pushNotification(user, text, onlyIfUnactive = true) {
+    Notification.requestPermission().then(function (result) {
+        if (result == "granted") {
+            if (onlyIfUnactive && !document.hasFocus()) {
+                let notification = new Notification(user.username, {
+                    body: text,
+                    icon: user["avatar"]
+                });
+            } else if (!onlyIfUnactive) {
+                let notification = new Notification(user.username, {
+                    body: text,
+                    icon: user["avatar"]
+                });
+
+            }
+        } else {
+            cclog("Popup Permission not granted", "error");
+        }
+    });
+
+}
 // goodbye repeat() you know for loops exist right?

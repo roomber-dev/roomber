@@ -624,6 +624,17 @@ body {
 	outline: 3px solid rgba(0,0,0,0.15);
 }
 
+.sep-horiz {
+	background: rgba(0,0,0,0.3);
+	height: 5px;
+	width: 80%;
+	margin: 5px;
+	margin-left: 10px;
+	border-radius: 6px;
+	outline: 3px solid rgba(0,0,0,0.15);
+}
+
+
 #servers {
 	display: flex;
 }
@@ -1054,4 +1065,39 @@ input[type=range]::-ms-track  {
 	box-shadow: none;
 	border: none;
 	background: transparent;
+}
+
+.coolslider::-webkit-scrollbar, #channels ul::-webkit-scrollbar {
+	width: 1em;
+}
+
+.coolslider::-webkit-scrollbar-track, #channels ul::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+	background: rgba(0,0,0,0.7);
+	backdrop-filter: blur(10px);
+}
+
+.light.coolslider::-webkit-scrollbar-track, .light #channels ul::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.3);
+	background: rgba(255,255,255,0.7);
+}
+
+.coolslider::-webkit-scrollbar-thumb, #channels ul::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 10px 10px rgba(255,255,255,0.4);
+	border: 5px solid transparent;
+	padding: 2px;
+	border-radius: 11px;
+	max-height: 40px;
+}
+
+.coolslider::-webkit-scrollbar-thumb:hover, #channels ul::-webkit-scrollbar-thumb:hover {
+	background: rgba(255,255,255,0.2);
+}
+
+.light.coolslider::-webkit-scrollbar-thumb, .light #channels ul::-webkit-scrollbar-thumb {
+	box-shadow: inset 0 0 10px 10px rgba(0,0,0,0.4);
+}
+
+.light.coolslider::-webkit-scrollbar-thumb:hover, .light #channels ul::-webkit-scrollbar-thumb:hover {
+	background: rgba(0,0,0,0.2);
 }

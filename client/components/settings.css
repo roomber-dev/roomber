@@ -323,3 +323,42 @@
 	background: linear-gradient(90deg, lime 0%, yellow 50%, red 100%, rgba(0,0,0,0) 300%);
 	border-radius: 4px 4px 4px 4px;
 }
+
+#changelog-content {
+	width: 90%;
+	height: 50%;
+	border: solid black 4px;
+	margin: 0 auto;
+	background: rgba(0,0,0,0.4);
+	border-radius: 4px;
+	overflow-y: scroll;
+	padding: 4px;
+}
+
+#changelog-content .changelogcategorytitleshit {
+	font-size: 120%;
+	font-weight: bold;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin: 5px;
+	margin-bottom: 5px;
+}
+
+#changelog-content .newfeature-title {
+	font-weight: bold;
+    color: white;
+    padding: 2px 4px;
+    border-radius: 4px;
+    margin: 0 5px 0 0;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+#changelog-content .newfeature-desc {
+	margin-left: 3px;
+}
+
+#changelog-content .changelogattach {
+	width: 70%;
+	margin: 0 auto;
+}

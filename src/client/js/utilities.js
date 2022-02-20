@@ -1,5 +1,5 @@
 // languages not needed here
-loadedEvents = [];
+let loadedEvents = [];
 const logs = [];
 const errors = [];
 function parseUrls(text, onUrl) {
