@@ -17,7 +17,6 @@ let poopoo = {
     "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(),
     "ldm.js": fs.readFileSync("./src/client/js/ldm.js").toString(),
     "call.js": fs.readFileSync("./src/client/js/call.js").toString(),
-    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString(),
     "client.js": fs.readFileSync("./src/client/js/client.js").toString(),
     "connectionEvents.js": fs.readFileSync("./src/client/js/connectionEvents.js").toString(),
     "extensions.js": fs.readFileSync("./src/client/js/extensions.js").toString(),
@@ -32,7 +31,8 @@ let poopoo = {
     "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(),
     "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(),
     "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(),
-    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString() 
+    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(),
+    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString()
 }
 Object.keys(poopoo).forEach((value) => {
     totalcode += poopoo[value] + "\n";
