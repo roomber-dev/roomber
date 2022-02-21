@@ -11,28 +11,28 @@ order.forEach((value, index) => {
 console.log(scriptorder);*/
 let totalcode = "";
 let poopoo = {
-    "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(),
-    "communication.js": fs.readFileSync("./src/client/js/communication.js").toString(),
-    "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(),
-    "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(),
-    "ldm.js": fs.readFileSync("./src/client/js/ldm.js").toString(),
-    "call.js": fs.readFileSync("./src/client/js/call.js").toString(),
-    "client.js": fs.readFileSync("./src/client/js/client.js").toString(),
-    "connectionEvents.js": fs.readFileSync("./src/client/js/connectionEvents.js").toString(),
-    "extensions.js": fs.readFileSync("./src/client/js/extensions.js").toString(),
-    "fun.js": fs.readFileSync("./src/client/js/fun.js").toString(),
-    "image.js": fs.readFileSync("./src/client/js/image.js").toString(),
-    "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(),
-    "login.js": fs.readFileSync("./src/client/js/login.js").toString(),
-    "qr.js": fs.readFileSync("./src/client/js/qr.js").toString(),
-    "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(),
-    "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(),
-    "components/incomingCall.js": fs.readFileSync("./src/client/components/incomingCall.js").toString(),
-    "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(),
-    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(),
-    "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(),
-    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(),
-    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString()
+    "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(), // yes
+    "communication.js": fs.readFileSync("./src/client/js/communication.js").toString(), // yes
+    "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(), // yes
+    "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(), // yes
+    "ldm.js": fs.readFileSync("./src/client/js/ldm.js").toString(), // yes
+    "messageSound.js": fs.readFileSync("./src/client/js/messageSound.js").toString(), // yes
+    "call.js": fs.readFileSync("./src/client/js/call.js").toString(), // yes
+    "client.js": fs.readFileSync("./src/client/js/client.js").toString(), // yes
+    "connectionEvents.js": fs.readFileSync("./src/client/js/connectionEvents.js").toString(), // yes
+    "extensions.js": fs.readFileSync("./src/client/js/extensions.js").toString(), // yes
+    "fun.js": fs.readFileSync("./src/client/js/fun.js").toString(), // yas
+    "image.js": fs.readFileSync("./src/client/js/image.js").toString(), // yes
+    "login.js": fs.readFileSync("./src/client/js/login.js").toString(), // yes
+    "qr.js": fs.readFileSync("./src/client/js/qr.js").toString(), // yes
+    "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
+    "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(), // yas
+    "components/incomingCall.js": fs.readFileSync("./src/client/components/incomingCall.js").toString(), // yas
+    "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(), // yas
+    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yas
+    "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(), // yes
+    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(), // yes
+    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString() // yes
 }
 Object.keys(poopoo).forEach((value) => {
     totalcode += poopoo[value] + "\n";
