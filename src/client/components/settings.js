@@ -418,7 +418,7 @@ const settings = () => `
 			<!--${settingsCategory(svgIcon("notifications_circle"), "settings.category.notifs", "notifs")}-->
 			${settingsCategory(materialIcon("translate"), "settings.category.lang", "language")}
 			${settingsCategory(materialIcon("volume_up"), "settings.category.audionvideo", "audio_video")}
-			${settingsCategory(materialIcon("library_books"), "settings.category.changelog", "changelog", changelogHidden)} <!-- this is a beta feature! -->
+			${settingsCategory(materialIcon("library_books"), "settings.category.changelog", "changelog", changelogHidden)}
 			${settingsCategory(svgIcon("roomber"), "settings.category.about", "about")}
 		</aside>
 		<div id="content">
@@ -458,10 +458,7 @@ const openSettings = () => {
 		.css("display", "flex")
 		.hide()
 		.fadeIn(300)
-	$(".settings #title").single_double_click(function () {
-		cclog("single", "debug")
-	}, function () {
-		cclog("double", "debug")
+	$(".settings #title").single_double_click(function(){}, function () {
 		changelogHidden = !changelogHidden;
 		updateSettings();
 	});

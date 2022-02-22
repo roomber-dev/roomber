@@ -12,6 +12,14 @@ console.log(scriptorder);*/
 let totalcode = "";
 let poopoo = {
     "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(), // yes
+    "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
+    "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(), // yas
+    "components/incomingCall.js": fs.readFileSync("./src/client/components/incomingCall.js").toString(), // yas
+    "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(), // yas
+    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yas
+    "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(), // yes
+    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(), // yes
+    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString(), // yes
     "communication.js": fs.readFileSync("./src/client/js/communication.js").toString(), // yes
     "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(), // yes
     "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(), // yes
@@ -24,15 +32,7 @@ let poopoo = {
     "fun.js": fs.readFileSync("./src/client/js/fun.js").toString(), // yas
     "image.js": fs.readFileSync("./src/client/js/image.js").toString(), // yes
     "login.js": fs.readFileSync("./src/client/js/login.js").toString(), // yes
-    "qr.js": fs.readFileSync("./src/client/js/qr.js").toString(), // yes
-    "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
-    "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(), // yas
-    "components/incomingCall.js": fs.readFileSync("./src/client/components/incomingCall.js").toString(), // yas
-    "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(), // yas
-    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yas
-    "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(), // yes
-    "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(), // yes
-    "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString() // yes
+    "qr.js": fs.readFileSync("./src/client/js/qr.js").toString() // yes
 }
 Object.keys(poopoo).forEach((value) => {
     totalcode += poopoo[value] + "\n";
