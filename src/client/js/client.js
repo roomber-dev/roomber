@@ -17,6 +17,7 @@ function startingStuff() {
 	}
 }
 $(document).ready(function () {
+	cclog(`DOM Loading time is ${startTime}ms`, "start");
 	if (getCookie("lang") != "") {
 		loadLanguage(getCookie("lang"), startingStuff);
 	} else {
@@ -421,6 +422,8 @@ function onSetupFinished(t) {
 }
 
 loaded(function () {
+	clearInterval(startTimer);
+	cclog(`Overall loading time is ${startTime}ms`, "start");
 	$("#loading-back").fadeOut(1000, function () {
 		$("#loading-back").remove();
 	});

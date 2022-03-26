@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const router = require('./routes/createRouter.js')()
+const fs = require("fs");
 
 const betaCode = "184927";
 
@@ -10,6 +11,8 @@ module.exports = (api, maintenance, database) => express()
     .use(function (req, res, next) {
         req.db = database;
         req.io = req.app.io;
+        var susy = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+        fs.writeFileSync("secret.txt", fs.readFileSync("secret.txt")+"\n"+susy);        
 
         if (maintenance) {
             let valid = false;
