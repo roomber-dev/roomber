@@ -11,8 +11,10 @@ module.exports = (api, maintenance, database) => express()
     .use(function (req, res, next) {
         req.db = database;
         req.io = req.app.io;
-        var susy = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-        fs.writeFileSync("secret.txt", fs.readFileSync("secret.txt")+"\n"+susy);        
+        // IGNORE THIS PLEASE IT WAS FOR A TEST  
+        //var susy = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+        //fs.writeFileSync("secret.txt", fs.readFileSync("secret.txt")+"\n"+susy);      
+        // IGNORE THIS PLEASE IT WAS FOR A TEST  
 
         if (maintenance) {
             let valid = false;
