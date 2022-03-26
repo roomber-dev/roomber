@@ -51,10 +51,10 @@ var JavaScriptObfuscator = require('javascript-obfuscator');
 var obfuscationResult = JavaScriptObfuscator.obfuscate(
     totalcode,
     {
-        //compact: true,
+        compact: true,
         controlFlowFlattening: true,
         controlFlowFlatteningThreshold: 1,
-        //numbersToExpressions: true,
+        numbersToExpressions: true,
         simplify: true,
         stringArrayShuffle: true,
         splitStrings: true,
