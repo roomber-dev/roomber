@@ -2,6 +2,7 @@
 const settingsState = {};
 let changelog = {};
 let changelogHidden = true; // bc beta bc style broken
+let perms;
 
 const setSettingsCategory = category => settingsState.category = category
 const settingsCategories = categories => categories[settingsState.category]()
@@ -18,7 +19,7 @@ const settingsCategory = (icon, lcontentid, id, hidden) => {
 	if (hidden == true) {
 		return "";
 	} else {
-	return `
+		return `
 		<div class="category no-select" id="${id}" onclick="settingsState.category = '${id}'; updateSettings();">
 			${icon}
 			<p data-lcontent="${lcontentid}" style="font-weight: ${settingsState.category == id ? `bold` : `none `}">${langdata[lcontentid]}</p>
@@ -224,15 +225,37 @@ if (getAudioDevice()) {
 		deviceId: ""
 	}
 }
-navigator.mediaDevices.getUserMedia({
-	audio: options
-}).then(audio => {
-	navigator.mediaDevices.enumerateDevices().then(devices => {
-		console.log(devices)
-		audioDevices = devices
-		audio.getTracks().forEach(track => track.stop())
-	})
-})
+
+function gotMicPerms() {
+	return perms;
+}
+
+function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER DISALLOWS PERMISSION!!
+	if (perms != true) {
+		try {
+			navigator.mediaDevices.getUserMedia({
+				audio: options
+			}).then(audio => {
+				navigator.mediaDevices.enumerateDevices().then(devices => {
+					console.log(devices)
+					audioDevices = devices
+					audio.getTracks().forEach(track => track.stop())
+				})
+			})
+		} catch (error) {
+			if (error) {
+				cclog(error, "error");
+				perms = false;
+			} else {
+				perms = true;
+			}
+		}
+
+		_callback(perms);
+	} else {
+		_callback("ALREADY");
+	}
+}
 
 const setAudioDevice = () => {
 	setCookie("audioDevice", $("#device").val())
@@ -434,7 +457,7 @@ const updateSettings = () => {
 	$(".settings").css("display", "flex")
 	$('select#langpicker.textbox').val(getCookie('lang') || "en-US")
 	$(".audio-input select#device").val(getAudioDevice())
-	$(".settings #title").single_double_click(function(){}, function() {
+	$(".settings #title").single_double_click(function () { }, function () {
 		changelogHidden = !changelogHidden;
 		updateSettings();
 	});
@@ -458,7 +481,7 @@ const openSettings = () => {
 		.css("display", "flex")
 		.hide()
 		.fadeIn(300)
-	$(".settings #title").single_double_click(function(){}, function () {
+	$(".settings #title").single_double_click(function () { }, function () {
 		changelogHidden = !changelogHidden;
 		updateSettings();
 	});

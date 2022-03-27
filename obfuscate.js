@@ -10,7 +10,10 @@ order.forEach((value, index) => {
 })
 console.log(scriptorder);*/
 let totalcode = "";
+
+// You have to use the HTTPS version<br> of Roomber for it to work
 let poopoo = {
+    "httpsCheck.js": fs.readFileSync("./src/client/js/httpsCheck.js").toString(), // yes
     "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(), // yes
     "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
     "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(), // yas
@@ -36,6 +39,11 @@ let poopoo = {
 }
 Object.keys(poopoo).forEach((value) => {
     totalcode += `// ${value}\n` + poopoo[value] + "\n";
+    if(poopoo[value] != undefined) {
+        console.log(`ADD ${value} TO TOTALCODE | SUCCESS`)
+    } else {
+        throw Error(`ADD ${value} TO TOTALCODE | FAILURE`)
+    }
 })
 
 // shut the fuck up on how bad this code is, someever. if it's bad, fix it.
@@ -61,5 +69,8 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
         stringArrayThreshold: 1
     }
 );
+
+
 const result_lol = obfuscationResult.getObfuscatedCode();
+console.log(`TOTALCODE OBFUSCATION | SUCCESS`);
 fs.writeFileSync("./client/Roomber.js", result_lol);

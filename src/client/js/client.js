@@ -419,6 +419,51 @@ function onSetupFinished(t) {
 	} else {
 		theme = "gradient";
 	}
+	if (!gotMicPerms()) {
+		setTimeout(() => {
+			vcPopupThing();
+		}, 5000);
+	}
+}
+
+function vcPopupThing() {
+	popup("Hey!", "Sorry to interrupt you, but to use VC's, you have to give us mic permissions! Hope you don't mind :)", [
+		{
+			label: "OK",
+			click: function (popup) {
+				getMicPerms(function (result) {
+					if (result == false) {
+						popup("Hey, I'm back again..", "It looks like you might've pressed the wrong button..?", [
+							{
+								label: "Try again",
+								click: function (popup_) {
+									popup_.close();
+									popup.close();
+									setTimeout(() => {
+										vcPopupThing();
+									}, 500);
+								}
+							},
+							{
+								label: "No",
+								click: function (popup_) {
+									popup_.close();
+									popup.close();
+								}
+							}
+						])
+					}
+				})
+				popup.close()
+			}
+		},
+		{
+			label: "No",
+			click: function (popup) {
+				popup.close()
+			}
+		}
+	])
 }
 
 loaded(function () {
