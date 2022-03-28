@@ -1,42 +1,34 @@
 module.exports = {
-    date: "2/17/2022",
+    date: "3/28/2022",
     newfeatures: [
         {
-            "title": "Video calling is here!",
-            "desc": "Now you can call people easily by just clicking that little camera button in their message, and wait for them to pick up.. just wait... just a bit.. if they pick up at all.."
-        },
-        {
-            "title": "Audio & Video",
-            "desc": "With Video calling, there's also a brand new settings page, where you can control what your friends hear, what they see and also test your mic!"
-        },
-        {
-            "title": "Change Log",
-            "desc": "Oh yeah we also right now added changelogs, the thing that you're reading right now"
+            "title": "Nothing.",
+            "desc": "No new features here. It's the first update in over a month because of someever's death, what do you expect, for me to work efficiently, ALONE??"
         }
     ],
     updates: [
         {
-            "title": "Some very small changes",
-            "desc": "The title says it all. And this thing..?",
-            "image": "https://i.imgur.com/yPDg35Q.png"
-        },
-        {
-            "title": "Polish Fun Facts!",
-            "desc": "I don't know why I added an exclamation mark there, but since we added Polish to the language list, the fun facts were mostly English, so there you go. (pierogi)"
-        },
-        {
-            "title": "Roomber Obfuscation",
-            "desc": "While it has no difference for how you see Roomber, for us it is a HUGE change because now.. no one can copy our code!"
+            "title": "Nothing once again..",
+            "desc": "Yup. Keep scrolling."
         }
     ],
     patches: [
         {
-            "title": "Message Deleting",
-            "desc": "We have fixed message deleting, it just didn't work idk why. Fun fact, this bug has been in Roomber since we first added deleting messages (i think)"
+            "title": "Security fix-ups",
+            "desc": "Previously, Roomber would not work if you used it on the unsafe version (i know, it's tragic), but now it will redirect you to the safe version immidietaly!"
         },
         {
-            "title": "Settings Current Category",
-            "desc": "Previously, if you changed your language while in settings (of course), then the boldness on the current settings category would just dissapear into pure nothingness."
+            "title": "Permission fix-ups",
+            "desc": "There were some trials in asking people for mic permission, (you know, trying not to seem sus) and notifs too."
+        },
+        {
+            "title": "Fixed up code order",
+            "desc": "You probably don't understand, but while confuscating our code, we really have to keep track of the order to keep everything nice and tidy. Here, we fixed it up a bit to avoid any further complications."
+        },
+        {
+            "title": "Oh wow, you're still there?",
+            "desc": "That's nice, didn't expect you here.. Anyways here's a picture of a duckie :D",
+            "image": "https://i.pinimg.com/originals/ac/36/bc/ac36bc3fea49309f484c726cec5637e2.jpg"
         }
     ],
 }

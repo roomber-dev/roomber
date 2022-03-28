@@ -227,8 +227,23 @@ if (getAudioDevice()) {
 }
 
 function gotMicPerms() {
+	perms = getCookie("micperms") || perms.toString() || false;
 	return perms;
 }
+
+function justGetTheMicPerms() {
+	navigator.mediaDevices.getUserMedia({
+		audio: options
+	}).then(audio => {
+		navigator.mediaDevices.enumerateDevices().then(devices => {
+			console.log(devices)
+			audioDevices = devices
+			audio.getTracks().forEach(track => track.stop())
+		})
+	})
+}
+
+justGetTheMicPerms();
 
 function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER DISALLOWS PERMISSION!!
 	if (perms != true) {
@@ -250,7 +265,7 @@ function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER 
 				perms = true;
 			}
 		}
-
+		setCookie("micperms", perms.toString());
 		_callback(perms);
 	} else {
 		_callback("ALREADY");

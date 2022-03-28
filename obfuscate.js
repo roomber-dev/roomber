@@ -15,16 +15,16 @@ let totalcode = "";
 let poopoo = {
     "httpsCheck.js": fs.readFileSync("./src/client/js/httpsCheck.js").toString(), // yes
     "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(), // yes
+    "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(), // yes
+    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yasss queen slaayyy
     "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
     "components/inCall.js": fs.readFileSync("./src/client/components/inCall.js").toString(), // yas
     "components/incomingCall.js": fs.readFileSync("./src/client/components/incomingCall.js").toString(), // yas
     "components/minAdminPanel.js": fs.readFileSync("./src/client/components/minAdminPanel.js").toString(), // yas
-    "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yasss queen slaayyy
     "components/settings.js": fs.readFileSync("./src/client/components/settings.js").toString(), // yes
     "components/setup.js": fs.readFileSync("./src/client/components/setup.js").toString(), // yes
     "components/horizontalMenu.js": fs.readFileSync("./src/client/components/horizontalMenu.js").toString(), // yes
     "communication.js": fs.readFileSync("./src/client/js/communication.js").toString(), // yes
-    "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(), // yes
     "lang.js": fs.readFileSync("./src/client/js/lang.js").toString(), // yes
     "ldm.js": fs.readFileSync("./src/client/js/ldm.js").toString(), // yes
     "messageSound.js": fs.readFileSync("./src/client/js/messageSound.js").toString(), // yes

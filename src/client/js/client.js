@@ -419,14 +419,14 @@ function onSetupFinished(t) {
 	} else {
 		theme = "gradient";
 	}
-	if (!gotMicPerms()) {
+	/*if (!gotMicPerms()) {
 		setTimeout(() => {
 			vcPopupThing();
 		}, 5000);
-	}
+	}*/
 }
 
-function vcPopupThing() {
+/*function vcPopupThing() {
 	popup("Hey!", "Sorry to interrupt you, but to use VC's, you have to give us mic permissions! Hope you don't mind :)", [
 		{
 			label: "OK",
@@ -464,7 +464,7 @@ function vcPopupThing() {
 			}
 		}
 	])
-}
+}*/
 
 loaded(function () {
 	clearInterval(startTimer);
