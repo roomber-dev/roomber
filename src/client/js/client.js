@@ -1,20 +1,29 @@
 // languages done here!
 
 function startingStuff() {
-	if (getCookie("cookies") == "") {
-		popup(langdata["cookies.title"], langdata["cookies.content"], [{
-			label: langdata["popup.buttons.iagree"],
-			click: function (p) {
-				setCookie("cookies", "true")
-				p.close();
-				setTimeout(function () {
+	popup("Disclaimer", "This site is no longer being supported, and updates are most probably no longer to come. You are still welcome to use the app, but it might not be as safe as it was before. Thank you for using our app :)", [{
+		label: langdata["popup.buttons.ok"],
+		click: function (p) {
+			p.close();
+			setTimeout(() => {
+				if (getCookie("cookies") == "") {
+					popup(langdata["cookies.title"], langdata["cookies.content"], [{
+						label: langdata["popup.buttons.iagree"],
+						click: function (p) {
+							setCookie("cookies", "true")
+							p.close();
+							setTimeout(function () {
+								loginInit();
+							}, 501);
+						}
+					}]);
+				} else {
 					loginInit();
-				}, 501);
-			}
-		}]);
-	} else {
-		loginInit();
-	}
+				}
+			}, 500);
+		}
+	}], false, "red")
+
 }
 $(document).ready(function () {
 	cclog(`DOM Loading time is ${startTime}ms`, "start");
