@@ -20,7 +20,8 @@ And as always, before you `git push`, always test!
 
 # To-do
 
-- [ ] Voice and video calls
+- [x] Voice calls
+- [ ] Video calls
 - [ ] Screensharing
 - [ ] Roomber Xtra (paid subscription)
 - [x] Desktop App
