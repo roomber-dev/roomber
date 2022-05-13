@@ -21,7 +21,7 @@ And as always, before you `git push`, always test!
 # To-do
 
 - [x] Voice calls
-- [ ] Video calls
+- [x] Video calls
 - [ ] Screensharing
 - [ ] Roomber Xtra (paid subscription)
 - [x] Desktop App
