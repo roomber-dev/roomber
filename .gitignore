@@ -2,3 +2,4 @@ node_modules/
 push.bat
 bot/
 test/
+server/config.js
