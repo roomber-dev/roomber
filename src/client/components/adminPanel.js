@@ -1,4 +1,3 @@
-// languages done here!
 AdminPanel = {
     addFlaggedMessage: function(message) {
         this.messages.append(newMessage(message));
@@ -24,13 +23,10 @@ AdminPanel = {
                 </div>
             </div>
         `)
-
         this.messages = $("#admin-panel #messages");
-
         $("#admin-panel .close").click(function () {
             AdminPanel.close();
         })
-
         let that = this;
         $.post(serverUrl+'/getMessages', {flagged: true}, function(data) {
             data.forEach(function(message) {

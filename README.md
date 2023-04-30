@@ -1,34 +1,40 @@
-![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
 
 ---
 
 [![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-css.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/uses-html.svg)](https://forthebadge.com)
 
-Create a free Roomber account and discover a new messaging app that's better than anything else out there. Roomber is a fun way to talk with your friends and stay connected.
+
+⚠️  **__DISCLAIMER__** ⚠️
+
+"Remember" is a fork of Roomber (https://github.com/roomber-dev/roomber). The original project belongs to Niko (aka. neksodebe) and SomeEver.
+"Remember" is not the original version but is simply a continuation of the already existing project - Roomber.
+
+Niko (aka. neksodebe) - https://neksodebe.github.io/ https://github.com/neksodebe
+SomeEver - https://github.com/somenever
 
 
 # How to update
 
-First, write all your client code in the src/client/ folder, then when you wanna `git push` or test the app, run `node obfuscator.js` in the console, wait a second and there you go! client/Roomber.js should update with the obfuscated code.
+First, go to the server folder, then in config.js, put the MongoDB URL. Next, write all your client code in the src/client/ folder, then when you wanna `git push` or test the app, run `node obfuscator.js` in the console ! client/Remember.js should update with the obfuscated code.
 
 Remember, when you make a new JS file in src/client/, remember to put it in the JSON object found in `obfuscate.js`. Add it in the order you want it to load.
 And as always, before you `git push`, always test!
 
 # Screenshots
 
-![image](https://cdn.discordapp.com/attachments/881974256949395517/914605147450134568/unknown.png)
+![image](real.png)
 
 # To-do
 
 - [x] Voice calls
 - [x] Video calls
 - [ ] Screensharing
-- [ ] Roomber Xtra (paid subscription)
 - [x] Desktop App
 - [ ] Mobile App
 
-# Made by
+# Credits
 
-- neksodebe (Founder and Programmer)
-- SomeEver (Programmer)
-- OlxsiU (Graphic Designer)
+- neksodebe (Founder and Programmer of Roomber (original project) )
+- SomeEver (Programmer of roomber (original project) )
+- OlxsiU (Graphic Designer of roomber (original project) )
+- Suromi (Continuing Roomber under a fork)

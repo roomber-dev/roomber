@@ -1,6 +1,5 @@
 let horizontalMenuButtons = [];
 let menus = 0;
-// no languages needed here
 function horizontalMenuAddButtons(menu, buttons, a = true) {
 	let buttonsHTML = "";
 	buttons.forEach(function(button) {
@@ -22,7 +21,6 @@ function horizontalMenuAddButtons(menu, buttons, a = true) {
 		return buttonsHTML;
 	}
 }
-
 const HorizontalMenu = function(buttons) {
 	menus++;
 	let buttonsHTML = horizontalMenuAddButtons(menus, buttons, false);

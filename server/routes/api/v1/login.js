@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
 
 module.exports = require('express').Router({ mergeParams: true })
@@ -10,26 +11,35 @@ module.exports = require('express').Router({ mergeParams: true })
             res.send({ error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters." });
             return;
         }
-        let query = { email: req.body.email, password: req.body.password };
-        if(req.body.id) {
-            query = { _id: req.body.id, password: req.body.password };
+
+        let query = { email: req.body.email };
+        if (req.body.id) {
+            query = { _id: req.body.id };
         }
-        req.db.User.find(query, (err, doc) => {
-            if (doc.length) {
-                var session = new req.db.Session({ user: doc[0]._id });
-                session.save(err__ => {
-                    if (err__) {
-                        console.log(err__);
-                        res.sendStatus(500);
+        
+        req.db.User.findOne(query, (err, user) => {
+            if (user) {
+                bcrypt.compare(req.body.password, user.password, (err_, result) => {
+                    if (result) {
+                        var session = new req.db.Session({ user: user._id });
+                        session.save(err__ => {
+                            if (err__) {
+                                console.log(err__);
+                                res.sendStatus(500);
+                            } else {
+                                res.send({
+                                    session: session._id,
+                                    user: user._id,
+                                    username: user.username
+                                });
+                            }
+                        });
+                    } else {
+                        res.sendStatus(401);
                     }
-                    res.send({
-                        session: session._id,
-                        user: doc[0]._id,
-                        username: doc[0].username
-                    })
-                })
+                });
             } else {
                 res.sendStatus(401);
             }
-        })
-    })
+        });
+    });

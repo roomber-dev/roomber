@@ -1,24 +1,19 @@
 let setupCurrentPage = 0;
 let setupTheme = "gradient";
-// languages done here!
 function setupNext() {
 	setupCurrentPage += 1;
 	$("#setup-container").html(setupPage(session.username));
 }
-
 function setupNotImplemented() {
-	alert("nope not yet"); // would you look at that it is there
+	alert("nope not yet");
 }
-
 function setupPickProfilePicture() {
 	pfpWidget.open();
 }
-
 function setupSetTheme(theme) {
 	setupTheme = theme;
 	$("#setup-container").html(setupPage(session.username));
 }
-
 function setupPage(username) {
 	return {
 		1: function () {
@@ -80,7 +75,7 @@ function setupPage(username) {
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-icon"><img src="../assets/roomber-logo.png"></div>
+						<div id="setup-icon"><img src="../assets/Roomber-logo.png"></div>
 						<div id="setup-text">${langdata["setup.pages.4.title"]}</div>
 						<button id="setup-btn" class="setup-button button" onclick="setupClose()">${langdata["setup.pages.4.button"]}</button>
 					</div>
@@ -89,7 +84,6 @@ function setupPage(username) {
 		}
 	}[setupCurrentPage]();
 }
-
 function setupClose() {
 	$(".setup-bg").remove();
 	$.post(serverUrl + '/setup', {
@@ -98,7 +92,6 @@ function setupClose() {
 	});
 	onSetupFinished(setupTheme);
 }
-
 function setup() {
 	setupNext();
 }

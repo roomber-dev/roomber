@@ -1,7 +1,7 @@
 {
-  "name": "roomber",
-  "version": "4",
-  "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
+  "name": "Remember",
+  "version": "1",
+  "description": "Remember is a fork of Roomber",
   "main": "./server/server.js",
   "scripts": {
     "test": "echo \"No test scripts!\" && exit 1",
@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.0",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.2",
     "child_process": "^1.0.2",

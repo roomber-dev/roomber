@@ -1,20 +1,8 @@
-/**
- * FOR USAGE GO TO README.MD
- */
 const fs = require("fs");
-
-/*let order = fs.readFileSync("client/index.html").toString().match(/(<!-- SCRIPT-(.*)-SCRIPT) -->/g);
-let scriptorder = [];
-order.forEach((value, index) => {
-    scriptorder.push(value.substring(5, value.length-4).split("-")[1])
-})
-console.log(scriptorder);*/
 let totalcode = "";
-
-// You have to use the HTTPS version<br> of Roomber for it to work
 let poopoo = {
-    "httpsCheck.js": fs.readFileSync("./src/client/js/httpsCheck.js").toString(), // yes
-    "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(), // yes
+    "httpsCheck.js": fs.readFileSync("./src/client/js/httpsCheck.js").toString(),
+    "serverUrl.js": fs.readFileSync("./src/client/js/serverUrl.js").toString(),
     "utilities.js": fs.readFileSync("./src/client/js/utilities.js").toString(), // yes
     "components/popup.js": fs.readFileSync("./src/client/components/popup.js").toString(), // yasss queen slaayyy
     "components/adminPanel.js": fs.readFileSync("./src/client/components/adminPanel.js").toString(), // yas
@@ -45,17 +33,7 @@ Object.keys(poopoo).forEach((value) => {
         throw Error(`ADD ${value} TO TOTALCODE | FAILURE`)
     }
 })
-
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-// shut the fuck up on how bad this code is, someever. if it's bad, fix it.
-
 var JavaScriptObfuscator = require('javascript-obfuscator');
-
 var obfuscationResult = JavaScriptObfuscator.obfuscate(
     totalcode,
     {
@@ -70,7 +48,6 @@ var obfuscationResult = JavaScriptObfuscator.obfuscate(
     }
 );
 
-
 const result_lol = obfuscationResult.getObfuscatedCode();
 console.log(`TOTALCODE OBFUSCATION | SUCCESS`);
-fs.writeFileSync("./client/Roomber.js", result_lol);
+fs.writeFileSync("./client/Remember.js", result_lol);

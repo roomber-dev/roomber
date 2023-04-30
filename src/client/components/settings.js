@@ -1,20 +1,14 @@
-// languages added here!
 const settingsState = {};
 let changelog = {};
-let changelogHidden = true; // bc beta bc style broken
-let perms;
-
+let changelogHidden = true;
 const setSettingsCategory = category => settingsState.category = category
 const settingsCategories = categories => categories[settingsState.category]()
-
 const materialIcon = (icon, props = "") => `
 <i class="material-icons no-select" ${props}>${icon}</i>
 `
-
 const svgIcon = icon => `
 <img src="assets/icons/${icon}.svg" alt="" class="no-select svg">
 `
-
 const settingsCategory = (icon, lcontentid, id, hidden) => {
 	if (hidden == true) {
 		return "";
@@ -27,11 +21,9 @@ const settingsCategory = (icon, lcontentid, id, hidden) => {
 	`;
 	}
 }
-
 const pickLang = () => {
 	setLanguage($("#langpicker").val());
 }
-
 const changeUsername = () => popup(
 	langdata["changeusername.popup.title"],
 	`<input type="text" class="textbox" id="new-username">`,
@@ -60,7 +52,6 @@ const changeUsername = () => popup(
 			}, 501)
 		}
 	}])
-
 const changePassword = () => popup(
 	langdata["changepass.popup.title"],
 	`${langdata["changepass.popup.prompt"]}<br>
@@ -87,7 +78,6 @@ const changePassword = () => popup(
 			}, 501)
 		}
 	}])
-
 const changeEmail = () => popup(
 	langdata["changeemail.popup.title"],
 	`${langdata["changeemail.popup.prompt"]}<br>
@@ -133,22 +123,16 @@ const changeEmail = () => popup(
 			}, 501)
 		}
 	}])
-
 const setInputVolume = () => {
 	setCookie("inputVolume", $("#input-volume").val())
 }
-
 const setOutputVolume = () => {
 	setCookie("outputVolume", $("#output-volume").val())
 	testAudio.volume = Number(getCookie("inputVolume")) || 0.5
 }
-
 let testAudio = new Audio()
-
 let testingAudio = false
-
 let testInterval = 0
-
 const getAudioDevice = () => {
 	if (getCookie("audioDevice")) {
 		return getCookie("audioDevice");
@@ -157,7 +141,6 @@ const getAudioDevice = () => {
 	} else {
 		return "";
 	}
-
 	return null;
 }
 const toggleMicTest = () => {
@@ -173,7 +156,6 @@ const toggleMicTest = () => {
 		$(".mic-test .bar .progress").css({
 			"mask-image": `linear-gradient(to right, black 0%, transparent 0%)`,
 			"-webkit-mask-image": `linear-gradient(to right, black 0%, transparent 0%)`,
-
 		})
 		delete window.testStream
 		return
@@ -197,7 +179,7 @@ const toggleMicTest = () => {
 			data.forEach(i => {
 				sum += i
 			})
-			sum /= data.length // average volume 5/500 => 1/100
+			sum /= data.length 
 			sum += 120
 			sum = -sum
 			$(".mic-test .bar .progress").css({
@@ -210,12 +192,8 @@ const toggleMicTest = () => {
 		})
 	})
 }
-
 let audioDevices = []
-// get media for device labels
-
 let options = {};
-
 if (getAudioDevice()) {
 	options = {
 		deviceId: getAudioDevice()
@@ -225,12 +203,10 @@ if (getAudioDevice()) {
 		deviceId: ""
 	}
 }
-
 function gotMicPerms() {
 	perms = getCookie("micperms") || perms.toString() || false;
 	return perms;
 }
-
 function justGetTheMicPerms() {
 	navigator.mediaDevices.getUserMedia({
 		audio: options
@@ -242,9 +218,7 @@ function justGetTheMicPerms() {
 		})
 	})
 }
-
 justGetTheMicPerms();
-
 function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER DISALLOWS PERMISSION!!
 	if (perms != true) {
 		try {
@@ -271,11 +245,9 @@ function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER 
 		_callback("ALREADY");
 	}
 }
-
 const setAudioDevice = () => {
 	setCookie("audioDevice", $("#device").val())
 }
-
 const categoryContent = () => settingsCategories({
 	profile: () => `
 		<div class="flex flex-down full-width align-center">
@@ -355,11 +327,6 @@ const categoryContent = () => settingsCategories({
 			<label for="langpicker">${langdata["settings.category.lang.title"]}:</label>
 			<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
 				<option value="en-US">English (United States)</option>
-				<option value="en-GB">English (United Kingdom)</option>
-				<option value="pl-PL">Polski (Polska)</option>
-				<option value="ru-RU">Русский (Россия)</option>
-				<option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
-				<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
 			</select>
 		</div>
 	`,
@@ -411,7 +378,7 @@ const categoryContent = () => settingsCategories({
 	`,
 	changelog: () => `
 	<div class="flex flex-down align-center justify-center">
-	<img src="assets/roomberfull2.png" style="width: 60%;">
+	<img src="assets/Roomberfull2.png" style="width: 60%;">
 	<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
 	<h3 style="margin-bottom: 3px;">${langdata["settings.category.changelog"]} (BETA)</h2>
 	<div style="opacity: 0.9; text-align: center;">
@@ -423,7 +390,7 @@ const categoryContent = () => settingsCategories({
 		</div>
 	</div>
 </div>
-	`,
+`,
 	about: () => `
 		<div class="flex flex-down align-center justify-center">
 			<img src="assets/roomberfull2.png" style="width: 60%;">
@@ -437,6 +404,7 @@ const categoryContent = () => settingsCategories({
 		</div>
 	`,
 })
+
 
 const settings = () => `
 <div class="settings ${theme}">
@@ -457,7 +425,6 @@ const settings = () => `
 			${settingsCategory(materialIcon("translate"), "settings.category.lang", "language")}
 			${settingsCategory(materialIcon("volume_up"), "settings.category.audionvideo", "audio_video")}
 			${settingsCategory(materialIcon("library_books"), "settings.category.changelog", "changelog", changelogHidden)}
-			${settingsCategory(svgIcon("roomber"), "settings.category.about", "about")}
 		</aside>
 		<div id="content">
 			${categoryContent()}
@@ -465,7 +432,6 @@ const settings = () => `
 	</section>
 </div>
 `
-
 const updateSettings = () => {
 	$(".settings").remove();
 	$("#body").append(settings())
@@ -477,15 +443,11 @@ const updateSettings = () => {
 		updateSettings();
 	});
 }
-
-
-
 const closeSettings = () => {
 	$(".settings").fadeOut(300, () => {
 		$(".settings").remove()
 	})
 }
-
 const openSettings = () => {
 	$.getJSON(serverUrl + "/changelog", data => {
 		changelog = data;
@@ -501,7 +463,6 @@ const openSettings = () => {
 		updateSettings();
 	});
 }
-
 const changelogShit = (title, data, colorRGB) => {
 
 	let startinghtml = `<p class="changelogcategorytitleshit" style="background-color: rgba(${colorRGB.toString()}, 0.5); border-bottom: solid rgb(${colorRGB.toString()}) 4px;">${title}</p>`
@@ -512,28 +473,3 @@ const changelogShit = (title, data, colorRGB) => {
 	})
 	return html;
 }
-
-/* 
-my attempt on fixing emojis
-
-const styleSheets = Array.from(document.styleSheets).filter(
-	  (styleSheet) => !styleSheet.href || styleSheet.href.startsWith(window.location.origin)
-	);
-styleSheets.forEach(function(key, index) {
-	let href = styleSheets[index].href;
-	if(href) {
-  if(href == "https://f358-84-208-218-154.ngrok.io/twemoji-amazing.css") {
-		Object.keys(styleSheets[index+1].cssRules).map(function(key2, index2) {
-		console.log(styleSheets[index+1].cssRules[index2+1].selectorText);
-				console.log(index)
-				console.log(styleSheets[index2-1].cssRules)
-		   if(styleSheets[index].cssRules[index2-1].selectorText) {
-
-				console.log("POOSAY")
-			}
-		})
-	}
-	console.log(href)
-	}
-});
-*/

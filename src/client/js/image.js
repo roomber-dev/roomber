@@ -21,7 +21,7 @@ const styles = {
 };
 
 pfpWidget = cloudinary.createUploadWidget({
-  cloudName: 'roomber', 
+  cloudName: 'Roomber', 
   uploadPreset: 's2kamlsu', 
   folder: 'assets', 
   cropping: true,
@@ -55,7 +55,7 @@ pfpWidget = cloudinary.createUploadWidget({
 
 function onAttachment(e) {oa = e;}
 attachmentWidget = cloudinary.createUploadWidget({
-  cloudName: 'roomber', 
+  cloudName: 'Roomber', 
   uploadPreset: 's2kamlsu', 
   folder: 'attachments', 
   cropping: true,
@@ -73,7 +73,7 @@ widgets = {};
 function onUpload(e) {ow = e;}
 function uploadWidget(name, extra = {}) {
   widgets[name] = cloudinary.createUploadWidget({
-    cloudName: 'roomber', 
+    cloudName: 'Roomber', 
     uploadPreset: 's2kamlsu', 
     folder: name, 
     cropping: true,

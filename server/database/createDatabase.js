@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const glob = require('glob')
 const path = require('path')
+mongoose.set('strictQuery', false);
 
 module.exports = (sclog, url) => {
     mongoose.connect(url)

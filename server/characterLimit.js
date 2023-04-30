@@ -1,11 +1,11 @@
 const characterLimits = {
-    "message": [1, 1000],
-    "broadcast": [1, 500],
-    "username": [1, 20],
-    "password": [7, 50],
-    "email": [1, 320],
-    "server": [1, 50],
-    "channel": [1, 20]
+    "message": [1, 9999999999999],
+    "broadcast": [1, 9999999999],
+    "username": [1, 9999999999],
+    "password": [7, 9999999999],
+    "email": [1, 9999999999],
+    "server": [1, 9999999999],
+    "channel": [1, 9999999999]
 };
 
 function matchCharacterLimit(limit, text) {

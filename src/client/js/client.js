@@ -1,7 +1,7 @@
 // languages done here!
 
 function startingStuff() {
-	popup("Disclaimer", "This site is no longer being supported, and updates are most probably no longer to come. You are still welcome to use the app, but it might not be as safe as it was before. Thank you for using our app :)", [{
+	popup("Welcome !", "Welcome to Remember! A Discord clone that has been continued by Suromi. The original is Roomber made by Neksodebe/Nikoo. Don't forget that it's in the BETA stage.", [{
 		label: langdata["popup.buttons.ok"],
 		click: function (p) {
 			p.close();
@@ -22,7 +22,7 @@ function startingStuff() {
 				}
 			}, 500);
 		}
-	}], false, "red")
+	}], false, "green")
 
 }
 $(document).ready(function () {
@@ -401,7 +401,7 @@ function openServer(index) {
 			}], false, "red")
 		})
 	}
-	const link = `https://roomber-app.herokuapp.com/invite?s=${server._id}`
+	const link = `localhost:5000/invite?s=${server._id}`
 	$("#channels ul #server-buttons").append(`
 		<button class="button" onclick="serverInvitePopup('${link}')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);
@@ -428,52 +428,7 @@ function onSetupFinished(t) {
 	} else {
 		theme = "gradient";
 	}
-	/*if (!gotMicPerms()) {
-		setTimeout(() => {
-			vcPopupThing();
-		}, 5000);
-	}*/
 }
-
-/*function vcPopupThing() {
-	popup("Hey!", "Sorry to interrupt you, but to use VC's, you have to give us mic permissions! Hope you don't mind :)", [
-		{
-			label: "OK",
-			click: function (popup) {
-				getMicPerms(function (result) {
-					if (result == false) {
-						popup("Hey, I'm back again..", "It looks like you might've pressed the wrong button..?", [
-							{
-								label: "Try again",
-								click: function (popup_) {
-									popup_.close();
-									popup.close();
-									setTimeout(() => {
-										vcPopupThing();
-									}, 500);
-								}
-							},
-							{
-								label: "No",
-								click: function (popup_) {
-									popup_.close();
-									popup.close();
-								}
-							}
-						])
-					}
-				})
-				popup.close()
-			}
-		},
-		{
-			label: "No",
-			click: function (popup) {
-				popup.close()
-			}
-		}
-	])
-}*/
 
 loaded(function () {
 	clearInterval(startTimer);
@@ -530,7 +485,7 @@ loaded(function () {
 		$("#message").val("");
 	})
 
-	$("#roomber-logo").single_double_click(function () { }, function () {
+	$("#Roomber-logo").single_double_click(function () { }, function () {
 		new Audio('assets/ROOMBAH.wav').play();
 	});
 
@@ -823,7 +778,7 @@ function composeMessageContent(message, messageText) {
 	});
 	message[0].innerHTML = parseUrls(message[0].innerHTML, function (url) {
 		cclog("loading embed for " + url, "loading");
-		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/roomber-logo.png" class="logo no-select"></div>');
+		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/Roomber-logo.png" class="logo no-select"></div>');
 		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 	const attachment = message.parent().parent().parent().find(".attachment");
@@ -852,7 +807,7 @@ function newAdMessage(id) {
 
 	return `<div class="message glass" id="${randomID}">
 		<div class="flex">
-		    <img src="assets/roombercircle2.png" class="avatar">
+		    <img src="assets/Roombercircle2.png" class="avatar">
 		    <div class="flex msg">
 		        <div class="flex-down msg-flex">
 		            <div class="username">${username}</div>
@@ -873,9 +828,9 @@ function newAdMessage(id) {
 }
 
 function easterEg() {
-	$("#body").append('<iframe id="roombcursedguy" src="./roomberguy3d/" style="position: absolute; top: 0; left: 0; right: 100%; bottom: 100%; z-index: 69420; border: 0; width: 100%; height: 100%">no iframes for u</iframe>');
+	$("#body").append('<iframe id="roombcursedguy" src="./Roomberguy3d/" style="position: absolute; top: 0; left: 0; right: 100%; bottom: 100%; z-index: 69420; border: 0; width: 100%; height: 100%">no iframes for u</iframe>');
 	$("#message-box").css("display", "none")
-	var audio = new Audio('./roomberguy3d/earsdead.m4a');
+	var audio = new Audio('./Roomberguy3d/earsdead.m4a');
 	audio.play();
 	setTimeout(() => {
 		$("#message-box").css("display", "block");

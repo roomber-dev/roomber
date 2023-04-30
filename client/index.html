@@ -1,4 +1,4 @@
-<!DOCTYPE html> <!-- languages added here! -->
+<!DOCTYPE html>
 <html lang="en">
 <script rel="preload">
     let startTime = 0;
@@ -7,54 +7,25 @@
     }, 1);
 </script>
 <head>
-    <!--
-            ⡯⡯⡾⠝⠘⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢊⠘⡮⣣⠪⠢⡑⡌
-        ⠀⠀⠀⠟⠝⠈⠀⠀⠀⠡⠀⠠⢈⠠⢐⢠⢂⢔⣐⢄⡂⢔⠀⡁⢉⠸⢨⢑⠕⡌
-        ⠀⠀⡀⠁⠀⠀⠀⡀⢂⠡⠈⡔⣕⢮⣳⢯⣿⣻⣟⣯⣯⢷⣫⣆⡂⠀⠀⢐⠑⡌
-        ⢀⠠⠐⠈⠀⢀⢂⠢⡂⠕⡁⣝⢮⣳⢽⡽⣾⣻⣿⣯⡯⣟⣞⢾⢜⢆⠀⡀⠀⠪
-        ⣬⠂⠀⠀⢀⢂⢪⠨⢂⠥⣺⡪⣗⢗⣽⢽⡯⣿⣽⣷⢿⡽⡾⡽⣝⢎⠀⠀⠀⢡
-        ⣿⠀⠀⠀⢂⠢⢂⢥⢱⡹⣪⢞⡵⣻⡪⡯⡯⣟⡾⣿⣻⡽⣯⡻⣪⠧⠑⠀⠁⢐
-        ⣿⠀⠀⠀⠢⢑⠠⠑⠕⡝⡎⡗⡝⡎⣞⢽⡹⣕⢯⢻⠹⡹⢚⠝⡷⡽⡨⠀⠀⢔
-        ⣿⡯⠀⢈⠈⢄⠂⠂⠐⠀⠌⠠⢑⠱⡱⡱⡑⢔⠁⠀⡀⠐⠐⠐⡡⡹⣪⠀⠀⢘
-        ⣿⣽⠀⡀⡊⠀⠐⠨⠈⡁⠂⢈⠠⡱⡽⣷⡑⠁⠠⠑⠀⢉⢇⣤⢘⣪⢽⠀⢌⢎
-        ⣿⢾⠀⢌⠌⠀⡁⠢⠂⠐⡀⠀⢀⢳⢽⣽⡺⣨⢄⣑⢉⢃⢭⡲⣕⡭⣹⠠⢐⢗
-        ⣿⡗⠀⠢⠡⡱⡸⣔⢵⢱⢸⠈⠀⡪⣳⣳⢹⢜⡵⣱⢱⡱⣳⡹⣵⣻⢔⢅⢬⡷
-        ⣷⡇⡂⠡⡑⢕⢕⠕⡑⠡⢂⢊⢐⢕⡝⡮⡧⡳⣝⢴⡐⣁⠃⡫⡒⣕⢏⡮⣷⡟
-        ⣷⣻⣅⠑⢌⠢⠁⢐⠠⠑⡐⠐⠌⡪⠮⡫⠪⡪⡪⣺⢸⠰⠡⠠⠐⢱⠨⡪⡪⡰
-        ⣯⢷⣟⣇⡂⡂⡌⡀⠀⠁⡂⠅⠂⠀⡑⡄⢇⠇⢝⡨⡠⡁⢐⠠⢀⢪⡐⡜⡪⡊
-        ⣿⢽⡾⢹⡄⠕⡅⢇⠂⠑⣴⡬⣬⣬⣆⢮⣦⣷⣵⣷⡗⢃⢮⠱⡸⢰⢱⢸⢨⢌
-        ⣯⢯⣟⠸⣳⡅⠜⠔⡌⡐⠈⠻⠟⣿⢿⣿⣿⠿⡻⣃⠢⣱⡳⡱⡩⢢⠣⡃⠢⠁
-        ⡯⣟⣞⡇⡿⣽⡪⡘⡰⠨⢐⢀⠢⢢⢄⢤⣰⠼⡾⢕⢕⡵⣝⠎⢌⢪⠪⡘⡌⠀
-        ⡯⣳⠯⠚⢊⠡⡂⢂⠨⠊⠔⡑⠬⡸⣘⢬⢪⣪⡺⡼⣕⢯⢞⢕⢝⠎⢻⢼⣀⠀
-        ⠁⡂⠔⡁⡢⠣⢀⠢⠀⠅⠱⡐⡱⡘⡔⡕⡕⣲⡹⣎⡮⡏⡑⢜⢼⡱⢩⣗⣯⣟
-        ⢀⢂⢑⠀⡂⡃⠅⠊⢄⢑⠠⠑⢕⢕⢝⢮⢺⢕⢟⢮⢊⢢⢱⢄⠃⣇⣞⢞⣞⢾
-        ⢀⠢⡑⡀⢂⢊⠠⠁⡂⡐⠀⠅⡈⠪⠪⠪⠣⠫⠑⡁⢔⠕⣜⣜⢦⡰⡎⡯⡾⡽
-    -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- HTML Meta Tags -->
-    <title>Roomber</title>
+    <title>Remember</title>
     <meta charset="UTF-8">
-    <meta name="keywords" content="Roomber,chat,talk,message,friends,fun">
-    <meta name="author" content="neksodebe">
+    <meta name="keywords" content="Roomber,Remember,chat,talk,message,friends,fun">
+    <meta name="author" content="Suromi">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
-        content="Create a free Roomber account and discover a new messaging app that's better and faster than your normal phone messaging app.">
-
-    <!-- Meta Meta Tags -->
+        content="A fork of Roomber">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Roomber">
+    <meta property="og:title" content="Remember">
     <meta property="og:description"
-        content="Create a free Roomber account and discover a new messaging app that's better and faster than your normal phone messaging app.">
+        content="A fork of Roomber">
     <meta property="og:image" content="https://i.imgur.com/hDx7FNI.png">
-
-    <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Roomber">
+    <meta name="twitter:title" content="Remember">
     <meta name="twitter:description"
-        content="Create a free Roomber account and discover a new messaging app that's better and faster than your normal phone messaging app.">
-    <meta name="twitter:image" content="https://roomber-app.herokuapp.com/assets/roomb.png">
+        content="A fork of Roomber">
+    <meta name="twitter:image" content="">
     <meta content="#9b34ba" data-react-helmet="true" name="theme-color" />
     <link rel="stylesheet" href="style.css">
     <style>
@@ -101,7 +72,7 @@
     <!-- PCTITLEBAR -->
     <div id="body">
         <div id="loading-back">
-            <img alt="" src="assets/roomber-logo.png" id="loading-image">
+            <img alt="" src="assets/remember-logo.png" id="loading-image">
             <div id="fun-fact-container">
                 <p id="fun-fact-title" data-lcontent="loading.funfact.title">Did you know</p>
                 <p id="fun-fact"></p>
@@ -124,7 +95,7 @@
             <div id="topbar" class="glass">
                 <div id="topbar-content">
                     <div id="by-the-logo">
-                        <img id="roomber-logo" src="assets/roomber-logo.png">
+                        <img id="roomber-logo" src="assets/remember-logo.png">
                     </div>
                     <div id="servers">
                         <div class="topbar-sep"></div>
@@ -167,7 +138,7 @@
         <script src="https://upload-widget.cloudinary.com/global/all.js" type="text/javascript"></script>
         <script src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
         <script src="/socket.io/socket.io.js"></script>
-        <script src="Roomber.js" rel="preconnect"></script>
+        <script src="Remember.js" rel="preconnect"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/cloudinary-jquery/2.12.3/cloudinary-jquery.min.js" crossorigin="anonymous" rel="preconnect" referrerpolicy="no-referrer"></script>
     </div>
 </body>
