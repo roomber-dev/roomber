@@ -1,5 +1,4 @@
 const auth = require('../../../auth');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/chat', (req, res) => {
         auth(req.db, req.body.user, req.body.session, () => {

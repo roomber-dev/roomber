@@ -1,0 +1,93 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #050505;
+}
+.cube {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    transform-style: preserve-3d;
+    transform: rotateX(-30deg);
+    animation: animate 15s, glow 10s, 10s linear infinite;
+}
+@keyframes glow {
+    0% {
+        box-shadow: #7289DA 
+    }
+    100% {
+        box-shadow: #7289DA 
+    }
+}
+@keyframes dissappear {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes animate {
+    0% {
+        transform: rotateX(-30deg) rotateY(0deg);
+    }
+    100% {
+        transform: rotateX(-30deg) rotateY(360deg);
+    }
+}
+.cube div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+.cube div span {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../assets/remember-logo.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    transform: rotateY(calc(90deg * var(--i))) translateZ(150px) /* 300 / 2 = 150 */
+}
+.top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: #7289DA ;
+    transform: rotateX(90deg) translateZ(150px);
+}
+.top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    background: #7289DA ;
+    transform: translateZ(-380px);
+    filter: blur(20px);
+    box-shadow: 0 0 120px #7289DA 
+}
+.bottom {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 300px;
+    height: 300px;
+    transform: rotateX(90deg) translateZ(-150px);
+    background: #7289DA ;
+}

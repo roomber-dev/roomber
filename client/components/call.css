@@ -8,11 +8,10 @@
         transform: translate(-50%, -50%) scale(1);
     }
 }
-
 #incoming-call {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 100%;
+    left: 100%;
     transform: translate(-50%, -50%);
     width: 300px;
     height: 400px;
@@ -23,7 +22,6 @@
     flex-direction: column;
     animation: appear 0.3s;
 }
-
 #incoming-call .user {
     display: flex;
     flex-direction: column;
@@ -32,20 +30,17 @@
     margin-bottom: 10px;
     align-items: center;
 }
-
 #incoming-call .user img {
     border-radius: 50%;
     margin-bottom: 10px;
     width: 90%;
 }
-
 #incoming-call .buttons {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 80px;
 }
-
 #incoming-call .buttons button {
     border-radius: 50%;
     width: 60px;
@@ -55,7 +50,6 @@
     color: white;
     margin: 5px;
 }
-
 #call-end {
     width: 60px;
     height: 60px;
@@ -65,7 +59,6 @@
     color: white;
     margin: 5px;
 }
-
 #call-mute {
     width: 60px;
     height: 60px;
@@ -75,11 +68,10 @@
     color: black;
     margin: 5px;
 }
-
 #in-call {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 100%;
+    left: 100%;
     transform: translate(-50%, -50%);
     min-width: 500px;
     height: 350px;
@@ -90,13 +82,11 @@
     flex-direction: column;
     animation: appear 0.3s;
 }
-
 #call-header {
     padding: 40px;
     font-weight: bolder;
     padding-bottom: 5px;
 }
-
 #call-footer {
     background: rgba(0,0,0,0.7);
     border-bottom-left-radius: 16px;
@@ -104,21 +94,18 @@
     padding: 8px;
     display: flex;
 }
-
 #call-main {
     flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
 #call-main img {
     width: 100px;
     height: 100px;
     margin: 20px;
     border-radius: 50%;
 }
-
 #call-main video {
     width: 200px;
     border-radius: 10px;

@@ -1,21 +1,17 @@
 let popups = 0;
 var popupButtons = [];
-// languages done here!
-
 function removePopup(id) {
     if (id > popups) return;
     if (id) {
         let popupElement = document.querySelector(`#popup-${id}`);
         let content = document.querySelector(`#popup-${id} .popup-content`);
         let blur = document.querySelector(`#popup-${id} .popup-blur`);
-
         if (popupElement) {
             content.style = "animation: 0.5s popup-after;";
             blur.style = "animation: 0.5s popup-blur-after;";
             setTimeout(function () {
                 popupElement.remove();
             }, 500);
-
             popups--
         } else {
             throw Error("Invalid popup ID");
@@ -25,7 +21,6 @@ function removePopup(id) {
         popups = 0;
     }
 }
-
 function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
     popups++
     let id = `popup-${popups}`;
@@ -60,13 +55,12 @@ function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], cl
         content.style.animation = "";
         blur.style.animation = "";
     }, 500);
-
     if (blink) {
-        popupTitle.style = '-moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */ animation:blink normal 1.5s infinite ease-in-out; /* Opera */'
+        popupTitle.style = '-moz-animation:blink normal 1.5s infinite ease-in-out;  Firefox  -webkit-animation:blink normal 1.5s infinite ease-in-out;  Webkit  -ms-animation:blink normal 1.5s infinite ease-in-out;  IE  animation:blink normal 1.5s infinite ease-in-out;  Opera '
     }
     if (sizeblink) {
         setTimeout(() => {
-            content.style = '-moz-animation:blinksize normal 1.5s infinite ease-in-out; /* Firefox */ -webkit-animation:blinksize normal 1.5s infinite ease-in-out; /* Webkit */ -ms-animation:blinksize normal 1.5s infinite ease-in-out; /* IE */ animation:blinksize normal 1.5s infinite ease-in-out; /* Opera */'
+            content.style = '-moz-animation:blinksize normal 1.5s infinite ease-in-out;  Firefox  -webkit-animation:blinksize normal 1.5s infinite ease-in-out;  Webkit  -ms-animation:blinksize normal 1.5s infinite ease-in-out;  IE  animation:blinksize normal 1.5s infinite ease-in-out;  Opera '
         }, 501);
     }
     let footer = document.querySelector(`#${id} .popup-footer`);
@@ -93,14 +87,11 @@ function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], cl
             </button>
         `;
     });
-
     return popups;
 };
-
 function alert(message) {
     popup(langdata["alert.title"], message);
 }
-
 function pushNotification(user, text, onlyIfUnactive = true) {
     Notification.requestPermission().then(function (result) {
         if (result == "granted") {
@@ -114,12 +105,9 @@ function pushNotification(user, text, onlyIfUnactive = true) {
                     body: text,
                     icon: user["avatar"]
                 });
-
             }
         } else {
             cclog("Popup Permission not granted", "error");
         }
     });
-
 }
-// goodbye repeat() you know for loops exist right?

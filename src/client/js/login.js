@@ -1,18 +1,14 @@
 function logOut() {
 	var cookies = document.cookie.split(";");
-
 	cookies.forEach(cookie => {
 		document.cookie = cookie.split('=')[0] + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
 	})
-
 	$.post(serverUrl + "/logout", {
 		user: session.user,
 		session: session.session
 	})
-
 	window.location.href = "";
 }
-
 function logoutPopup() {
 	popup(langdata["logout.title"], langdata["logout.content"], [{
 		label: langdata["popup.buttons.no"],
@@ -27,7 +23,6 @@ function logoutPopup() {
 		}
 	}]);
 }
-
 function logIn() {
 	$("#login").text("");
 	$("#login").append(`<img src="avatars/default.png" alt="" class="avatar" id="avatar-btn">`);
@@ -36,14 +31,15 @@ function logIn() {
 	$("#login p.username").click(function () {
 		copyUsername();
 	});
-
 	socket.emit('auth', session);
-
 	$("#settings").click(function() {
 		openSettings();
 	})
+	$("#login").insertAfter("#channels");
+	$("#settings").insertAfter("#topbar-content");
+	$("#settings").css("margin-left", "auto");
+    $("#settings").css("margin-right", "auto");
 }
-
 function reg_err(p, msg, close = true) {
 	if(close) { p.close() };
 	setTimeout(function () {
@@ -56,9 +52,7 @@ function reg_err(p, msg, close = true) {
 		}], false, "red");
 	}, 500);
 }
-
 function reg_callback(p, url, msg, has_username = true) {
-	// pretty fancy right?
 	let username = "a";
 	let usernameInput = $("#reg-username").val();
 	if (usernameInput) username = usernameInput;
@@ -84,7 +78,6 @@ function reg_callback(p, url, msg, has_username = true) {
 		window.location.href = "";
 	}).fail(function () { reg_err(p, msg) });
 }
-
 function passVisibilityToggle() {
 	let visibility = false;
 	$(".password-visibility").click(function () {
@@ -94,7 +87,6 @@ function passVisibilityToggle() {
 			visibility ? "text" : "password");
 	})
 }
-
 function regPass() {
 	return `<p>${langdata["login.password"]}</p><div id="pass-flex">
 	<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
@@ -102,7 +94,6 @@ function regPass() {
 		no-select password-visibility">visibility_off</i>
 	</div>`;
 }
-
 function reg() {
 	popup(langdata["login.title"], langdata["login.content"], [
 		{
@@ -114,7 +105,7 @@ function reg() {
 						<p>${langdata["email"]}</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
-						<p>${langdata["email"]}</p>
+						<p>${langdata["username"]}</p>
 						<input type="username" id="reg-username" class="textbox" placeholder="Username"/>
 						<br>
 						${regPass()}
@@ -134,15 +125,6 @@ function reg() {
 					}]);
 					passVisibilityToggle();
 				}, 500);
-			}
-		},
-		{
-			label: langdata["login.choices.qr"],
-			click: function (p) {
-				p.close();
-				setTimeout(function() {
-					openQRLogin();
-				}, 501);
 			}
 		},
 		{
@@ -175,7 +157,6 @@ function reg() {
 		}
 	]);
 }
-
 function checkSetup() {
 	$.post(serverUrl + '/getSetup', { user: session.user }, function (isSetup) {
 		if (isSetup) {
@@ -185,7 +166,6 @@ function checkSetup() {
 		}
 	})
 }
-
 function loginInit() {
 	let id = getCookie("session");
 	let uid = getCookie("userid");
@@ -195,7 +175,7 @@ function loginInit() {
 	} else {
 		session = {session: id, user: uid};
 		getProfile(function(profile) {
-			session.username = profile.username; // For backwards compatibility
+			session.username = profile.username;
 			logIn();
 			$("#login img").prop("src", profile.avatar);
 			checkSetup();

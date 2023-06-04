@@ -1,5 +1,4 @@
 let pickupCallback = null
-
 const incomingCall = caller => `
     <div id="incoming-call">
         <div class="user">
@@ -12,9 +11,7 @@ const incomingCall = caller => `
         </div>
     </div>
 `
-
 let incomingCallAudio = new Audio("assets/incoming-call.mp3")
-
 const showIncomingCall = cb => {
     pickupCallback = cb
     $("#body").append(incomingCall())
@@ -22,7 +19,6 @@ const showIncomingCall = cb => {
     incomingCallAudio.currentTime = 0
     incomingCallAudio.play()
 }
-
 const hideIncomingCall = () => {
     if ($("#incoming-call").html()) {
         $("#incoming-call").remove()

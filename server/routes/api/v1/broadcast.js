@@ -1,5 +1,4 @@
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/broadcast', (req, res) => {
         if (!matchCharacterLimit("broadcast", req.body.message)) {

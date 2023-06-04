@@ -1,5 +1,3 @@
-
-const Roomber = require("./Remember")
-
-new Roomber()
+const Remember = require("./Remember")
+new Remember()
 	.listen(process.env.PORT || 5000)

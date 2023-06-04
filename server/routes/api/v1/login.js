@@ -1,6 +1,5 @@
 const bcrypt = require('bcrypt');
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/login', (req, res) => {
         if (req.body.email && !matchCharacterLimit("email", req.body.email)) {
@@ -11,7 +10,6 @@ module.exports = require('express').Router({ mergeParams: true })
             res.send({ error: "Your password is outside of the range between " + characterLimits["password"][0] + " and " + characterLimits["password"][1] + " characters." });
             return;
         }
-
         let query = { email: req.body.email };
         if (req.body.id) {
             query = { _id: req.body.id };

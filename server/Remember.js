@@ -1,3 +1,5 @@
+console.clear();
+console.log(``)
 const sclog = require('./sclog');
 const config = require('./config');
 const createDatabase = require('./database/createDatabase');
@@ -5,7 +7,22 @@ const createExpressApp = require('./createExpressApp');
 const http = require('http');
 const socketio = require('socket.io');
 const auth = require('./auth');
-class Roomber {
+const express = require("express");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+const multer = require("multer");
+const { exec } = require('child_process');
+process.on('SIGINT', (code) => {
+	sclog('Received SINGINT signal. Now shutting down ', 'info');
+	exec('mongod --shutdown', (error, stdout, stderr) => {
+	  if (error) {
+		console.error(`Error executing 'mongod --shutdown': ${error.message}`);
+		return;
+	  }	
+	  process.exit(0);
+	});
+  });
+class Remember {
 	constructor() {
 		this.db = createDatabase(sclog, config.dbUrl);
 		this.app = createExpressApp(config.apiPath, config.maintenance, this.db);
@@ -14,7 +31,6 @@ class Roomber {
 		this.app.io = this.io;
 		const callPeers = {}
 		this.io.on('connection', socket => {
-			sclog(`A user connected`, "join");
 			socket.on('auth', session => {
 				auth(this.db, session.user, session.session, () => {
 					socket.join(session.user);
@@ -46,9 +62,6 @@ class Roomber {
 			socket.on('leaveCall', callee => {
 				this.io.emit('calleeLeave', callee)
 			})
-			socket.on('disconnect', () => {
-				sclog(`A user disconnected`, "leave");
-			})
 			socket.on('joinChannel', channel => {
 				socket.join(channel);
 			})
@@ -56,9 +69,27 @@ class Roomber {
 				socket.leave(channel);
 			})
 		})
+		this.app.use("/cdn", express.static(path.join(__dirname, "cdn")));
 		process.on("uncaughtException", function(err) {
 			sclog(err, "error")
 		})
+		const storage = multer.diskStorage({
+			destination: function (req, file, cb) {
+			  cb(null, path.join(__dirname, "/cdn/attachments")); // Upload to "cdn/attachments" folder
+			},
+			filename: function (req, file, cb) {
+			  const uniqueFileName = uuidv4(); // Generate a unique filename using UUID
+			  const fileExtension = path.extname(file.originalname);
+			  const finalFileName = uniqueFileName + fileExtension;
+			  cb(null, finalFileName);
+			},
+		  });
+		  const upload = multer({ storage });
+		  this.app.post("/upload", upload.single("file"), (req, res) => {
+			// File upload successful
+			const fileUrl = `/cdn/attachments/${req.file.filename}`;
+			res.status(200).send(fileUrl);
+		  });
 	}
 	listen(port) {
 		this.server.listen(port, () => {
@@ -66,4 +97,4 @@ class Roomber {
 		})
 	}
 }
-module.exports = Roomber;
+module.exports = Remember;

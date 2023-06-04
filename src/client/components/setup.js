@@ -8,7 +8,7 @@ function setupNotImplemented() {
 	alert("nope not yet");
 }
 function setupPickProfilePicture() {
-	pfpWidget.open();
+	alert("The profile picker feature is not ready yet. :)")
 }
 function setupSetTheme(theme) {
 	setupTheme = theme;
@@ -49,14 +49,6 @@ function setupPage(username) {
 						<div id="setup-text">${langdata["setup.pages.3.title"]}</div>
 						<div id="setup-themes">
 				<div class="setup-theme">
-					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
-					<p>${langdata["settings.category.appearance.landscape"]}</p>
-				</div>
-				<div class="setup-theme">
-					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
-					<p>${langdata["settings.category.appearance.gradient"]}</p>
-				</div>
-				<div class="setup-theme">
 					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
 					<p>${langdata["settings.category.appearance.dark"]}</p>
 				</div>
@@ -75,7 +67,7 @@ function setupPage(username) {
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-icon"><img src="../assets/Roomber-logo.png"></div>
+						<div id="setup-icon"><img src="../assets/remember-logo.png"></div>
 						<div id="setup-text">${langdata["setup.pages.4.title"]}</div>
 						<button id="setup-btn" class="setup-button button" onclick="setupClose()">${langdata["setup.pages.4.button"]}</button>
 					</div>

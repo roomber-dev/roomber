@@ -1,4 +1,3 @@
-
 const inCall = () => `
     <div id="in-call">
         <div id="call-header">
@@ -13,12 +12,10 @@ const inCall = () => `
         </div>
     </div>
 `
-
 const showInCall = () => {
     $("#body").append(inCall())
     makeDrag($("#in-call")[0])
 }
-
 const hideInCall = () => {
     $("#in-call").remove()
 }

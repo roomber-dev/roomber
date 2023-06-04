@@ -1,5 +1,4 @@
 const chalk = require('chalk');
-
 module.exports = function (message, type) {
 	const category = {
 		debug: function (text) {
@@ -27,7 +26,6 @@ module.exports = function (message, type) {
 			return chalk.blueBright("[LOAD]") + " " + message
 		}
 	}
-
 	if (category[type]) {
 		process.stdout.write(`${category[type](message)}\n`);
 	}

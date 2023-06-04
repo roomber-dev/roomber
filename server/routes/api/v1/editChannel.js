@@ -1,6 +1,5 @@
 const auth = require('../../../auth');
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/editChannel', (req, res) => {
         if (!matchCharacterLimit("channel", req.body.name)) {

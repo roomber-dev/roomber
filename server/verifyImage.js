@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-
 module.exports = function (user, url, callback) {
     const magic = {
         jpg: 'ffd8ffe0',
@@ -7,7 +6,6 @@ module.exports = function (user, url, callback) {
         gif: '47494638'
     };
     const invalidImage = "Invalid image";
-
     fetch(url)
         .then(res => res.blob())
         .then(blob => blob.arrayBuffer())

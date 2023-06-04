@@ -1,5 +1,4 @@
 const auth = require('../../../auth');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/deleteMessage', (req, res) => {
         auth(req.db, req.body.deleter, req.body.session, () => {
@@ -14,7 +13,6 @@ module.exports = require('express').Router({ mergeParams: true })
                         res.sendStatus(200);
                         return;
                     }
-
                     req.db.Message.findOne({ author: req.body.deleter, _id: req.body.message }, (err, msg) => {
                         if (msg) {
                             msg.removed = true;

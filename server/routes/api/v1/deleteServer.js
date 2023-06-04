@@ -1,10 +1,8 @@
 const auth = require('../../../auth')
-
 const deleteChannel = (db, channel) => {
 	db.Message.deleteMany({channel: channel._id.toString()});
 	channel.remove();
 }
-
 module.exports = require('express').Router({ mergeParams: true })
 	.post('/v1/deleteServer', (req, res) => {
 		auth(req.db, req.body.user, req.body.session, () => {

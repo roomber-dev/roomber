@@ -2,10 +2,8 @@ const mongoose = require('mongoose')
 const glob = require('glob')
 const path = require('path')
 mongoose.set('strictQuery', false);
-
 module.exports = (sclog, url) => {
     mongoose.connect(url)
-
     const db = glob.sync('./schemas/**/*.js', { cwd: __dirname })
         .map(filename => {
             return {
@@ -22,12 +20,10 @@ module.exports = (sclog, url) => {
                 [model.modelName]: model,
             }
         }, {})
-
     mongoose.connection
         .on('error', error => {
             throw error
         })
         .once('open', () => sclog('MongoDB connected', 'start'))
-
     return db
 }

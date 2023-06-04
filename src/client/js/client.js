@@ -1,30 +1,6 @@
-// languages done here!
-
 function startingStuff() {
-	popup("Welcome !", "Welcome to Remember! A Discord clone that has been continued by Suromi. The original is Roomber made by Neksodebe/Nikoo. Don't forget that it's in the BETA stage.", [{
-		label: langdata["popup.buttons.ok"],
-		click: function (p) {
-			p.close();
-			setTimeout(() => {
-				if (getCookie("cookies") == "") {
-					popup(langdata["cookies.title"], langdata["cookies.content"], [{
-						label: langdata["popup.buttons.iagree"],
-						click: function (p) {
-							setCookie("cookies", "true")
-							p.close();
-							setTimeout(function () {
-								loginInit();
-							}, 501);
-						}
-					}]);
-				} else {
 					loginInit();
 				}
-			}, 500);
-		}
-	}], false, "green")
-
-}
 $(document).ready(function () {
 	cclog(`DOM Loading time is ${startTime}ms`, "start");
 	if (getCookie("lang") != "") {
@@ -32,16 +8,11 @@ $(document).ready(function () {
 	} else {
 		loadLanguage("en-US", startingStuff);
 	}
-
-
 });
-
 canEditAndDeleteAny = false;
 toFetch = 0;
 fetchingMessages = false;
 servers = [];
-
-
 function copyMessage(id) {
 	var copyText = $(`#${id} .msgln`)[0];
 	var range = document.createRange();
@@ -51,7 +22,6 @@ function copyMessage(id) {
 	document.execCommand("copy", false, copyText.innerHTML);
 	window.getSelection().removeAllRanges();
 }
-
 function copyUsername() {
 	var copyText = $(`#login .username`)[0];
 	var range = document.createRange();
@@ -61,14 +31,11 @@ function copyUsername() {
 	document.execCommand("copy", false, copyText.innerHTML);
 	window.getSelection().removeAllRanges();
 }
-
-
 function chatScrollDown() {
 	if ($('#messages').prop("scrollHeight") - $('#messages').prop("scrollTop") != 524) {
 		$("#messages").animate({ scrollTop: $('#messages').prop("scrollHeight") }, 300);
 	}
 }
-
 profile = {};
 function getProfile(onProfile) {
 	$.post(serverUrl + "/getProfile", { ...session }, function (data) {
@@ -76,7 +43,6 @@ function getProfile(onProfile) {
 		onProfile(data.profile);
 	});
 }
-
 function getMessageManagementButtons() {
 	return [
 		{
@@ -109,11 +75,9 @@ function getMessageManagementButtons() {
 		}
 	];
 }
-
 function updateTheme() {
 	$("body").prop("class", theme);
 }
-
 function setTheme(_theme) {
 	const oldTheme = theme;
 	theme = _theme;
@@ -124,16 +88,13 @@ function setTheme(_theme) {
 		$(".settings").addClass(theme);
 	}
 }
-
 function addServer(server) {
 	let idx = servers.push(server) - 1;
-
 	if (server["picture"]) {
 		$("#server-list").prepend(`<img id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server" src="${server["picture"]}"/>`);
 	} else {
 		$("#server-list").prepend(`<div id="${server["_id"]}" title="${server["name"]}" onclick="openServer(${idx})" alt="${server["name"]}" class="server basic"><p class="no-select">${server["name"].at(0).toUpperCase()}</p></div>`);
 	}
-
 	$.post(serverUrl + "/getChannels", { server: server._id }, function (channels) {
 		servers[idx].channels = channels;
 		let current = getCookie("server");
@@ -142,7 +103,6 @@ function addServer(server) {
 		}
 	});
 }
-
 function channelClick(id) {
 	changeChannel(id);
 	if (servers[currentServer].owner == session.user) {
@@ -206,7 +166,6 @@ function channelClick(id) {
 		$("#channels #" + id).addClass("active");
 	}
 }
-
 function createChannel(index) {
 	const server = servers[index];
 	popup(langdata["channel.create.title"], `
@@ -236,26 +195,22 @@ function createChannel(index) {
 		}
 	}]);
 }
-
 currentServer = 0;
-
 function addLoadingAnimation(server) {
 	$("#server-list #" + servers[server]._id).css({
 		animation: "1s blink60 infinite"
 	});
 }
-
 function removeLoadingAnimation(server) {
 	$("#server-list #" + servers[server]._id).css({
 		animation: ""
 	});
 }
-
 function serverSettings(callback) {
 	let pic = "";
+	// this shit is not ready yet --> <a href="#" class="pick-server-pic"><img src="assets/pick-image.png" class="picked-server-pic" style="width: 35%; border-radius: 50%"></a></br>
 	popup("", `
 		<div style="text-align: center;">
-		<a href="#" class="pick-server-pic"><img src="assets/pick-image.png" class="picked-server-pic" style="width: 35%; border-radius: 50%"></a></br>
 		<input class="textbox" id="server-name" placeholder="Server Name" style="width: 80%;"></input>
 		</div>
 	`, [{
@@ -285,7 +240,6 @@ function serverSettings(callback) {
 		openUpload("serverPictures");
 	})
 }
-
 function changeServerSettings(index) {
 	serverSettings(function (settings) {
 		$.post(serverUrl + "/editServer", { ...session, ...settings, server: servers[index]._id }, function (data) {
@@ -308,11 +262,9 @@ function changeServerSettings(index) {
 		})
 	});
 }
-
 function serverInvitePopup(link) {
 	popup(langdata["server.invite.title"], formatLangText(langdata["server.invite.content"], [`<a href="${link}">${link}</a>`]))
 }
-
 function openServer(index) {
 	$("#messages").html("");
 	let server = servers[index];
@@ -401,27 +353,23 @@ function openServer(index) {
 			}], false, "red")
 		})
 	}
-	const link = `localhost:5000/invite?s=${server._id}`
+	const link = `${window.location.protocol}//${window.location.hostname}/invite?s=${server._id}`;
 	$("#channels ul #server-buttons").append(`
 		<button class="button" onclick="serverInvitePopup('${link}')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);
 }
-
 function onSetupFinished(t) {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function () {
 		canEditAndDeleteAny = true;
 	});
-
 	if (t) {
 		theme = t;
 		updateTheme();
 	}
-
 	$.post(serverUrl + '/getServers', { ...session }, function (servers) {
 		servers.forEach(addServer);
 		fireLoaded();
 	});
-
 	if (getCookie("theme") != "") {
 		theme = getCookie("theme");
 		updateTheme();
@@ -429,37 +377,59 @@ function onSetupFinished(t) {
 		theme = "gradient";
 	}
 }
-
 loaded(function () {
 	clearInterval(startTimer);
 	cclog(`Overall loading time is ${startTime}ms`, "start");
 	$("#loading-back").fadeOut(1000, function () {
 		$("#loading-back").remove();
 	});
-
-	$.get(serverUrl + "/version", function (v) {
-		version = {
-			number: v,
-			text: `v4.${v / 10}`
-		}
-	})
-
 	let attachment = "";
-
-	onAttachment(function (url) {
-		attachment = url;
-		$("#attachment-indicator").css({ display: "flex" });
-	});
-
-	$("#remove-attachment").click(function () {
-		$("#attachment-indicator").css({ display: "none" });
-		attachment = "";
-	});
-
+	//who needs these anyway
+	//onAttachment(function (url) {
+	//	attachment = url;
+	//	$("#attachment-indicator").css({ display: "flex" });
+	//});
+	//$("#remove-attachment").click(function () {
+	//	$("#attachment-indicator").css({ display: "none" });
+	//	attachment = "";
+	//});
 	$("#attach").click(function () {
-		attachmentWidget.open();
-	});
-
+		var input = document.createElement('input');
+		input.type = 'file';
+		input.click();
+	  
+		input.onchange = function () {
+		  var file = input.files[0];
+		  var formData = new FormData();
+		  formData.append('file', file);
+		  var serverUrl = '/upload';
+		  var xhr = new XMLHttpRequest();
+		  xhr.open('POST', serverUrl, true);
+		  xhr.onload = function () {
+			if (xhr.status === 200) {
+			  var fileUrl = xhr.responseText;
+			  var fileLink = fileUrl;
+			  sendMessage({
+				session: session.session,	
+				msg: {
+				  author: session.user,
+				  message: $("#message").val() + $(location).attr('origin') + fileLink,
+				  timestamp: new Date().getTime(),
+				  channel: channel
+				}
+			  });
+			} else {
+			  console.error("File upload failed:", xhr.responseText);
+			}
+		  };
+	  
+		  xhr.send(formData);
+		};
+	  });
+	  
+	  
+	  
+	  
 	$("#send").click(function () {
 		if ($("#message").val().trim() == "") {
 			return;
@@ -484,11 +454,9 @@ loaded(function () {
 		});
 		$("#message").val("");
 	})
-
-	$("#Roomber-logo").single_double_click(function () { }, function () {
-		new Audio('assets/ROOMBAH.wav').play();
+	$("#roomber-logo").single_double_click(function () { }, function () {
+		new Audio('assets/REMEMBAH.wav').play();
 	});
-
 	$("#message").keypress(function (e) {
 		var key = e.which;
 		if (key == 13) {
@@ -496,15 +464,12 @@ loaded(function () {
 			return false;
 		}
 	});
-
 	$(".message").hover(function () {
 		if ($(this).find(".horizontalMenu").children().length == 1 && $(this).find(".username").text() == session.username) {
 			horizontalMenuAddButtons($(this).find(".horizontalMenu").data("id"), getMessageManagementButtons());
 		}
 	});
-
 	makeDrag($("#minAdminPanel")[0]);
-
 	$("#messages").prop("scrollTop", $("#messages").prop("scrollHeight"));
 	$("#chat-area #messages").scroll(function (e) {
 		if ($(this).prop("scrollTop") == 0) {
@@ -518,7 +483,6 @@ loaded(function () {
 			}
 		}
 	});
-	//$("#by-the-logo").append('<button class="button" id="avatar-btn"><i class="megasmall material-icons">add_a_photo</i></button>');
 	$("#by-the-logo").append('<button class="button" id="dm-btn"><i class="megasmall material-icons">person</i></button>');
 	$("#avatar-btn").click(function () {
 		setupPickProfilePicture();
@@ -526,7 +490,7 @@ loaded(function () {
 	$("#by-the-logo #dm-btn").click(function () {
 		getChats();
 	});
-
+	$("#dm-btn").insertAfter("#by-the-logo");
 	function j() {
 		popup(langdata["server.join.title"], `
 			${langdata["server.join.content"]}
@@ -551,7 +515,6 @@ loaded(function () {
 			}
 		}])
 	}
-
 	function createServer() {
 		serverSettings(function (settings) {
 			$.post(serverUrl + "/createServer", {
@@ -569,7 +532,6 @@ loaded(function () {
 			})
 		})
 	}
-
 	function newServerPopup() {
 		let p_ = popup(langdata["server.new.title"], `
 			<div class="new-server-popup">
@@ -598,18 +560,12 @@ loaded(function () {
 			setTimeout(createServer, 501);
 		});
 	}
-
 	$(".new-server").click(newServerPopup);
-
-	ldmUpdate();
 })
-
 function newMessage(message) {
 	const d = new Date(Number.parseInt(message.timestamp));
 	const ts = d.toLocaleString();
 	let flagHtml = "";
-	let xtraHtml = "";
-
 	let extra = [];
 	if ((session != {} && message.author == session.user)
 		|| canEditAndDeleteAny) {
@@ -666,34 +622,25 @@ function newMessage(message) {
 			}
 		});
 	}
-
 	if (message.flagged) {
 		flagHtml = `<i class="megasmall material-icons" style="color: yellow; cursor: help;" title="${langdata["message.inappropriate"]}">warning</i>`;
 	}
-	if (cache[message.author] && cache[message.author]["xtra"]) {
-		xtraHtml = '<div class="xtraBadge">XTRA</div>';
-	}
-
 	let attachmentHtml = "";
-
 	if (message.attachment) {
 		attachmentHtml = `<a href="${message.attachment}" class="attachment-link" target="blank"><img src="${message.attachment}" class="attachment"></a>`;
 	}
-
 	let avatar = get("avatar", "avatars/default.png");
 	let username = get("username", "unknown");
-
 	function get(name, d = "") {
 		return (cache[message.author] && cache[message.author][name]) ? cache[message.author][name] : d;
 	}
-
 	return `<div class="message glass" id="${message._id}" data-author="${message.author}">
 		<div class="flex">
 		    <img src="${avatar}" class="avatar no-select">
 		    <div class="flex-down msg-embeds">
 			    <div class="flex msg">
 			        <div class="flex-down msg-flex">
-			            <div class="username-badges"><div class="username ellipsis-overflow">${username}</div><div class="badges no-select">${xtraHtml} ${flagHtml}</div></div>
+			            <div class="username-badges"><div class="username ellipsis-overflow">${username}</div><div class="badges no-select">	${flagHtml}</div></div>
 			            <div class="msgln"></div>
 			        </div>
 					${HorizontalMenu([
@@ -713,43 +660,40 @@ function newMessage(message) {
 		</div>
 	</div>`;
 }
-
 function addChat(chat) {
 	$("#channels ul").append(`
 		<li class="dm" onclick="changeChannel('${chat.chat}')"><img src="${chat.recipient.avatar || 'avatars/default.png'}" class="avatar"/><div class="no-select username ellipsis-overflow">${chat.recipient.username}</div></li>
 	`);
 }
-
-function embed(url, lang, onResult) {
-	$.post(serverUrl + '/embed', { url: url, lang: lang }, onResult);
-}
-
-function generateEmbed(embed, useTextHeight) {
-	let size = { width: "130", height: "130" };
-	let img = "";
-	if (!embed.ogImage) {
-		size = { width: "0", height: "0" };
-	} else {
-		img = embed.ogImage.url;
-		if (embed.ogImage.width) {
-			size.width = Number(embed.ogImage.width).clamp(0, 200);
-		}
-		if (embed.ogImage.height) {
-			size.height = Number(embed.ogImage.height).clamp(0, 130);
-		}
-	}
-	return `<div class="embed">
-        <div class="color"></div>
-        <a href="${embed.requestUrl}" class="title" target="_blank">${embed.ogTitle}</a>
-        <div class="desc-img">
-        <p class="description">${embed.ogDescription}</p>
-        <div class="img-container">
-        <a href="${embed.requestUrl}" target="_blank"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
-        </div>
-        </div>
-    </div>`;
-}
-
+//embed is broken for now :)
+//function embed(url, lang, onResult) {
+//	$.post(serverUrl + '/embed', { url: url, lang: lang }, onResult);
+//}
+//function generateEmbed(embed, useTextHeight) {
+//	let size = { width: "130", height: "130" };
+//	let img = "";
+//	if (!embed.ogImage) {
+//		size = { width: "0", height: "0" };
+//	} else {
+//		img = embed.ogImage.url;
+//		if (embed.ogImage.width) {
+//			size.width = Number(embed.ogImage.width).clamp(0, 200);
+//		}
+//		if (embed.ogImage.height) {
+//			size.height = Number(embed.ogImage.height).clamp(0, 130);
+//		}
+//	}
+//	return `<div class="embed">
+//      <div class="color"></div>
+//        <a href="${embed.requestUrl}" class="title" target="_blank">${embed.ogTitle}</a>
+//        <div class="desc-img">
+//        <p class="description">${embed.ogDescription}</p>
+//        <div class="img-container">
+//        <a href="${embed.requestUrl}" target="_blank"><img src="${img}" alt="" width="${size.width}" height="${size.height}"></a>
+//        </div>
+//        </div>
+//    </div>`;
+//}
 function createEmbed(messageID, url, lang) {
 	embed(url, lang, function (embed) {
 		if (embed) {
@@ -770,16 +714,16 @@ function createEmbed(messageID, url, lang) {
 		}
 	})
 }
-
 function composeMessageContent(message, messageText) {
 	message.text(messageText);
 	message[0].innerHTML = message[0].innerHTML.replace(/\:[a-zA-Z_-]+:/g, function (emoji, a) {
 		return `<i class="twa twa-${emoji.replaceAll(":", "")}"></i>`
 	});
 	message[0].innerHTML = parseUrls(message[0].innerHTML, function (url) {
-		cclog("loading embed for " + url, "loading");
-		message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/Roomber-logo.png" class="logo no-select"></div>');
-		createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
+		//embed related shit
+		//cclog("loading embed for " + url, "loading");
+		//message.parent().parent().parent().find(".embeds").html('<div class="embed"><img src="assets/remember-logo.png" class="logo no-select"></div>');
+		//createEmbed(message.parent().parent().parent().parent().parent().prop("id"), url, "en-GB");
 	});
 	const attachment = message.parent().parent().parent().find(".attachment");
 	if (attachment && attachment.attr("src")) {
@@ -789,7 +733,6 @@ function composeMessageContent(message, messageText) {
 		});
 	}
 }
-
 function getChats() {
 	$.post(serverUrl + "/chats", session, function (chats) {
 		$("#channels ul").html("");
@@ -797,14 +740,11 @@ function getChats() {
 		chats.forEach(addChat);
 	});
 }
-
 function newAdMessage(id) {
 	const d = new Date();
 	const ts = d.toLocaleString();
-
 	let username = "AD"
 	var randomID = id;
-
 	return `<div class="message glass" id="${randomID}">
 		<div class="flex">
 		    <img src="assets/Roombercircle2.png" class="avatar">
@@ -826,20 +766,6 @@ function newAdMessage(id) {
 		</div>
 	</div>`;
 }
-
-function easterEg() {
-	$("#body").append('<iframe id="roombcursedguy" src="./Roomberguy3d/" style="position: absolute; top: 0; left: 0; right: 100%; bottom: 100%; z-index: 69420; border: 0; width: 100%; height: 100%">no iframes for u</iframe>');
-	$("#message-box").css("display", "none")
-	var audio = new Audio('./Roomberguy3d/earsdead.m4a');
-	audio.play();
-	setTimeout(() => {
-		$("#message-box").css("display", "block");
-		$("#roombcursedguy").remove();
-		audio.pause();
-		audio.currentTime = 0;
-	}, 10000);
-}
-
 setTimeout(function () {
 	let i = 0;
 	let intrv = setInterval(function () {
@@ -848,7 +774,6 @@ setTimeout(function () {
 		i++
 	}, 500);
 }, 2000);
-
 function warningMessageConsole() {
 	console.log(
 		"%c" + (langdata["warning.hacker.title"] || "Stop!"),

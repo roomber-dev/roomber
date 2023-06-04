@@ -18,7 +18,6 @@ AdminPanel = {
                             <i class="material-icons">close</i>
                         </div>
                     </div>
-
                     <div id="messages"></div>
                 </div>
             </div>

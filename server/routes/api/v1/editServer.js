@@ -1,7 +1,6 @@
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
 const auth = require('../../../auth');
 const verifyImage = require('../../../verifyImage');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/editServer', (req, res) => {
         if (!matchCharacterLimit("server", req.body.name)) {
@@ -14,13 +13,11 @@ module.exports = require('express').Router({ mergeParams: true })
                 if(req.body.picture) {
                     server.picture = req.body.picture;
                 }
-
                 function success(server) {
                     server.save(err => {
                         if (!err) res.send(server);
                     })
                 }
-
                 if (req.body.picture) {
                     req.db.User.findOne({ _id: req.body.user }, (err, user) => {
                         verifyImage(user, req.body.picture, err => {

@@ -1,8 +1,6 @@
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
 const removeCredentials = require('../../../removeCredentials');
 const auth = require('../../../auth');
-const filterMessage = require('../../../filterMessage');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/messages', (req, res) => {
         let msg = req.body.msg;
@@ -12,7 +10,6 @@ module.exports = require('express').Router({ mergeParams: true })
         }
         msg.flagged = false;
         msg.removed = false;
-        if (filterMessage(msg.message)) msg.flagged = true;
         auth(req.db, msg.author, req.body.session, () => {
             req.db.User.find({ _id: msg.author }, (err, user) => {
                 req.db.Channel.countDocuments({ _id: msg.channel }, (err, count) => {

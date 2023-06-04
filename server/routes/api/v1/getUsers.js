@@ -1,6 +1,5 @@
 const id = require('mongoose').Types.ObjectId;
 const removeCredentials = require('../../../removeCredentials');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/getUsers', (req, res) => {
         let ids

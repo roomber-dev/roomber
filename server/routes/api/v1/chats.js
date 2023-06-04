@@ -1,6 +1,5 @@
 const auth = require('../../../auth');
 const removeCredentials = require('../../../removeCredentials');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/chats', (req, res) => {
         auth(req.db, req.body.user, req.body.session, () => {

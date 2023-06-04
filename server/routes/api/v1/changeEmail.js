@@ -1,5 +1,4 @@
 const validateEmail = require('../../../validateEmail')
-
 module.exports = require('express').Router({ mergeParams: true })
 	.post('/v1/changeEmail', (req, res) => {
 		if(!validateEmail(req.body.email)) {

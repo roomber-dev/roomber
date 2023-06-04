@@ -1,82 +1,114 @@
-// languages not needed here
 let loadedEvents = [];
 const logs = [];
 const errors = [];
 function parseUrls(text, onUrl) {
 	var words = text.split(" ");
-
+	var imageExtensions = [".png", ".jpg", ".jpeg", ".gif", ".bmp", ".svg", ".tiff", ".tif", ".ico", ".webp", ".exif"];
+	var videoExtensions = [".mp4", ".avi", ".mov", ".wmv", ".flv", ".mkv", ".webm", ".m4v", ".mpg", ".mpeg", ".3gp", ".3g2", ".f4v", ".ogv", ".swf"];
+	var audioExtensions = [".mp3", ".wav", ".ogg", ".aac", ".wma", ".flac", ".m4a", ".opus", ".aiff", ".ape", ".mid", ".amr", ".pcm", ".alac", ".mp2"];
+  
+	var youtubeRegex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/watch\?(?:.*&)?v=([^&$]+)|youtu\.be\/([^\/$]+))/i;
+  
 	words.forEach(function (item, index) {
-		if (item.startsWith("https://") || item.startsWith("http://")) {
+	  if (item.startsWith("https://") || item.startsWith("http://")) {
+		if (imageExtensions.some(ext => item.toLowerCase().endsWith(ext))) {
+		  // Handle image URL
+		  if (onUrl) onUrl(item);
+		  words[index] = `<img src="${item}" alt="Image" class="msgImg"><style>
+		  .msgImg {
+			max-width: 800px;
+			height: auto;
+			border-radius: 30px;
+		  }
+		  </style>`;
+		} else if (videoExtensions.some(ext => item.toLowerCase().endsWith(ext))) {
+		  // Handle video URL
+		  if (onUrl) onUrl(item);
+		  words[index] = `<video src="${item}" controls class="msgVideo"></video><style>
+		  .msgImg {
+			max-width: 800px;
+			height: auto;
+			border-radius: 30px;
+		  }
+		  </style>`;
+		} else if (audioExtensions.some(ext => item.toLowerCase().endsWith(ext))) {
+		  // Handle audio URL
+		  if (onUrl) onUrl(item);
+		  words[index] = `<audio src="${item}" controls class="msgAudio"></audio><style>
+		  .msgImg {
+			max-width: 800px;
+			height: auto;
+			border-radius: 30px;
+		  }
+		  </style>`;
+		} else {
+		  var youtubeMatch = item.match(youtubeRegex);
+      if (youtubeMatch) {
+        var videoId = youtubeMatch[1];
+        if (onUrl) onUrl(item);
+        words[index] = `
+          <div class="youtube-container">
+            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+          </div>
+			`;
+		  } else {
 			if (onUrl) onUrl(item);
 			words[index] = `<a href="${item}" class="msgUrl">${item}</a>`;
+		  }
 		}
+	  }
 	});
-
 	return words.join(" ");
-}
-
+  }
 function makeDrag(element) {
 	var dragElement = element;
 	if (element.firstElementChild.dataset["dragger"] == "true") {
 		dragElement = element.firstElementChild;
 	}
-
 	var startPosX = 0;
 	var startPosY = 0;
 	var newPosX = 0;
 	var newPosY = 0;
-
 	let mouseMove = function (e) {
 		newPosX = startPosX - e.clientX;
 		newPosY = startPosY - e.clientY;
-
 		startPosX = e.clientX;
 		startPosY = e.clientY;
-
 		element.style.top = (element.offsetTop - newPosY) + "px";
 		element.style.left = (element.offsetLeft - newPosX) + "px";
 	};
-
 	dragElement.onmousedown = function (e) {
 		e.preventDefault();
-
 		startPosX = e.clientX;
 		startPosY = e.clientY;
 		document.onmousemove = mouseMove;
-
 		document.onmouseup = function () {
 			document.onmousemove = null;
 		};
 	};
 };
-
 function getRandomArbitrary(min, max) {
 	return Math.random() * (max - min) + min;
 }
-
 function getRandomInt(min, max) {
 	min = Math.ceil(min);
 	max = Math.floor(max);
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
 function uuidv4() {
 	return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
 		(c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
 	);
 }
-
 Number.prototype.clamp = function (min, max) {
 	return Math.min(Math.max(this, min), max);
 };
-
 function setCookie(cname, cvalue) {
 	const d = new Date();
 	d.setTime(d.getTime() + (365 * 24 * 60 * 60 * 1000));
 	let expires = "expires=" + d.toUTCString();
 	document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
-
 function getCookie(cname) {
 	let name = cname + "=";
 	let decodedCookie = decodeURIComponent(document.cookie);
@@ -92,19 +124,14 @@ function getCookie(cname) {
 	}
 	return "";
 }
-
-
-
 function loaded(cb) {
 	loadedEvents.push(cb);
 	};
-
 function fireLoaded() {
 	loadedEvents.forEach(function (event) {
 		event();
 	});
 }
-
 const propertyCSS = {
 	cbw: {
 		element: "#channels",
@@ -119,10 +146,8 @@ const propertyCSS = {
 		postfix: "'"
 	}
 };
-
 function decodeSaveCustomizationCode(code = String, load = false) {
 	const result = {};
-
 	{
 		const properties = code.split(";");
 		properties.forEach(function (property) {
@@ -130,22 +155,18 @@ function decodeSaveCustomizationCode(code = String, load = false) {
 			result[splitProperty[0]] = splitProperty[1];
 		});
 	}
-
 	function requireProperties(properties) {
 		properties.forEach(function (property) {
 			if (!result[property]) throw Error(
 				"Customization code missing property " + property);
 		});
 	}
-
 	requireProperties(["cbw", "sbh", "bg", "fs", "ff"]);
-
 	function loadProperty(element, property, value) {
 		let css = {};
 		css[property] = value;
 		$(element).css(css);
 	}
-
 	if (load) {
 		Object.entries(result).forEach(function ([property, value]) {
 			propertyCSS[property] &&
@@ -155,10 +176,8 @@ function decodeSaveCustomizationCode(code = String, load = false) {
 					+ value + propertyCSS[property].postfix);
 		});
 	}
-
 	return result;
 }
-
 function cclog(message, type, timestamp = true) {
 	const category = {
 		debug: function (text) {
@@ -188,11 +207,9 @@ function cclog(message, type, timestamp = true) {
 	}
 	console.log(...category[type](message))
 }
-
 function generateUID() {
 	return uuidv4().substr(0,6);
 }
-
 function urlToBlob(src) {
 	const byteCharacters = atob(src);
 	const byteNumbers = new Array(byteCharacters.length);

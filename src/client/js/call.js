@@ -1,17 +1,12 @@
 let peer = null
 let audios = []
-
 let myAudio = new Audio()
 myAudio.muted = true
-
 const declineSound = new Audio("assets/Call_Decline.mp3")
 const outcoming = new Audio("assets/OutcomingCall.mp3")
-
 let peers = [];
-
 loaded(() => {
     peer = new Peer()
-
     peer.on('open', id => {
         console.log("Opened peer", id)
         socket.emit("peer", {
@@ -19,7 +14,6 @@ loaded(() => {
             peer: id
         })
     })
-
     peer.on('call', call => {
         console.log("Received call", call)
         $.post(serverUrl + "/getProfile", {
@@ -67,7 +61,6 @@ loaded(() => {
         })
     })
 })
-
 function addStream(audio, stream) {
     audio.srcObject = stream
     audio.addEventListener('loadedmetadata', () => {
@@ -78,7 +71,6 @@ function addStream(audio, stream) {
         document.getElementById("call-main").append(audio)
     }
 }
-
 function newCall(id, video = false) {
     if ($("#in-call").html()) {
         return
@@ -135,7 +127,6 @@ function newCall(id, video = false) {
         }
     })
 }
-
 function endCall() {
     console.log("End call")
     if (!window.currentCall) {
@@ -143,7 +134,6 @@ function endCall() {
     }
     window.currentCall.close()
 }
-
 function onCallEnd(stream) {
     declineSound.currentTime = 0
     declineSound.play()
@@ -162,7 +152,6 @@ function onCallEnd(stream) {
     window.myStream = null
     socket.emit('leaveCall', session.user)
 }
-
 socket.on('calleeLeave', callee => {
     if (window.otherCalleeProfile.id == callee) {
         endCall()

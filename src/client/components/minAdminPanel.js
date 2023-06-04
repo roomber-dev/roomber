@@ -1,12 +1,10 @@
 $("#minAdminPanel .close").click(function() {
     $("#minAdminPanel").css("display", "none")
 })
-// languages done here!
 $().ready(function() {
     const adminPanel = $("#minAdminPanel")
     adminPanel.css("display","none");
     adminPanel.css("top", window.innerHeight - adminPanel.height() - adminPanel.css("padding-bottom").replace("px","") * 2);
-
     $("#remove-all-messages").click(function() {
         popup(langdata["adminpanel.min.clear_all.popup.title"],langdata["popup.content.areyousure"],[{
             label: "Yes",
@@ -20,7 +18,6 @@ $().ready(function() {
                         collection: "Message"
                     }); 
                 }, 500);
-
             }
         }, {
             label: "No",
@@ -29,7 +26,6 @@ $().ready(function() {
             }
         }])
     });
-
     $("#broadcast").click(function() {
         popup(langdata["adminpanel.min.broadcast.popup.title"], `
             ${langdata["adminpanel.min.broadcast.popup.content"]}<br>
@@ -53,11 +49,9 @@ $().ready(function() {
             }
         }])
     });
-
     $("#full-panel").click(function() {
         AdminPanel.open();
     });
-
     $("#by-the-logo").append('<button id="security" class="button"><i class="megasmall material-icons">security</i></button>')
     const panelButton = $("#security").click(function() {
         if(adminPanel.css("display") == "flex") {
@@ -66,7 +60,6 @@ $().ready(function() {
             adminPanel.css("display","flex");
         }
     }).css("display","none")
-
     loaded(function() {
         ifPermission("messages.moderate", function() {
             panelButton.css("display","flex");

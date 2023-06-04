@@ -3,3 +3,4 @@ push.bat
 bot/
 test/
 server/config.js
+client/Remember.js

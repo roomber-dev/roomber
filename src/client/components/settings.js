@@ -219,7 +219,7 @@ function justGetTheMicPerms() {
 	})
 }
 justGetTheMicPerms();
-function getMicPerms(_callback) { // TODO: THIS NEEDS TO BE FIXED WHEN THE USER DISALLOWS PERMISSION!!
+function getMicPerms(_callback) {
 	if (perms != true) {
 		try {
 			navigator.mediaDevices.getUserMedia({
@@ -258,9 +258,6 @@ const categoryContent = () => settingsCategories({
 			</div>
 			<div id="profile-user" class="align-center">
 				<div class="flex profile-username justify-center align-center no-select" onclick="changeUsername()"><div>${profile.username}</div>${materialIcon("edit")}</div>
-				${profile.xtra ? `
-					<div id="profile-xtra">XTRA</div>
-				` : ""}
 			</div>
 		</div>
 	`,
@@ -285,12 +282,6 @@ const categoryContent = () => settingsCategories({
 						</div>
 					</div>
 				</div>
-				<div id="account-qr" class="flex flex-down">
-					<div id="qr-image" onclick="popupQR()">
-						<img src="assets/fake-qr.png">
-					</div>
-					<div id="qr-label">${langdata["settings.category.accountnsecurity.urqr"]}</div>
-				</div>
 			</div>
 		</div>
 	`,
@@ -298,14 +289,6 @@ const categoryContent = () => settingsCategories({
 		<div class="flex flex-down align-center justify-center">
 			<h1 style="margin-bottom: 35px;">${langdata["settings.category.appearance"]}</h1>
 			<div id="setup-themes">
-				<div class="setup-theme">
-					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
-					<p>${langdata["settings.category.appearance.landscape"]}</p>
-				</div>
-				<div class="setup-theme">
-					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
-					<p>${langdata["settings.category.appearance.gradient"]}</p>
-				</div>
 				<div class="setup-theme">
 					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
 					<p>${langdata["settings.category.appearance.dark"]}</p>
@@ -315,7 +298,6 @@ const categoryContent = () => settingsCategories({
 					<p>${langdata["settings.category.appearance.light"]}</p>
 				</div>
 			</div>
-			<button class="button" id="ldm" onclick="ldmToggle();" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> <span>${langdata["settings.category.appearance.ldm"]}: ${langdata["status." + (ldmOn ? "on" : "off")]}</span></button>
 		</div>
 	`,
 	notifs: () => `
@@ -327,6 +309,8 @@ const categoryContent = () => settingsCategories({
 			<label for="langpicker">${langdata["settings.category.lang.title"]}:</label>
 			<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
 				<option value="en-US">English (United States)</option>
+				<option value="fr-FR">French (France)	</option>
+				<option value="pl-PL">Polish (Poland)</option>
 			</select>
 		</div>
 	`,
@@ -375,37 +359,8 @@ const categoryContent = () => settingsCategories({
 				</div>
 			</div>
 		</div>
-	`,
-	changelog: () => `
-	<div class="flex flex-down align-center justify-center">
-	<img src="assets/Roomberfull2.png" style="width: 60%;">
-	<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
-	<h3 style="margin-bottom: 3px;">${langdata["settings.category.changelog"]} (BETA)</h2>
-	<div style="opacity: 0.9; text-align: center;">
-	<div id="changelog-content" class="coolslider">
-
-		${changelogShit("New features", changelog.newfeatures, [0, 255, 0])}
-		${changelogShit("Updates", changelog.updates, [255, 0, 0])}
-		${changelogShit("Patches", changelog.patches, [255, 0, 255])}
-		</div>
-	</div>
-</div>
 `,
-	about: () => `
-		<div class="flex flex-down align-center justify-center">
-			<img src="assets/roomberfull2.png" style="width: 60%;">
-			<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
-			<div style="opacity: 0.9; text-align: center;">
-				<p>${langdata["settings.category.about.line1"]}</p>
-				<p>${langdata["settings.category.about.line2"]}</p>
-				<p>${langdata["settings.category.about.line3"]}</p>
-				${langdata["settings.category.about.line4"] ? `<p>${langdata["settings.category.about.line4"]}</p>` : ""}
-			</div>
-		</div>
-	`,
 })
-
-
 const settings = () => `
 <div class="settings ${theme}">
 	<heading>
@@ -444,7 +399,7 @@ const updateSettings = () => {
 	});
 }
 const closeSettings = () => {
-	$(".settings").fadeOut(300, () => {
+	$(".settings").fadeOut(150, () => {
 		$(".settings").remove()
 	})
 }
@@ -457,19 +412,9 @@ const openSettings = () => {
 	$(".settings")
 		.css("display", "flex")
 		.hide()
-		.fadeIn(300)
+		.fadeIn(150)
 	$(".settings #title").single_double_click(function () { }, function () {
 		changelogHidden = !changelogHidden;
 		updateSettings();
 	});
-}
-const changelogShit = (title, data, colorRGB) => {
-
-	let startinghtml = `<p class="changelogcategorytitleshit" style="background-color: rgba(${colorRGB.toString()}, 0.5); border-bottom: solid rgb(${colorRGB.toString()}) 4px;">${title}</p>`
-	let html = startinghtml;
-
-	data.forEach((element, index) => {
-		html += `<span class="newfeature-title">${element.title}</span><span class="newfeature-desc">${element.desc}</span><br>${element.image ? `<img class='attachment changelogattach' src='${element.image}'></img>` : ""}${index + 1 >= data.length ? "" : "<div class='sep-horiz'></div>"}`
-	})
-	return html;
 }

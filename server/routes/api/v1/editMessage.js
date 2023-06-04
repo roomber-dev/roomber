@@ -1,6 +1,5 @@
 const [characterLimits, matchCharacterLimit] = require('../../../characterLimit');
 const auth = require('../../../auth');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/editMessage', (req, res) => {
         if (!matchCharacterLimit("message", req.body.newMessage)) {
@@ -14,7 +13,6 @@ module.exports = require('express').Router({ mergeParams: true })
                     if (result == false) {
                         a = { author: req.body.editor };
                     }
-
                     req.db.Message.find({ ...a, _id: req.body.message }, (err, message) => {
                         if (message.length) {
                             var message = message[0];

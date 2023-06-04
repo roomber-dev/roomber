@@ -2,21 +2,18 @@
 	padding: 0;
 	margin: 0;
 }
-
 html,
 body,
 #titlebar-body,
 #body {
 	height: 100%;
 }
-
 #time {
     margin-top: 20px;
     text-align: center;
     font-weight: bold;
     font-size: 3rem;
 }
-
 #title {
     margin-top: 10px;
     margin-bottom: 1px;
@@ -24,28 +21,23 @@ body,
     font-weight: bold;
     font-size: 1rem;
 }
-
 body, #body {
 	font-size: 20px;
 	font-family: 'Noto Sans';
 	color: white;
 	overflow: hidden;
 }
-
 body {
 	background: url("assets/bggradient.png");
 	background-size: cover;
 }
-
 #body {
 	position: relative;
 }
-
 .plain-gradient {
 	background: linear-gradient(-45deg, #712489, #9b34ba, #0095ba, #004a5d);
 	background-size: cover;
 }
-
 .sep {
 	background: rgba(0,0,0,0.3);
 	height: 5px;
@@ -55,7 +47,6 @@ body {
 	border-radius: 6px;
 	outline: 3px solid rgba(0,0,0,0.15);
 }
-
 .center {
     width: 50%;
     margin: 0 auto;

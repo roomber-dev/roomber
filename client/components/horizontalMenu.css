@@ -6,11 +6,9 @@
 	display: grid;
 	grid-template-columns: auto auto auto;
 }
-
 .light .horizontalMenu {
 	background: rgba(27,27,27,0.2);
 }
-
 .horizontalMenuItem {
 	width: 22px;
 	height: 22px;
@@ -23,12 +21,10 @@
 	justify-content: center;
 	transition: 0.25s background;
 }
-
 .light .horizontalMenuItem {
 	background: rgba(255,255,255,0.7);
 	border: 1px solid rgba(0,0,0,0.1);
 }
-
 .horizontalMenuItem:hover {
 	background: rgba(38,38,38,0.7);
 }

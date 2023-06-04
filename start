@@ -1,7 +1,4 @@
 #!/bin/bash
-echo Loading...
-echo Obfuscating code...
-node obfuscate.js
-echo Starting Roomber server !
+node pack.js
+nohup mongod > /dev/null 2>&1 &
 npm start
-

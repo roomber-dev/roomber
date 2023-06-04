@@ -11,7 +11,6 @@ module.exports = require('express').Router({ mergeParams: true })
                             res.send({ error: "No messages found" });
                             return;
                         }
-
                         let users = [];
                         messages.forEach(message => {
                             if (!users.includes(message.author)) {

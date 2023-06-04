@@ -1,6 +1,5 @@
 const verifyImage = require("../../verifyImage");
 const [characterLimits, matchCharacterLimit] = require("../../characterLimit");
-
 module.exports = {
     "avatar": (user, avatar, callback, db) => {
         verifyImage(user, avatar, function (err) {

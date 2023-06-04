@@ -1,6 +1,5 @@
 const auth = require('../../../auth');
 const sclog = require('../../../sclog');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/leaveServer', (req, res) => {
         auth(req.db, req.body.user, req.body.session, () => {

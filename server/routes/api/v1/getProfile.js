@@ -1,6 +1,5 @@
 const removeCredentials = require("../../../removeCredentials")
 const auth = require("../../../auth")
-
 module.exports = require('express').Router({ mergeParams: true })
 	.post('/v1/getProfile', (req, res) => {
 		req.db.User.findOne({_id: req.body.user}, (err, user) => {

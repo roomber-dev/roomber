@@ -1,13 +1,11 @@
 const bcrypt = require('bcrypt');
 const sclog = require('../../../sclog');
-
 module.exports = require('express').Router({ mergeParams: true })
     .post('/v1/changePassword', (req, res) => {
         if (req.body.newPassword.trim() == "") {
             res.sendStatus(401);
             return;
         }
-
         req.db.User.findOne({ _id: req.body.user, password: req.body.password }, (err, user) => {
             if (user) {
                 bcrypt.hash(req.body.newPassword, 10, (err_, hashedPassword) => {

@@ -1,7 +1,5 @@
 cache = {};
-// languages done here!
 channel = "";
-
 function ifPermission(permission, ifTrue) {
 	$.post(serverUrl + '/can', {
 		user: session.user,
@@ -12,7 +10,6 @@ function ifPermission(permission, ifTrue) {
 		}
 	})
 }
-
 function ifPermissions(permissions, ifTrue) {
 	$.post(serverUrl + '/hasPermissions', {
 		user: session.user,
@@ -23,40 +20,32 @@ function ifPermissions(permissions, ifTrue) {
 		}
 	})
 }
-
 function addMessage(message, scroll = true, before = false) {
 	if (before == false) {
 		$("#messages").append(newMessage(message));
 	} else {
 		$("#messages").prepend(newMessage(message));
 	}
-	ldmUpdate();
 	composeMessageContent($(`#${message._id} .msgln`), message.message);
-
 	scroll && chatScrollDown();
 }
-
 async function adAppend(scroll = true) {
 	const id = uuidv4();
 	$("#messages").append(await newAdMessage(id));
 	composeMessageContent($(`#${id} .msgln`), langdata["message.ad"]);
-
 	scroll && chatScrollDown();
 }
-
 function cacheUser(user) {
 	if (!Object.keys(cache).includes(user._id)) {
 		cache[user._id] = user;
 	}
 }
-
 function cacheUsers(users, onCache) {
 	$.post(serverUrl + '/getUsers', { users: users }, function (data) {
 		data.forEach(cacheUser);
 		onCache();
 	})
 }
-
 function getMessages(before = false, scroll = false) {
 	cclog("fetching messages from " + toFetch + " with limit " + 50, "loading");
 	cclog("(fetching messages in channel " + channel + ")", "loading");
@@ -71,7 +60,6 @@ function getMessages(before = false, scroll = false) {
 			cclog(data.error, "error");
 			return;
 		}
-
 		var forEach = new Promise(function (resolve, reject) {
 			cclog("fetched " + data.messages.length + " messages", "load");
 			removeLoadingAnimation(currentServer);
@@ -90,8 +78,6 @@ function getMessages(before = false, scroll = false) {
 				fetchingMessages = false;
 				delete scrolledMessage;
 			});
-		} else {
-			ldmUpdate();
 		}
 		if (scroll) {
 			forEach.then(function () {
@@ -100,7 +86,6 @@ function getMessages(before = false, scroll = false) {
 		}
 	})
 }
-
 function sendMessage(message) {
 	$.post(serverUrl + '/messages', message, function (data) {
 		if (data.error) {
@@ -108,7 +93,6 @@ function sendMessage(message) {
 		}
 	})
 }
-
 function editMessage(message, newMessage) {
 	$.post(serverUrl + '/editMessage', {
 		editor: session.user,
@@ -127,7 +111,6 @@ function editMessage(message, newMessage) {
 		}, 500);
 	});
 }
-
 function deleteMessage(message) {
 	$.post(serverUrl + '/deleteMessage', {
 		deleter: session.user,
@@ -139,9 +122,7 @@ function deleteMessage(message) {
 		}, 500);
 	});
 }
-
 var socket = io();
-
 function changeChannel(id, type = "text") {
 	if (type == "dm") {
 		$("#channels ul").html("");
@@ -154,10 +135,8 @@ function changeChannel(id, type = "text") {
 	fetchingMessages = false;
 	$("#messages").html("");
 	socket.emit("joinChannel", id);
-	//$(`#channels ul #ch${id}`).addClass("active");
 	getMessages(false, true);
 }
-
 function joinServer(id) {
 	$.post(serverUrl + "/joinServer", { ...session, server: id }, function (data) {
 		if (data.error) {
@@ -168,7 +147,6 @@ function joinServer(id) {
 		addServer(data);
 	});
 }
-
 socket.on('message', function (message) {
 	cacheUser(message.user);
 	addMessage(message);
@@ -220,10 +198,3 @@ socket.on('deleteChannel', function(c) {
 		openServer(currentServer);
 	} 
 });
-/*socket.on('userJoin', function () {
-	cclog("yoo new user in channel!!", "join")
-});
-socket.on('maintenance', function () {
-	cclog("maintannenenance!!111", "debug");
-	location.reload();
-});*/

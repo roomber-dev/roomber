@@ -1,5 +1,4 @@
 let langdata;
-
 function loadLanguage(language, callback = function() {}) {
     $.getJSON(`../assets/lang/${language}/${language}.json`, function (langfile) {
         if (langfile) {
@@ -13,14 +12,11 @@ function loadLanguage(language, callback = function() {}) {
         }
         callback();
     });
-
 }
-
 function setLanguage(lang) {
     setCookie("lang", lang);
     loadLanguage(lang);
 }
-
 function formatLangText(text, values) {
     let formatted = text;
     values.forEach((value, index) => {

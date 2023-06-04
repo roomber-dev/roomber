@@ -1,5 +1,4 @@
 const auth = require('../../auth');
-
 const User = require('mongoose').Schema({
     username: String,
     password: String,
@@ -12,7 +11,6 @@ const User = require('mongoose').Schema({
     bannedUntil: Number,
     banReason: String
 });
-
 User.methods.hasPermission = function (db, permission, callback) {
     db.Permission.find({ name: this.permission }, (err, perm) => {
         if (perm.length) {
@@ -26,7 +24,6 @@ User.methods.hasPermission = function (db, permission, callback) {
         }
     })
 }
-
 User.methods.hasPermissions = function (db, permissions, callback) {
     db.Permission.find({ name: this.permission }, (err, perm) => {
         if (perm.length) {
@@ -40,11 +37,9 @@ User.methods.hasPermissions = function (db, permissions, callback) {
         }
     })
 }
-
 User.methods.hasXtra = function () {
     return this.xtra;
 }
-
 User.methods.hasPermissionAuth = function (db, session, permission, callback) {
     auth(db, this._id, session, () => {
         db.Permission.find({ name: this.permission }, (err, perm) => {
@@ -56,5 +51,4 @@ User.methods.hasPermissionAuth = function (db, session, permission, callback) {
         })
     })
 }
-
 module.exports = User;
