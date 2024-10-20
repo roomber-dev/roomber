@@ -54,7 +54,12 @@ body,
 
 body, #body {
 	font-size: 20px;
-	font-family: system-ui, -apple-system, 'Noto Sans';
+	font-family: system-ui,
+		-apply-system,
+		BlinkMacSystemFont,
+		Cantarell,
+		'Noto Sans',
+		sans-serif;
 	color: white;
 	overflow: clip;
 }
@@ -224,6 +229,7 @@ body {
     align-items: center;
     text-align: center;
     color: white;
+	font-family: inherit;
 }
 
 .light .button {
@@ -244,9 +250,8 @@ body {
 	background: rgba(220,220,220,0.5);
 }
 
-
-
 #message {
+	font-family: inherit;
 	flex: 1;
 	width: 80%;
 	margin-right: 10px;
