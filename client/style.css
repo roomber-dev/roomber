@@ -54,7 +54,7 @@ body,
 
 body, #body {
 	font-size: 20px;
-	font-family: 'Noto Sans';
+	font-family: system-ui, -apple-system, 'Noto Sans';
 	color: white;
 	overflow: clip;
 }
