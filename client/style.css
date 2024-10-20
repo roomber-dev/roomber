@@ -640,13 +640,10 @@ body {
 }
 
 .server p {
-	position: absolute;
-	top: calc(50%);
-	transform: translateY(-50%);
-	left: 0;
-	text-align: center;
+	display: grid;
+	place-items: center;
 	width: 100%;
-	height: 50%;
+	height: 100%;
 	font-size: 16px;
 	color: white;
 	font-weight: bold;
@@ -681,7 +678,6 @@ body {
 }
 
 .server.new-server i {
-	padding-top: 2px;
 	color: white;
 }
 
