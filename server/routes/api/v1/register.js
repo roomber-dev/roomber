@@ -15,7 +15,7 @@ module.exports = require('express').Router({ mergeParams: true })
             return;
         }
         req.db.User.find({ username: req.body.username }, (err, doc) => {
-            if (doc.length) {
+            if (doc?.length) {
                 res.sendStatus(409);
             } else {
                 var user = new req.db.User(req.body);
