@@ -5,6 +5,7 @@
 	backdrop-filter: blur(30px);
 	display: grid;
 	grid-template-columns: auto auto auto;
+	margin-right: 0.5rem;
 }
 
 .light .horizontalMenu {
@@ -15,13 +16,17 @@
 	width: 22px;
 	height: 22px;
 	background: red;
-	margin: 4px;
 	background: rgba(27,27,27,0.7);
+	margin: 2px;
 	border-radius: 4px;
 	border: 1px solid rgba(255,255,255,0.1);
 	align-items: center;
 	justify-content: center;
 	transition: 0.25s background;
+}
+
+.horizontalMenuItem i {
+	transform: scale(70%);
 }
 
 .light .horizontalMenuItem {
