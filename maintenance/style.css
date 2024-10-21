@@ -55,7 +55,7 @@ body,
 body, #body {
 	font-size: 20px;
 	font-family: system-ui,
-		-apply-system,
+		-apple-system,
 		BlinkMacSystemFont,
 		Cantarell,
 		'Noto Sans',
