@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const config = require('./config');
 
 const cache = {};
 const url = "https://api.github.com/repos/roomber-dev/roomber/commits?per_page=1";
@@ -8,11 +7,10 @@ module.exports = () => {
 	return new Promise(resolve => {
 		if(cache.version) {
 			resolve(cache.version);
-			return;		
+			return;
 		}
 		fetch(url, {
 			headers: {
-				Authorization: `token ${config.gitToken}`,
 				Accept: "application/vnd.github.v3+json"
 			}
 		}).then(res => {
