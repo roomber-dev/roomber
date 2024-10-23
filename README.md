@@ -1,4 +1,4 @@
-![image](https://media.discordapp.net/attachments/882659049399787591/910635241364947014/roomberfull2.png)
+![Roomber logo](logo.png)
 
 ---
 
@@ -6,17 +6,18 @@
 
 Create a free Roomber account and discover a new messaging app that's better than anything else out there. Roomber is a fun way to talk with your friends and stay connected.
 
+# How to build
 
-# How to update
+If you want to serve Roomber with minified code, here are the steps to do so:
 
-First, write all your client code in the src/client/ folder, then when you wanna `git push` or test the app, run `node obfuscator.js` in the console, wait a second and there you go! client/Roomber.js should update with the obfuscated code.
+1. Run `npm run build` to pack the code and produce a client/Roomber.js file.
+2. Run `npm run serve` to run the server. It will use the obfuscated code.
 
-Remember, when you make a new JS file in src/client/, remember to put it in the JSON object found in `obfuscate.js`. Add it in the order you want it to load.
-And as always, before you `git push`, always test!
+If you just want to test out some changes, use `npm run dev`. This will not pack the code.
 
 # Screenshots
 
-![image](https://cdn.discordapp.com/attachments/881974256949395517/914605147450134568/unknown.png)
+![Roomber UI](https://user-images.githubusercontent.com/89866735/145712496-0ae6d1f1-5e9b-4ad6-9c58-0260578f39ce.png)
 
 # To-do
 
