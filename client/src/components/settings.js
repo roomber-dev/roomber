@@ -492,7 +492,6 @@ const settings = () => `
 const updateSettings = () => {
 	$(".settings").remove();
 	$("#body").append(settings())
-	$(".settings").css("display", "flex")
 	$('select#langpicker.textbox').val(getCookie('lang') || "en-US")
 	$(".audio-input select#device").val(getAudioDevice())
 	$(".settings #title").single_double_click(function () { }, function () {
@@ -501,24 +500,30 @@ const updateSettings = () => {
 	});
 }
 
-
-
 const closeSettings = () => {
-	$(".settings").fadeOut(300, () => {
-		$(".settings").remove()
-	})
+	$(".settings")
+  	.css("scale", "100%")
+  	.css("opacity", 1)
+    .animate({ scale: "0%", opacity: 0 }, {
+      duration: 300,
+      complete: () => {
+        $(".settings").remove();
+      },
+    });
 }
 
 const openSettings = () => {
+  if ($(".settings").length) return;
+
 	$.getJSON(serverUrl + "/changelog", data => {
 		changelog = data;
 	})
-	setSettingsCategory("profile")
-	$("#body").append(settings())
-	$(".settings")
-		.css("display", "flex")
-		.hide()
-		.fadeIn(300)
+  setSettingsCategory("profile");
+  $("#body").append(settings());
+  $(".settings")
+    .css("opacity", 0)
+    .animate({ scale: "100%", opacity: 1 }, 600, "easeInOutElastic");
+    // .hide()
 	$(".settings #title").single_double_click(function () { }, function () {
 		changelogHidden = !changelogHidden;
 		updateSettings();
