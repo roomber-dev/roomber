@@ -21,9 +21,9 @@ const styles = {
 };
 
 pfpWidget = cloudinary.createUploadWidget({
-  cloudName: 'roomber', 
-  uploadPreset: 's2kamlsu', 
-  folder: 'assets', 
+  cloudName: 'roomber',
+  uploadPreset: 's2kamlsu',
+  folder: 'assets',
   cropping: true,
   croppingAspectRatio: 1.0,
   showSkipCropButton: false,
@@ -39,7 +39,7 @@ pfpWidget = cloudinary.createUploadWidget({
       avatar: src
     }, function(data) {
       if(data.error) {
-        popup(langdata["popup.title.error"], data.error, undefined, false, "red");
+        popup(__("popup.title.error"), data.error, undefined, false, "red");
         return;
       }
       $("#setup-pfp img").attr("src", src);
@@ -55,9 +55,9 @@ pfpWidget = cloudinary.createUploadWidget({
 
 function onAttachment(e) {oa = e;}
 attachmentWidget = cloudinary.createUploadWidget({
-  cloudName: 'roomber', 
-  uploadPreset: 's2kamlsu', 
-  folder: 'attachments', 
+  cloudName: 'roomber',
+  uploadPreset: 's2kamlsu',
+  folder: 'attachments',
   cropping: true,
   sources: ["local", "url", "camera"],
   styles: styles,
@@ -73,9 +73,9 @@ widgets = {};
 function onUpload(e) {ow = e;}
 function uploadWidget(name, extra = {}) {
   widgets[name] = cloudinary.createUploadWidget({
-    cloudName: 'roomber', 
-    uploadPreset: 's2kamlsu', 
-    folder: name, 
+    cloudName: 'roomber',
+    uploadPreset: 's2kamlsu',
+    folder: name,
     cropping: true,
     sources: ["local", "url", "camera"],
     styles: styles,
@@ -86,7 +86,7 @@ function uploadWidget(name, extra = {}) {
       const src = result.info.url.replace(v, "c_crop,g_custom");
       if(ow) ow(src);
     }
-  });  
+  });
 }
 function openUpload(name) {
   widgets[name].open();

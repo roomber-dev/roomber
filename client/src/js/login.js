@@ -14,13 +14,13 @@ function logOut() {
 }
 
 function logoutPopup() {
-	popup(langdata["logout.title"], langdata["logout.content"], [{
-		label: langdata["popup.buttons.no"],
+	popup(__("logout.title"), __("logout.content"), [{
+		label: __("popup.buttons.no"),
 		click: function (p) {
 			p.close();
 		}
 	}, {
-		label: langdata["popup.buttons.yes"],
+		label: __("popup.buttons.yes"),
 		click: function (p) {
 			logOut();
 			p.close();
@@ -47,7 +47,7 @@ function logIn() {
 function reg_err(p, msg, close = true) {
 	if(close) { p.close() };
 	setTimeout(function () {
-		popup(langdata["popup.title.error"], msg, [{
+		popup(__("popup.title.error"), msg, [{
 			label: "OK",
 			click: function (popup) {
 				popup.close();
@@ -63,7 +63,7 @@ function reg_callback(p, url, msg, has_username = true) {
 	let usernameInput = $("#reg-username").val();
 	if (usernameInput) username = usernameInput;
 	if ([username, $("#reg-email").val(), $("#reg-password").val()].map(function (i) { return i.trim(); }).includes("")) {
-		reg_err(p, langdata["login.empty"]);
+		reg_err(p, __("login.empty"));
 		return;
 	}
 	let u = {};
@@ -96,30 +96,30 @@ function passVisibilityToggle() {
 }
 
 function regPass() {
-	return `<p>${langdata["login.password"]}</p><div id="pass-flex">
+	return `<p>${__("login.password")}</p><div id="pass-flex">
 	<input type="password" id="reg-password" class="textbox" placeholder="Password"/>
-	<i class="megasmall material-icons 
+	<i class="megasmall material-icons
 		no-select password-visibility">visibility_off</i>
 	</div>`;
 }
 
 function reg() {
-	popup(langdata["login.title"], langdata["login.content"], [
+	popup(__("login.title"), __("login.content"), [
 		{
-			label: langdata["login.choices.register"],
+			label: __("login.choices.register"),
 			click: function (p) {
 				p.close();
 				setTimeout(function () {
-					popup(langdata["login.choices.register"], `
-						<p>${langdata["email"]}</p>
+					popup(__("login.choices.register"), `
+						<p>${__("email")}</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
-						<p>${langdata["email"]}</p>
+						<p>${__("email")}</p>
 						<input type="username" id="reg-username" class="textbox" placeholder="Username"/>
 						<br>
 						${regPass()}
 					`, [{
-						label: langdata["popup.buttons.back"],
+						label: __("popup.buttons.back"),
 						click: function (p) {
 							p.close();
 							setTimeout(function () {
@@ -127,9 +127,9 @@ function reg() {
 							}, 501);
 						}
 					}, {
-						label: langdata["popup.buttons.ok"],
+						label: __("popup.buttons.ok"),
 						click: function (p_) {
-							reg_callback(p_, "/register", langdata["register.error.taken"]);
+							reg_callback(p_, "/register", __("register.error.taken"));
 						}
 					}]);
 					passVisibilityToggle();
@@ -137,7 +137,7 @@ function reg() {
 			}
 		},
 		{
-			label: langdata["login.choices.qr"],
+			label: __("login.choices.qr"),
 			click: function (p) {
 				p.close();
 				setTimeout(function() {
@@ -146,17 +146,17 @@ function reg() {
 			}
 		},
 		{
-			label: langdata["login.choices.login"],
+			label: __("login.choices.login"),
 			click: function (p) {
 				p.close();
 				setTimeout(function () {
-					popup(langdata["login.choices.login"], `
-						<p>${langdata["email"]}</p>
+					popup(__("login.choices.login"), `
+						<p>${__("email")}</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
 						${regPass()}
 					`, [{
-						label: langdata["popup.buttons.back"],
+						label: __("popup.buttons.back"),
 						click: function (p) {
 							p.close();
 							setTimeout(function () {
@@ -164,9 +164,9 @@ function reg() {
 							}, 501);
 						}
 					}, {
-						label: langdata["popup.buttons.ok"],
+						label: __("popup.buttons.ok"),
 						click: function (p_) {
-							reg_callback(p_, "/login", langdata["login.error.invalid"], false);
+							reg_callback(p_, "/login", __("login.error.invalid"), false);
 						}
 					}]);
 					passVisibilityToggle();

@@ -27,8 +27,8 @@ function setupPage(username) {
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-icon"><i class="material-icons">build</i></div>
-						<div id="setup-text">${langdata["setup.pages.1.title"]}</div>
-						<button id="setup-btn" class="setup-button button" onclick="setupNext()">${langdata["setup.pages.1.go"]}</button>
+						<div id="setup-text">${__("setup.pages.1.title")}</div>
+						<button id="setup-btn" class="setup-button button" onclick="setupNext()">${__("setup.pages.1.go")}</button>
 					</div>
 				</div>
 			`;
@@ -38,7 +38,7 @@ function setupPage(username) {
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-text">${langdata["setup.pages.2.title"]}</div>
+						<div id="setup-text">${__("setup.pages.2.title")}</div>
 						<div id="setup-pfp"><img src="../avatars/default.png"></div>
 						<button id="setup-btn" class="setup-button button" onclick="setupPickProfilePicture()">Pick</button>
 						<div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
@@ -51,23 +51,23 @@ function setupPage(username) {
 				<div class="setup-bg ${setupTheme}">
 					<div id="setup-page">
 						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-text">${langdata["setup.pages.3.title"]}</div>
+						<div id="setup-text">${__("setup.pages.3.title")}</div>
 						<div id="setup-themes">
 				<div class="setup-theme">
 					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
-					<p>${langdata["settings.category.appearance.landscape"]}</p>
+					<p>${__("settings.category.appearance.landscape")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
-					<p>${langdata["settings.category.appearance.gradient"]}</p>
+					<p>${__("settings.category.appearance.gradient")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
-					<p>${langdata["settings.category.appearance.dark"]}</p>
+					<p>${__("settings.category.appearance.dark")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/light-preview.png" onclick="setTheme('light')">
-					<p>${langdata["settings.category.appearance.light"]}</p>
+					<p>${__("settings.category.appearance.light")}</p>
 				</div>
 			</div>
 						<div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
@@ -81,8 +81,8 @@ function setupPage(username) {
 					<div id="setup-page">
 						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
 						<div id="setup-icon"><img src="../assets/roomber-logo.png"></div>
-						<div id="setup-text">${langdata["setup.pages.4.title"]}</div>
-						<button id="setup-btn" class="setup-button button" onclick="setupClose()">${langdata["setup.pages.4.button"]}</button>
+						<div id="setup-text">${__("setup.pages.4.title")}</div>
+						<button id="setup-btn" class="setup-button button" onclick="setupClose()">${__("setup.pages.4.button")}</button>
 					</div>
 				</div>
 			`;

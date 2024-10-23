@@ -26,7 +26,7 @@ function removePopup(id) {
     }
 }
 
-function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
+function popup(title, text, buttons = [{ label: __("popup.buttons.ok"), click: function (popup) { popup.close() } }], blink = false, color = "", sizeblink = false) {
     popups++
     let id = `popup-${popups}`;
     let t = title;
@@ -97,7 +97,7 @@ function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], cl
 };
 
 function alert(message) {
-    popup(langdata["alert.title"], message);
+    popup(__("alert.title"), message);
 }
 
 function pushNotification(user, text, onlyIfUnactive = true) {

@@ -8,7 +8,7 @@ $().ready(function() {
     adminPanel.css("top", window.innerHeight - adminPanel.height() - adminPanel.css("padding-bottom").replace("px","") * 2);
 
     $("#remove-all-messages").click(function() {
-        popup(langdata["adminpanel.min.clear_all.popup.title"],langdata["popup.content.areyousure"],[{
+        popup(__("adminpanel.min.clear_all.popup.title"),__("popup.content.areyousure"),[{
             label: "Yes",
             click: function(p) {
                 p.close();
@@ -18,7 +18,7 @@ $().ready(function() {
                         user: session.user,
                         command: "clear_collection",
                         collection: "Message"
-                    }); 
+                    });
                 }, 500);
 
             }
@@ -31,8 +31,8 @@ $().ready(function() {
     });
 
     $("#broadcast").click(function() {
-        popup(langdata["adminpanel.min.broadcast.popup.title"], `
-            ${langdata["adminpanel.min.broadcast.popup.content"]}<br>
+        popup(__("adminpanel.min.broadcast.popup.title"), `
+            ${__("adminpanel.min.broadcast.popup.content")}<br>
             <input type="text" class="textbox" id="broadcast-msg"></input>
         `, [{
             label: "OK",
@@ -46,7 +46,7 @@ $().ready(function() {
                         message: msg
                     }, function(data) {
                         if(data.error) {
-                            popup(langdata["popup.title.error"], data.error, undefined, false, "red");
+                            popup(__("popup.title.error"), data.error, undefined, false, "red");
                         }
                     });
                 },500);

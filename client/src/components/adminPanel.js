@@ -14,7 +14,7 @@ AdminPanel = {
             <div id="admin-panel" class="setup-bg gradient">
                 <div id="setup-page">
                     <div class="titlebar">
-                        <div>${langdata["adminpanel.title"]}</div>
+                        <div>${__("adminpanel.title")}</div>
                         <div class="close">
                             <i class="material-icons">close</i>
                         </div>

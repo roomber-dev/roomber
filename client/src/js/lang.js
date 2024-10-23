@@ -1,30 +1,39 @@
-let langdata;
+let languageData = {};
 
-function loadLanguage(language, callback = function() {}) {
-    $.getJSON(`../assets/lang/${language}/${language}.json`, function (langfile) {
-        if (langfile) {
-            langdata = langfile;
-            $("*").each(function (index) {
-                let dataset = $(this).data("lcontent");
-                if (dataset) {
-                    $(this).text(langdata[dataset]);
-                }
-            });
-        }
-        callback();
-    });
-
+async function fetchLanguage(language) {
+  const response = await fetch(`assets/lang/${language}/${language}.json`);
+  const languageJson = await response.json();
+  return languageJson;
 }
 
-function setLanguage(lang) {
-    setCookie("lang", lang);
-    loadLanguage(lang);
+async function loadLanguage(language) {
+  languageData = await fetchLanguage(language);
+  $("*").each(() => {
+    const data = $(this).data("lcontent");
+    if (data) {
+      $(this).text(languageData[data]);
+    }
+  });
 }
 
-function formatLangText(text, values) {
-    let formatted = text;
-    values.forEach((value, index) => {
-        formatted = formatted.replace(`$${index+1}`, value);
-    });
-    return formatted;
+async function setLanguage(lang) {
+  setCookie("lang", lang);
+  await loadLanguage(lang);
 }
+
+function __(text, ...values) {
+  let formatted = languageData[text];
+  if (!formatted) {
+    if (fallbackLanguage[text]) {
+      formatted = fallbackLanguage[text];
+    } else {
+      return text;
+    }
+  }
+  for (let i = 0; i < values.length; ++i) {
+    formatted = formatted.replace(`$${i + 1}`, values[i]);
+  }
+  return formatted;
+}
+
+fetchLanguage("en-US").then((language) => fallbackLanguage = language);

@@ -6,11 +6,11 @@ function generateQR(password)
 
 
 function popupQR() {
-	popup(langdata["qr.show.title"], `${langdata["qr.show.content"]}<br><input type="password" class="textbox" placeholder="Password" id="qr-pass"></input>`, [{
-		label: langdata["popup.buttons.cancel"],
+	popup(__("qr.show.title"), `${__("qr.show.content")}<br><input type="password" class="textbox" placeholder="Password" id="qr-pass"></input>`, [{
+		label: __("popup.buttons.cancel"),
 		click: function(p) {p.close();}
 	}, {
-		label: langdata["popup.buttons.ok"],
+		label: __("popup.buttons.ok"),
 		click: function(p) {
 			p.close();
 			const password = $("#qr-pass").val();
@@ -20,7 +20,7 @@ function popupQR() {
 					$(".settings #qr-image").css({filter: "none"})
 				}, 501);
 			}).fail(function(err) {
-				setTimeout(function() { popup(langdata["popup.title.error"], langdata["qr.show.error.invalid"], undefined, false, "red"); }, 501);
+				setTimeout(function() { popup(__("popup.title.error"), __("qr.show.error.invalid"), undefined, false, "red"); }, 501);
 			});
 		}
 	}])
@@ -46,13 +46,13 @@ function scanQR(p) {
 			setCookie("userid", data.user);
 			setCookie("session", data.session);
 			window.location.href = "";
-		}).fail(function () { reg_err(undefined, langdata["qr.scan.error"], false) });
+		}).fail(function () { reg_err(undefined, __("qr.scan.error"), false) });
 	});
 }
 
 function openQRLogin() {
-	const p = popup(langdata["qr.scan.title"], `<div style="width: 100%;" id="reader"></div>`, [{
-		label: langdata["popup.buttons.cancel"],
+	const p = popup(__("qr.scan.title"), `<div style="width: 100%;" id="reader"></div>`, [{
+		label: __("popup.buttons.cancel"),
 		click: function(p) {
 			p.close();
 			setTimeout(function() {

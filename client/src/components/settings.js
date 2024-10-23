@@ -22,24 +22,25 @@ const settingsCategory = (icon, lcontentid, id, hidden) => {
 		return `
 		<div class="category no-select" id="${id}" onclick="settingsState.category = '${id}'; updateSettings();">
 			${icon}
-			<p data-lcontent="${lcontentid}" style="font-weight: ${settingsState.category == id ? `bold` : `none `}">${langdata[lcontentid]}</p>
+			<p data-lcontent="${lcontentid}" style="font-weight: ${settingsState.category == id ? `bold` : `none `}">${__(lcontentid)}</p>
 		</div>
 	`;
 	}
 }
 
-const pickLang = () => {
-	setLanguage($("#langpicker").val());
+const pickLang = async () => {
+	await setLanguage($("#langpicker").val());
+  updateSettings();
 }
 
 const changeUsername = () => popup(
-	langdata["changeusername.popup.title"],
+	__("changeusername.popup.title"),
 	`<input type="text" class="textbox" id="new-username">`,
 	[{
-		label: langdata["popup.buttons.cancel"],
+		label: __("popup.buttons.cancel"),
 		click: p => p.close()
 	}, {
-		label: langdata["popup.buttons.ok"],
+		label: __("popup.buttons.ok"),
 		click: p => {
 			const username = $("#new-username").val()
 			p.close()
@@ -49,7 +50,7 @@ const changeUsername = () => popup(
 					toChange: "username",
 					username: username
 				}, data => {
-					if (data.error) return popup(langdata["popup.title.error"], data.error, undefined, false, "red")
+					if (data.error) return popup(__("popup.title.error"), data.error, undefined, false, "red")
 					session.username = username
 					profile.username = username
 					if (cache[session.user])
@@ -61,19 +62,19 @@ const changeUsername = () => popup(
 		}
 	}])
 
-const changePassword = () => popup(langdata["changepass.popup.title"], `
+const changePassword = () => popup(__("changepass.popup.title"), `
  	<div class="popup-input">
-   	${langdata["changepass.popup.prompt"]}
+   	${__("changepass.popup.prompt")}
    	<input type="password" class="textbox" id="old-password">
  	</div>
  	<div class="popup-input">
-   	${langdata["changepass.popup.prompt2"]}
+   	${__("changepass.popup.prompt2")}
    	<input type="password" class="textbox" id="new-password">
  	</div>
 `, [
-  { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+  { label: __("popup.buttons.cancel"), click: p => p.close() },
   {
-		label: langdata["popup.buttons.ok"],
+		label: __("popup.buttons.ok"),
 		click: p => {
 			const oldPassword = $("#old-password").val()
 			const newPassword = $("#new-password").val()
@@ -84,22 +85,22 @@ const changePassword = () => popup(langdata["changepass.popup.title"], `
 					password: oldPassword,
 					newPassword: newPassword
 				}, data => {
-					popup(langdata["popup.title.success"], langdata["changepass.popup.success"], undefined, false, "lime")
-				}).fail(() => popup(langdata["popup.title.error"], langdata["changepass.popup.error.invalidpass"], undefined, false, "red"))
+					popup(__("popup.title.success"), __("changepass.popup.success"), undefined, false, "lime")
+				}).fail(() => popup(__("popup.title.error"), __("changepass.popup.error.invalidpass"), undefined, false, "red"))
 			}, 501)
 		}
 	}
 ])
 
-const changeEmail = () => popup(langdata["changeemail.popup.title"], `
+const changeEmail = () => popup(__("changeemail.popup.title"), `
   <div class="popup-input">
-	 ${langdata["changeemail.popup.prompt"]}
+	 ${__("changeemail.popup.prompt")}
   	<input type="password" class="textbox" id="password">
   </div>
 `, [
-  { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+  { label: __("popup.buttons.cancel"), click: p => p.close() },
   {
-		label: langdata["popup.buttons.ok"],
+		label: __("popup.buttons.ok"),
 		click: p => {
 			const password = $("#password").val()
 			p.close()
@@ -108,15 +109,15 @@ const changeEmail = () => popup(langdata["changeemail.popup.title"], `
 					user: session.user,
 					password: password
 				}, data => {
-          popup(langdata["changeemail.popup.title"], `
+          popup(__("changeemail.popup.title"), `
 					  <div class="popup-input">
-     					${langdata["changeemail.popup.prompt2"]}
+     					${__("changeemail.popup.prompt2")}
   						<input type="text" class="textbox" id="email">
 						</div>
 					`, [
-            { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+            { label: __("popup.buttons.cancel"), click: p => p.close() },
             {
-              label: langdata["popup.buttons.ok"],
+              label: __("popup.buttons.ok"),
               click: p => {
                 const email = $("#email").val()
                 p.close()
@@ -126,17 +127,17 @@ const changeEmail = () => popup(langdata["changeemail.popup.title"], `
                     password: password,
                     email: email
                   }, data => {
-                    popup(langdata["popup.title.success"], langdata["changeemail.popup.success"], undefined, false, "lime")
+                    popup(__("popup.title.success"), __("changeemail.popup.success"), undefined, false, "lime")
                     const firstPart = email.substr(0, email.indexOf("@"))
                     const secondPart = email.substr(email.indexOf("@"))
                     profile.email = "*".repeat(firstPart.length) + secondPart
                     updateSettings()
-                  }).fail(() => popup(langdata["popup.title.error"], langdata["changeemail.popup.error.invalidemail"], undefined, false, "red"))
+                  }).fail(() => popup(__("popup.title.error"), __("changeemail.popup.error.invalidemail"), undefined, false, "red"))
                 }, 501)
               }
             }
           ]);
-				}).fail(() => popup(langdata["popup.title.error"], langdata["changeemail.popup.error.invalidpass"], undefined, false, "red"))
+				}).fail(() => popup(__("popup.title.error"), __("changeemail.popup.error.invalidpass"), undefined, false, "red"))
 			}, 501)
 		}
 	}
@@ -287,7 +288,7 @@ const setAudioDevice = () => {
 const categoryContent = () => settingsCategories({
 	profile: () => `
 		<div class="flex flex-down full-width align-center">
-			<h1>${langdata["settings.category.userprofile"]}</h1>
+			<h1>${__("settings.category.userprofile")}</h1>
 			<div id="profile-avatar">
 				<img src="${profile.avatar || "avatars/default.png"}" alt="">
 				<div id="hover" onclick="setupPickProfilePicture()" class="flex align-center justify-center">${svgIcon("image_plus")}</div>
@@ -302,7 +303,7 @@ const categoryContent = () => settingsCategories({
 	`,
 	account: () => `
 		<div class="settings-category align-center">
-			<h1 class="settings-category-title">${langdata["settings.category.accountnsecurity"]}</h1>
+			<h1 class="settings-category-title">${__("settings.category.accountnsecurity")}</h1>
 			<div id="account-content" class="flex full-width">
 				<div id="account-user" class="flex flex-down">
 					<div id="account-profile" class="flex full-width align-center">
@@ -312,11 +313,11 @@ const categoryContent = () => settingsCategories({
 					</div>
 					<div id="account-credentials" class="flex-down">
 						<div class="flex align-center text-field" onclick="changeEmail()">
-							<div class="label">${langdata["settings.category.accountnsecurity.email"]}</div>
+							<div class="label">${__("settings.category.accountnsecurity.email")}</div>
 							<div class="input no-select">${profile.email}</div>
 						</div>
 						<div class="flex align-center text-field" onclick="changePassword()">
-							<div class="label">${langdata["settings.category.accountnsecurity.password"]}</div>
+							<div class="label">${__("settings.category.accountnsecurity.password")}</div>
 							<div class="input no-select">*******</div>
 						</div>
 					</div>
@@ -325,39 +326,39 @@ const categoryContent = () => settingsCategories({
 					<div id="qr-image" onclick="popupQR()">
 						<img src="assets/fake-qr.png">
 					</div>
-					<div id="qr-label">${langdata["settings.category.accountnsecurity.urqr"]}</div>
+					<div id="qr-label">${__("settings.category.accountnsecurity.urqr")}</div>
 				</div>
 			</div>
 		</div>
 	`,
 	appearance: () => `
 		<div class="settings-category">
-			<h1 class="settings-category-title">${langdata["settings.category.appearance"]}</h1>
+			<h1 class="settings-category-title">${__("settings.category.appearance")}</h1>
 			<div class="settings-subheading">
   			${materialIcon("format_paint")}
-  			<p>${langdata["settings.category.appearance.theme"]}</p>
+  			<p>${__("settings.category.appearance.theme")}</p>
       </div>
 			<div id="setup-themes">
 				<div class="setup-theme">
 					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
-					<p>${langdata["settings.category.appearance.landscape"]}</p>
+					<p>${__("settings.category.appearance.landscape")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
-					<p>${langdata["settings.category.appearance.gradient"]}</p>
+					<p>${__("settings.category.appearance.gradient")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
-					<p>${langdata["settings.category.appearance.dark"]}</p>
+					<p>${__("settings.category.appearance.dark")}</p>
 				</div>
 				<div class="setup-theme">
 					<img src="../assets/light-preview.png" onclick="setTheme('light')">
-					<p>${langdata["settings.category.appearance.light"]}</p>
+					<p>${__("settings.category.appearance.light")}</p>
 				</div>
 			</div>
 			<div class="settings-subheading">
   			${materialIcon("opacity")}
-  			<p>${langdata["settings.category.appearance.ldm"]}</p>
+  			<p>${__("settings.category.appearance.ldm")}</p>
   			<input type="checkbox" onchange="ldmToggle();" ${ldmOn ? "checked" : ""}>
 			</div>
 		</div>
@@ -367,10 +368,10 @@ const categoryContent = () => settingsCategories({
 	`,
 	language: () => `
 		<div class="settings-category">
-			<h1 class="settings-category-title">${langdata["settings.category.lang"]}</h1>
+			<h1 class="settings-category-title">${__("settings.category.lang")}</h1>
 			<div class="settings-subheading">
 			  ${materialIcon("translate")}
-  			<p>${langdata["settings.category.lang.title"]}:</p>
+  			<p>${__("settings.category.lang.title")}:</p>
   			<select id="langpicker" name="langpicker" class="textbox full-width" onchange="pickLang()">
   				<option value="en-US">English (United States)</option>
   				<option value="en-GB">English (United Kingdom)</option>
@@ -435,7 +436,7 @@ const categoryContent = () => settingsCategories({
 	<div class="flex flex-down align-center justify-center">
 	<img src="assets/roomberfull2.png" style="width: 60%;">
 	<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
-	<h3 style="margin-bottom: 3px;">${langdata["settings.category.changelog"]} (BETA)</h2>
+	<h3 style="margin-bottom: 3px;">${__("settings.category.changelog")} (BETA)</h2>
 	<div style="opacity: 0.9; text-align: center;">
 	<div id="changelog-content" class="coolslider">
 
@@ -451,10 +452,10 @@ const categoryContent = () => settingsCategories({
 			<img src="assets/roomberfull2.png" style="width: 60%;">
 			<h2 style="margin-bottom: 10px;">Roomber ${version.text}</h2>
 			<div style="opacity: 0.9; text-align: center;">
-				<p>${langdata["settings.category.about.line1"]}</p>
-				<p>${langdata["settings.category.about.line2"]}</p>
-				<p>${langdata["settings.category.about.line3"]}</p>
-				${langdata["settings.category.about.line4"] ? `<p>${langdata["settings.category.about.line4"]}</p>` : ""}
+				<p>${__("settings.category.about.line1")}</p>
+				<p>${__("settings.category.about.line2")}</p>
+				<p>${__("settings.category.about.line3")}</p>
+				${__("settings.category.about.line4") ? `<p>${__("settings.category.about.line4")}</p>` : ""}
 			</div>
 		</div>
 	`,
@@ -464,7 +465,7 @@ const settings = () => `
 <div class="settings ${theme}">
 	<heading>
 		<div id="title" class="no-select">
-			<i class="large material-icons">settings</i> <span data-lcontent="settings.title">${langdata["settings.title"]}</span>
+			<i class="large material-icons">settings</i> <span data-lcontent="settings.title">${__("settings.title")}</span>
 		</div>
 		<div id="close" onclick="closeSettings()">
 			<i class="material-icons no-select">close</i>

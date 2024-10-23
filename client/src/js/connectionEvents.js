@@ -48,7 +48,7 @@ disconnected = false;
 
 socket.on('disconnect', function() {
 	disconnected = true;
-	errorpopupid = popup(langdata["popup.title.error"], langdata["disconnected.content"], [], false, "red", true);
+	errorpopupid = popup(__("popup.title.error"), __("disconnected.content"), [], false, "red", true);
 	console.log(
 		"%cConnection lost.",
 		"color:red;font-family:system-ui;font-size:1.5rem;-webkit-text-stroke: 1px black;font-weight:bold"
