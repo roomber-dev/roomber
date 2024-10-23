@@ -104,15 +104,16 @@
 .setup-theme {
 	display: flex;
 	flex-direction: column;
-	font-weight: bold;
 	align-items: center;
 	margin-bottom: 10px;
 }
 
+.setup-theme > img {
+	width: 200px;
+}
+
 #setup-themes {
 	display: flex;
-	align-self: center;
 	flex-wrap: wrap;
-	justify-content: center;
-	align-items: center;
+	gap: 1rem;
 }

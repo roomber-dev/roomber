@@ -61,16 +61,18 @@ const changeUsername = () => popup(
 		}
 	}])
 
-const changePassword = () => popup(
-	langdata["changepass.popup.title"],
-	`${langdata["changepass.popup.prompt"]}<br>
-	<input type="password" class="textbox" id="old-password"><br>
-	${langdata["changepass.popup.prompt2"]}<br>
-	<input type="password" class="textbox" id="new-password">`,
-	[{
-		label: langdata["popup.buttons.cancel"],
-		click: p => p.close()
-	}, {
+const changePassword = () => popup(langdata["changepass.popup.title"], `
+ 	<div class="popup-input">
+   	${langdata["changepass.popup.prompt"]}
+   	<input type="password" class="textbox" id="old-password">
+ 	</div>
+ 	<div class="popup-input">
+   	${langdata["changepass.popup.prompt2"]}
+   	<input type="password" class="textbox" id="new-password">
+ 	</div>
+`, [
+  { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+  {
 		label: langdata["popup.buttons.ok"],
 		click: p => {
 			const oldPassword = $("#old-password").val()
@@ -86,16 +88,17 @@ const changePassword = () => popup(
 				}).fail(() => popup(langdata["popup.title.error"], langdata["changepass.popup.error.invalidpass"], undefined, false, "red"))
 			}, 501)
 		}
-	}])
+	}
+])
 
-const changeEmail = () => popup(
-	langdata["changeemail.popup.title"],
-	`${langdata["changeemail.popup.prompt"]}<br>
-	<input type="password" class="textbox" id="password">`,
-	[{
-		label: langdata["popup.buttons.cancel"],
-		click: p => p.close()
-	}, {
+const changeEmail = () => popup(langdata["changeemail.popup.title"], `
+  <div class="popup-input">
+	 ${langdata["changeemail.popup.prompt"]}
+  	<input type="password" class="textbox" id="password">
+  </div>
+`, [
+  { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+  {
 		label: langdata["popup.buttons.ok"],
 		click: p => {
 			const password = $("#password").val()
@@ -105,34 +108,39 @@ const changeEmail = () => popup(
 					user: session.user,
 					password: password
 				}, data => {
-					popup(langdata["changeemail.popup.title"], `${langdata["changeemail.popup.prompt2"]}<br>
-						<input type="text" class="textbox" id="email">`, [{
-						label: langdata["popup.buttons.cancel"],
-						click: p => p.close()
-					}, {
-						label: langdata["popup.buttons.ok"],
-						click: p => {
-							const email = $("#email").val()
-							p.close()
-							setTimeout(() => {
-								$.post(serverUrl + "/changeEmail", {
-									user: session.user,
-									password: password,
-									email: email
-								}, data => {
-									popup(langdata["popup.title.success"], langdata["changeemail.popup.success"], undefined, false, "lime")
-									const firstPart = email.substr(0, email.indexOf("@"))
-									const secondPart = email.substr(email.indexOf("@"))
-									profile.email = "*".repeat(firstPart.length) + secondPart
-									updateSettings()
-								}).fail(() => popup(langdata["popup.title.error"], langdata["changeemail.popup.error.invalidemail"], undefined, false, "red"))
-							}, 501)
-						}
-					}])
+          popup(langdata["changeemail.popup.title"], `
+					  <div class="popup-input">
+     					${langdata["changeemail.popup.prompt2"]}
+  						<input type="text" class="textbox" id="email">
+						</div>
+					`, [
+            { label: langdata["popup.buttons.cancel"], click: p => p.close() },
+            {
+              label: langdata["popup.buttons.ok"],
+              click: p => {
+                const email = $("#email").val()
+                p.close()
+                setTimeout(() => {
+                  $.post(serverUrl + "/changeEmail", {
+                    user: session.user,
+                    password: password,
+                    email: email
+                  }, data => {
+                    popup(langdata["popup.title.success"], langdata["changeemail.popup.success"], undefined, false, "lime")
+                    const firstPart = email.substr(0, email.indexOf("@"))
+                    const secondPart = email.substr(email.indexOf("@"))
+                    profile.email = "*".repeat(firstPart.length) + secondPart
+                    updateSettings()
+                  }).fail(() => popup(langdata["popup.title.error"], langdata["changeemail.popup.error.invalidemail"], undefined, false, "red"))
+                }, 501)
+              }
+            }
+          ]);
 				}).fail(() => popup(langdata["popup.title.error"], langdata["changeemail.popup.error.invalidpass"], undefined, false, "red"))
 			}, 501)
 		}
-	}])
+	}
+])
 
 const setInputVolume = () => {
 	setCookie("inputVolume", $("#input-volume").val())
@@ -293,8 +301,8 @@ const categoryContent = () => settingsCategories({
 		</div>
 	`,
 	account: () => `
-		<div class="flex flex-down align-center">
-			<h1 id="account-title">${langdata["settings.category.accountnsecurity"]}</h1>
+		<div class="settings-category align-center">
+			<h1 class="settings-category-title">${langdata["settings.category.accountnsecurity"]}</h1>
 			<div id="account-content" class="flex full-width">
 				<div id="account-user" class="flex flex-down">
 					<div id="account-profile" class="flex full-width align-center">
@@ -323,8 +331,12 @@ const categoryContent = () => settingsCategories({
 		</div>
 	`,
 	appearance: () => `
-		<div class="flex flex-down align-center justify-center">
-			<h1 style="margin-bottom: 35px;">${langdata["settings.category.appearance"]}</h1>
+		<div class="settings-category">
+			<h1 class="settings-category-title">${langdata["settings.category.appearance"]}</h1>
+			<div class="settings-subheading">
+  			${materialIcon("format_paint")}
+  			<p>${langdata["settings.category.appearance.theme"]}</p>
+      </div>
 			<div id="setup-themes">
 				<div class="setup-theme">
 					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
@@ -343,70 +355,80 @@ const categoryContent = () => settingsCategories({
 					<p>${langdata["settings.category.appearance.light"]}</p>
 				</div>
 			</div>
-			<button class="button" id="ldm" onclick="ldmToggle();" style="padding: 10px; font-size: 2rem;"><i class="large material-icons" style="transform: scale(150%); margin-right: 10px;">opacity</i> <span>${langdata["settings.category.appearance.ldm"]}: ${langdata["status." + (ldmOn ? "on" : "off")]}</span></button>
+			<div class="settings-subheading">
+  			${materialIcon("opacity")}
+  			<p>${langdata["settings.category.appearance.ldm"]}</p>
+  			<input type="checkbox" onchange="ldmToggle();" ${ldmOn ? "checked" : ""}>
+			</div>
 		</div>
 	`,
 	notifs: () => `
 		Not implemented
 	`,
 	language: () => `
-		<div class="flex flex-down full-width align-center">
-			<h1>${langdata["settings.category.lang"]}</h1>
-			<label for="langpicker">${langdata["settings.category.lang.title"]}:</label>
-			<select id="langpicker" name="langpicker" class="textbox" style="font-size: 1.5rem;" onchange="pickLang()">
-				<option value="en-US">English (United States)</option>
-				<option value="en-GB">English (United Kingdom)</option>
-				<option value="pl-PL">Polski (Polska)</option>
-				<option value="ru-RU">Русский (Россия)</option>
-				<option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
-				<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
-			</select>
+		<div class="settings-category">
+			<h1 class="settings-category-title">${langdata["settings.category.lang"]}</h1>
+			<div class="settings-subheading">
+			  ${materialIcon("translate")}
+  			<p>${langdata["settings.category.lang.title"]}:</p>
+  			<select id="langpicker" name="langpicker" class="textbox full-width" onchange="pickLang()">
+  				<option value="en-US">English (United States)</option>
+  				<option value="en-GB">English (United Kingdom)</option>
+  				<option value="pl-PL">Polski (Polska)</option>
+  				<option value="ru-RU">Русский (Россия)</option>
+  				<option value="me-OW">Meow (ฅ^•ﻌ•^ฅ)</option>
+  				<option value="vi-VI">Tiếng Việt (Vietnamese)</option>
+  			</select>
+			</div>
 		</div>
 	`,
 	audio_video: () => `
-		<div class="audio-heading">${materialIcon("volume_up")}<b>Audio</b></div>
-		<div class="audio-volume">
-			<div class="inputs">
-				<div class="audio-input">
-					Input device<br/>
-					<select id="device" name="device" class="textbox" onchange="setAudioDevice()">
-						${audioDevices
-			.filter(device => device.kind == "audioinput")
-			.map(device => ({
-				label: device.label,
-				id: device.deviceId
-			}))
-			.map(({ label, id }) =>
-				`<option value="${id}">${label}</option>`)
-			.join("\n")}
-					</select>
-				</div>
-				<div class="audio-input">
-					Input volume<br/>
-					<div class="input">
-						${materialIcon("volume_up")}
-						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("inputVolume") || 0.5)}" class="volume-slider" id="input-volume" onchange="setInputVolume()">
-					</div>
-				</div>
-				<div class="audio-input">
-					Output volume<br/>
-					<div class="input">
-						${materialIcon("volume_up")}
-						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("outputVolume") || 0.5)}" class="volume-slider" id="output-volume" onchange="setOutputVolume()">
-					</div>
-				</div>
-			</div>
-			<div class="mic-test">
-				<div class="audio-heading"><b>Microphone test</b></div>
-				Say something to play it back
-				<div class="button-bar">
-					<button class="button" onclick="toggleMicTest()">${materialIcon("mic")}<div class="label">Start Test</div></button>
-					<div class="bar">
-						<div class="progress">
-						</div>
-					</div>
-				</div>
-			</div>
+  	<div class="settings-category">
+  		<h1 class="settings-category-title">Audio & Video</h1>
+  		<div class="settings-subheading">${materialIcon("volume_up")}Audio</div>
+  		<div class="audio-volume">
+  			<div class="inputs">
+  				<div class="audio-input">
+  					Input device
+  					<select id="device" name="device" class="textbox" onchange="setAudioDevice()">
+  						${audioDevices
+             			.filter(device => device.kind == "audioinput")
+             			.map(device => ({
+              				label: device.label,
+              				id: device.deviceId
+             			}))
+             			.map(({ label, id }) =>
+                      `<option value="${id}">${label}</option>`
+                  )
+         			}
+  					</select>
+  				</div>
+  				<div class="audio-input">
+  					Input volume<br/>
+  					<div class="input">
+  						${materialIcon("volume_up")}
+  						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("inputVolume") || 0.5)}" class="volume-slider" id="input-volume" onchange="setInputVolume()">
+  					</div>
+  				</div>
+  				<div class="audio-input">
+  					Output volume<br/>
+  					<div class="input">
+  						${materialIcon("volume_up")}
+  						<input type="range" min="0.0" max="1.0" step="0.01" value="${Number(getCookie("outputVolume") || 0.5)}" class="volume-slider" id="output-volume" onchange="setOutputVolume()">
+  					</div>
+  				</div>
+  			</div>
+  			<div class="mic-test">
+  				<p>Microphone test</p>
+  				<div class="button-bar">
+  					<button class="button" onclick="toggleMicTest()">${materialIcon("mic")}<div class="label">Start Test</div></button>
+  					<div class="bar">
+  						<div class="progress">
+  						</div>
+  					</div>
+  				</div>
+  			</div>
+  		</div>
 		</div>
 	`,
 	changelog: () => `
@@ -513,7 +535,7 @@ const changelogShit = (title, data, colorRGB) => {
 	return html;
 }
 
-/* 
+/*
 my attempt on fixing emojis
 
 const styleSheets = Array.from(document.styleSheets).filter(

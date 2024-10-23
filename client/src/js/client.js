@@ -254,9 +254,9 @@ function removeLoadingAnimation(server) {
 function serverSettings(callback) {
 	let pic = "";
 	popup("", `
-		<div style="text-align: center;">
-		<a href="#" class="pick-server-pic"><img src="assets/pick-image.png" class="picked-server-pic" style="width: 35%; border-radius: 50%"></a></br>
-		<input class="textbox" id="server-name" placeholder="Server Name" style="width: 80%;"></input>
+		<div class="popup-text align-center">
+  		<a href="#" class="pick-server-pic text-center"><img src="assets/pick-image.png" class="picked-server-pic" style="width: 128px; border-radius: 50%"></a>
+  		<input class="textbox" id="server-name" placeholder="Server Name" style="width: 80%;"></input>
 		</div>
 	`, [{
 		label: langdata["popup.buttons.ok"],
@@ -623,7 +623,7 @@ loaded(function () {
 				${langdata["server.new.join.title"]}
 			</button>
 			<button class="new-server-btn button">
-				<i class="large material-icons">add_circle</i>	
+				<i class="large material-icons">add_circle</i>
 				${langdata["server.new.create.title"]}
 			</button>
 			</div>

@@ -30,5 +30,5 @@ And as always, before you `git push`, always test!
 # Made by
 
 - neksodebe (Founder and Programmer)
-- SomeEver (Programmer)
+- someever (Programmer)
 - OlxsiU (Graphic Designer)

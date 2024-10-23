@@ -46,7 +46,7 @@
 }
 
 .settings section {
-	background: rgba(0, 0, 0, 0.2);
+	background: rgba(0, 0, 0, 0.3);
 	border: 1px solid rgba(255, 255, 255, 0.5);
 	box-sizing: border-box;
 	box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
@@ -54,7 +54,7 @@
 	margin: 5px 28px 28px 28px;
 	flex: 1;
 	display: flex;
-	backdrop-filter: blur(30px);
+	backdrop-filter: blur(80px);
 }
 
 .light .settings section {
@@ -193,10 +193,6 @@
 	margin-left: 15px;
 }
 
-.settings #account-title {
-	margin-bottom: 16px;
-}
-
 .settings #account-content .label {
 	font-weight: bold;
 }
@@ -250,50 +246,38 @@
 	flex: 1;
 }
 
-.audio-heading {
-	height: 40px;
-	display: flex;
-	align-items: center;
-}
-
-.audio-heading i {
-	margin-top: 2px;
-	margin-right: 5px;
-}
-
 .audio-volume {
 	display: flex;
-	margin-left: 50px;
-	margin-right: 50px;
 	flex-direction: column;
+	gap: 1.5rem;
 }
 
 .audio-volume .inputs {
 	display: flex;
+	gap: 2rem;
 }
 
 .audio-input {
-	margin: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .audio-input .input {
 	display: flex;
-	height: 38px;
+	/* height: 38px; */
 	align-items: center;
-}
-
-.audio-input .input i {
-	margin-right: 8px;
+	gap: 0.5rem;
 }
 
 .mic-test {
 	display: flex;
 	flex-direction: column;
+	gap: 0.5rem;
 }
 
 .mic-test .button-bar {
 	display: flex;
-	margin-top: 15px;
 	align-items: center;
 }
 
@@ -339,10 +323,10 @@
 #changelog-content .changelogcategorytitleshit {
 	font-size: 120%;
 	font-weight: bold;
-    color: white;
-    padding: 2px 4px;
-    border-radius: 4px;
-    margin: 5px;
+  color: white;
+  padding: 2px 4px;
+  border-radius: 4px;
+  margin: 5px;
 	margin-bottom: 5px;
 }
 
@@ -362,4 +346,30 @@
 #changelog-content .changelogattach {
 	width: 70%;
 	margin: 0 auto;
+}
+
+.settings.landscape > heading > #title, .settings.landscape > heading > #close {
+  color: black;
+}
+
+.settings-category {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.settings-subheading {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  font-weight: 700;
+  text-wrap-mode: nowrap;
+}
+
+.settings-subheading > input, .settings-subheading > select {
+  margin-left: 0.5rem;
+}
+
+.settings-category-title {
+	margin-bottom: 1rem;
 }

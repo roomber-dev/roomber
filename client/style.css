@@ -369,7 +369,6 @@ body {
 .textbox {
 	background: rgb(32, 32, 32);
 	color: #C7C7C7;
-	margin-top: 14px;
 	padding: 6px;
 	border: 1px solid rgba(255,255,255,0.3);
 	border-radius: 6px;
@@ -432,11 +431,11 @@ body {
 	background: linear-gradient(to bottom, rgba(0,149,186,1) 0%, rgba(155,52,186,1) 70%);*/
 }
 
-@keyframes spin { 
-	100% { 
-		-webkit-transform: rotate(360deg); 
-		transform:rotate(360deg); 
-	} 
+@keyframes spin {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform:rotate(360deg);
+	}
 }
 
 @keyframes fade-out {
@@ -1107,3 +1106,5 @@ input[type=range]::-ms-track  {
 .light.coolslider::-webkit-scrollbar-thumb:hover, .light #channels ul::-webkit-scrollbar-thumb:hover {
 	background: rgba(0,0,0,0.2);
 }
+
+.text-center { text-align: center; }

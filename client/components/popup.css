@@ -69,7 +69,10 @@
 
 .popup-main {
     flex: 1;
-    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem;
     background: #1B1B1B;
     border-radius: 8px 8px 0px 0px;
     outline: 1px solid rgba(0,0,0,0.5);
@@ -112,4 +115,16 @@
 .light .popup-footer {
     background: rgb(225,224,224,0.8);
     outline: 1px solid rgba(255,255,255,0.5);
+}
+
+.popup-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.popup-input {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }

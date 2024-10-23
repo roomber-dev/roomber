@@ -34,14 +34,13 @@ function popup(title, text, buttons = [{ label: langdata["popup.buttons.ok"], cl
         t = `<p style='color: ${color}; font-weight: bold;'>${title}</p>`;
     }
     let html = `<div class="popup" id="${id}">
-    <div class="popup-content">
-        <div class="popup-main">
-            <h4>${t}</h4>
-            <br>
-            <p class="popup-text">
-                ${text}
-            </p>
-        </div>
+        <div class="popup-content">
+            <div class="popup-main">
+                <h4>${t}</h4>
+                <div class="popup-text">
+                    ${text}
+                </div>
+            </div>
             <div class="popup-footer">
             </div>
         </div>

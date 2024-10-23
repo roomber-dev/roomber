@@ -5,7 +5,8 @@
   "main": "./server/server.js",
   "scripts": {
     "test": "echo \"No test scripts!\" && exit 1",
-    "start": "node .",
+    "build": "node pack.js",
+    "serve": "ROOMBER_PACKED=true node .",
     "dev": "nodemon .",
     "gui": "electron gui/main.js"
   },
