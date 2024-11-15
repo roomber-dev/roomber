@@ -1,4 +1,4 @@
-![Roomber logo](logo.png)
+![Roomber logo](images/logo.png)
 
 ---
 
@@ -17,19 +17,21 @@ If you just want to test out some changes, use `npm run dev`. This will not pack
 
 # Screenshots
 
-![Roomber UI](https://user-images.githubusercontent.com/89866735/145712496-0ae6d1f1-5e9b-4ad6-9c58-0260578f39ce.png)
+![Roomber UI](images/screenshot_1.png)
+![Newer Roomber UI](images/screenshot_2.png)
+![Roomber Settings](images/screenshot_3.png)
 
 # To-do
 
-- [x] Voice calls
-- [x] Video calls
-- [ ] Screensharing
-- [ ] Roomber Xtra (paid subscription)
-- [x] Desktop App
-- [ ] Mobile App
+-   [x] Voice calls
+-   [x] Video calls
+-   [ ] Screensharing
+-   [ ] Roomber Xtra (paid subscription)
+-   [x] Desktop App
+-   [ ] Mobile App
 
 # Made by
 
-- neksodebe (Founder and Programmer)
-- someever (Programmer)
-- OlxsiU (Graphic Designer)
+-   neksodebe (Founder and Programmer)
+-   someever (Programmer)
+-   OlxsiU (Graphic Designer)
