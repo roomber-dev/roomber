@@ -1,39 +1,38 @@
 {
-  "name": "roomber",
-  "version": "4",
-  "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
-  "main": "./server/server.js",
-  "scripts": {
-    "test": "echo \"No test scripts!\" && exit 1",
-    "build": "node pack.js",
-    "serve": "ROOMBER_PACKED=true node .",
-    "dev": "nodemon .",
-    "gui": "electron gui/main.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "chalk": "^4.1.2",
-    "child_process": "^1.0.2",
-    "electron": "^17.0.0",
-    "express": "^4.17.1",
-    "express-rate-limit": "^6.0.3",
-    "glob": "^7.2.0",
-    "http": "^0.0.1-security",
-    "js-confuser": "^1.4.0",
-    "mongoose": "^6.0.12",
-    "ngrok": "^4.2.2",
-    "node-fetch": "^2.6.7",
-    "nodemailer": "^6.7.2",
-    "open": "^8.4.0",
-    "open-graph-scraper": "^4.11.0",
-    "socket.io": "^4.3.1"
-  },
-  "engines": {
-    "node": "16.13.1"
-  },
-  "devDependencies": {
-    "javascript-obfuscator": "^4.0.0"
-  }
+    "name": "roomber",
+    "version": "4",
+    "description": "Roomber's fourth recode \"attempt\"! We still don't know if it's an attempt or a success..",
+    "main": "./server/server.js",
+    "scripts": {
+        "test": "echo \"No test scripts!\" && exit 1",
+        "build": "node pack.js",
+        "serve": "ROOMBER_PACKED=true node .",
+        "dev": "nodemon .",
+        "gui": "electron gui/main.js"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "body-parser": "^1.19.0",
+        "chalk": "^4.1.2",
+        "child_process": "^1.0.2",
+        "express": "^4.17.1",
+        "express-rate-limit": "^6.0.3",
+        "glob": "^7.2.0",
+        "http": "^0.0.1-security",
+        "js-confuser": "^1.4.0",
+        "mongoose": "^6.0.12",
+        "ngrok": "^4.2.2",
+        "node-fetch": "^2.6.7",
+        "nodemailer": "^6.7.2",
+        "open": "^8.4.0",
+        "open-graph-scraper": "^4.11.0",
+        "socket.io": "^4.3.1"
+    },
+    "engines": {
+        "node": "16.13.1"
+    },
+    "devDependencies": {
+        "javascript-obfuscator": "^4.0.0"
+    }
 }
