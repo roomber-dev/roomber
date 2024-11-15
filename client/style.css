@@ -1044,6 +1044,10 @@ a {
     margin-right: 0.5rem;
 }
 
+.light .attachment i {
+    color: white;
+}
+
 .server-name {
     font-size: 16px;
     font-weight: bold;
