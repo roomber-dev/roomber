@@ -66,34 +66,8 @@ body,
     overflow: clip;
 }
 
-body {
-    background-position: center center;
-    background: url("assets/bggradient.png");
-}
-
 #body {
     position: relative;
-}
-
-.gradient {
-    background: url("../assets/bggradient.png");
-    background-size: cover;
-}
-
-.landscape {
-    background: url("../assets/bglandscape.jpg");
-    background-size: cover;
-}
-
-.dark {
-    background: url("../assets/bgdark.png");
-    background-size: cover;
-}
-
-.light {
-    background: url("../assets/bglight.png");
-    background-size: cover;
-    color: black;
 }
 
 .light * {
