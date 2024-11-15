@@ -771,7 +771,7 @@ function composeMessageContent(message, messageText) {
 	if (attachment && attachment.attr("src")) {
 		const s = attachment.attr("src").split("/");
 		attachment.on("error", function () {
-			attachment.parent().html(`<div class="attachment" style="padding: 4px; border: 1px solid rgba(0,0,0,0.1);"><i class="megasmall material-icons">description</i>${s[s.length - 1]}</div>`);
+			attachment.parent().html(`<div class="attachment" style="padding: 0.5rem 0.75rem; width: fit-content;"><i class="megasmall material-icons">description</i>${s[s.length - 1]}</div>`);
 		});
 	}
 }
