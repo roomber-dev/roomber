@@ -228,7 +228,7 @@ body,
 }
 
 .light .button:hover {
-    background: rgba(220, 220, 220, 0.5);
+    background: rgba(240, 240, 240, 1);
 }
 
 #message {
