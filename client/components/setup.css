@@ -1,119 +1,147 @@
-.setup-bg {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 1000;
-	display: flex;
-	justify-content: center;
-	align-items: center;
+.setup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #setup-page {
-	width: 80%;
-	height: 90%;
-	background: rgba(0,0,0,0.2);
-	border: 2px solid rgba(255,255,255,0.3);
-	outline: 1px solid rgba(0,0,0,0.3);
-	backdrop-filter: blur(10px);
-	border-radius: 10px;
-	display: flex;
-	flex-direction: column;
-	align-items: flex-end;
+    width: 80%;
+    height: 90%;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    outline: 1px solid rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(80px);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.light #setup-page {
+    background: rgba(255, 255, 255, 0.3);
+    border: 2px solid rgba(0, 0, 0, 0.5);
+    outline: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 #setup-user {
-	display: flex;
-	height: 50px;
-	justify-content: flex-end;
-	margin: 15px;
-	width: 100%;
-	font-weight: 300;
+    display: flex;
+    height: 50px;
+    justify-content: flex-end;
+    margin: 15px;
+    width: 100%;
+    font-weight: 300;
 }
 
-
 #setup-icon i {
-	font-size: 200px;
+    font-size: 200px;
 }
 
 #setup-icon {
-	text-align: center;
-	padding-top: 40px;
-	width: 100%;
-	margin-bottom: 20px;
+    text-align: center;
+    padding-top: 40px;
+    width: 100%;
+    margin-bottom: 20px;
 }
 
 #setup-icon img {
-	width: 128px;
-	height: 128px;
+    width: 128px;
+    height: 128px;
 }
 
 #setup-text {
-	font-size: 36px;
-	text-align: center;
-	align-self: center;
-	font-weight: bold;
-	margin-bottom: 40px;
+    font-size: 36px;
+    text-align: center;
+    align-self: center;
+    font-weight: bold;
+    margin-bottom: 40px;
 }
 
 #setup-btn {
-	align-self: center;
+    align-self: center;
 }
 
 .setup-button {
-	padding: 10px;
-	outline: 1px solid rgba(0,0,0,0.5);
-	border: 2px solid rgba(255,255,255,0.3);
-	font-size: 24px;
-	padding-left: 20px;
-	padding-right: 20px;
-	border-radius: 10px;
+    padding: 10px;
+    outline: 1px solid rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    font-size: 24px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 10px;
 }
 
 #setup-top-icon {
-	flex: 1;
-	margin-left: 30px;
+    flex: 1;
+    margin-left: 30px;
 }
 
 #setup-pfp img {
-	width: 128px;
-	height: 128px;
-	border-radius: 50%;
+    width: 128px;
+    height: 128px;
+    border-radius: 50%;
 }
 
 #setup-pfp {
-	text-align: center;
-	align-self: center;
-	margin-bottom: 20px;
+    text-align: center;
+    align-self: center;
+    margin-bottom: 20px;
 }
 
 #setup-next {
-	display: flex;
-	flex: 1;
-	align-items: flex-end;
+    display: flex;
+    flex: 1;
+    align-items: flex-end;
 }
 
 #setup-next button {
-	padding: 10px;
-	padding-bottom: 4px;
-	height: 48px;
-	margin: 20px;
+    padding: 10px;
+    height: 48px;
+    margin: 20px;
 }
 
 .setup-theme {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
 }
 
 .setup-theme > img {
-	width: 200px;
+    width: 200px;
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.light .setup-theme > img {
+    border: 2px solid rgba(0, 0, 0, 0.15);
+}
+
+.setup-theme.current > img {
+    outline: 4px solid #2196f3;
+    outline-offset: 4px;
 }
 
 #setup-themes {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1rem;
+    margin: 0.5rem 0;
+}
+
+.theme-button-group,
+#setup-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.setup #setup-themes {
+    width: 100%;
+    justify-content: center;
+    padding: 0 6rem;
+    box-sizing: border-box;
 }

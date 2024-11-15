@@ -27,7 +27,10 @@ function startingStuff() {
 }
 $(document).ready(function () {
 	cclog(`DOM Loading time is ${startTime}ms`, "start");
+    theme = getCookie("theme") ?? "gradient";
 	loadLanguage(getCookie("lang") ?? "en-US").then(startingStuff);
+    updateTheme();
+    console.log(theme);
 });
 
 canEditAndDeleteAny = false;
@@ -109,13 +112,14 @@ function updateTheme() {
 }
 
 function setTheme(_theme) {
-	const oldTheme = theme;
 	theme = _theme;
 	updateTheme();
 	setCookie("theme", _theme);
 	if ($(".settings").html()) {
-		$(".settings").removeClass(oldTheme);
-		$(".settings").addClass(theme);
+    	updateSettings();
+	}
+	if ($(".setup").html()) {
+    	setupUpdate();
 	}
 }
 
@@ -395,79 +399,22 @@ function openServer(index) {
 			}], false, "red")
 		})
 	}
-	const link = `https://roomber-app.herokuapp.com/invite?s=${server._id}`
+    const link = `https://roomber-app.herokuapp.com/invite?s=${server._id}`;
 	$("#channels ul #server-buttons").append(`
 		<button class="button" onclick="serverInvitePopup('${link}')"><div class="hash no-select"><i class="megasmall material-icons">more</i></div></button>
 	`);
 }
 
-function onSetupFinished(t) {
+function onSetupFinished() {
 	ifPermissions(["messages.delete_any", "messages.edit_any"], function () {
 		canEditAndDeleteAny = true;
 	});
-
-	if (t) {
-		theme = t;
-		updateTheme();
-	}
 
 	$.post(serverUrl + '/getServers', { ...session }, function (servers) {
 		servers.forEach(addServer);
 		fireLoaded();
 	});
-
-	if (getCookie("theme") != "") {
-		theme = getCookie("theme");
-		updateTheme();
-	} else {
-		theme = "gradient";
-	}
-	/*if (!gotMicPerms()) {
-		setTimeout(() => {
-			vcPopupThing();
-		}, 5000);
-	}*/
 }
-
-/*function vcPopupThing() {
-	popup("Hey!", "Sorry to interrupt you, but to use VC's, you have to give us mic permissions! Hope you don't mind :)", [
-		{
-			label: "OK",
-			click: function (popup) {
-				getMicPerms(function (result) {
-					if (result == false) {
-						popup("Hey, I'm back again..", "It looks like you might've pressed the wrong button..?", [
-							{
-								label: "Try again",
-								click: function (popup_) {
-									popup_.close();
-									popup.close();
-									setTimeout(() => {
-										vcPopupThing();
-									}, 500);
-								}
-							},
-							{
-								label: "No",
-								click: function (popup_) {
-									popup_.close();
-									popup.close();
-								}
-							}
-						])
-					}
-				})
-				popup.close()
-			}
-		},
-		{
-			label: "No",
-			click: function (popup) {
-				popup.close()
-			}
-		}
-	])
-}*/
 
 loaded(function () {
 	clearInterval(startTimer);

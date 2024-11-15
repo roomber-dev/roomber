@@ -1,104 +1,86 @@
 let setupCurrentPage = 0;
-let setupTheme = "gradient";
-// languages done here!
-function setupNext() {
-	setupCurrentPage += 1;
-	$("#setup-container").html(setupPage(session.username));
+
+const themeButton = (themeName) => `
+    <div class="setup-theme ${theme === themeName ? "current" : ""}">
+    	<img src="../assets/${themeName}-preview.png" onclick="setTheme('${themeName}')">
+    	<p>${__(`settings.category.appearance.${themeName}`)}</p>
+    </div>
+`;
+
+const themeButtons = () => `
+    <div class="theme-button-group">
+        ${themeButton("landscape")}
+        ${themeButton("gradient")}
+    </div>
+    <div class="theme-button-group">
+        ${themeButton("dark")}
+        ${themeButton("light")}
+    </div>
+`;
+
+function setup() {
+    setupNext();
 }
 
-function setupNotImplemented() {
-	alert("nope not yet"); // would you look at that it is there
+function setupUpdate() {
+    $(".setup").remove();
+    $("#body").append(renderSetup());
+}
+
+function setupNext() {
+    setupCurrentPage += 1;
+    setupUpdate();
 }
 
 function setupPickProfilePicture() {
-	pfpWidget.open();
+    pfpWidget.open();
 }
 
-function setupSetTheme(theme) {
-	setupTheme = theme;
-	$("#setup-container").html(setupPage(session.username));
-}
+const renderSetup = () => `
+    <div class="setup ${theme}">
+        <div id="setup-page">
+            ${setupPage(session.username)}
+        </div>
+    </div>
+`;
 
 function setupPage(username) {
-	return {
-		1: function () {
-			return `
-				<div class="setup-bg ${setupTheme}">
-					<div id="setup-page">
-						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-icon"><i class="material-icons">build</i></div>
-						<div id="setup-text">${__("setup.pages.1.title")}</div>
-						<button id="setup-btn" class="setup-button button" onclick="setupNext()">${__("setup.pages.1.go")}</button>
-					</div>
-				</div>
-			`;
-		},
-		2: function () {
-			return `
-				<div class="setup-bg ${setupTheme}">
-					<div id="setup-page">
-						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-text">${__("setup.pages.2.title")}</div>
-						<div id="setup-pfp"><img src="../avatars/default.png"></div>
-						<button id="setup-btn" class="setup-button button" onclick="setupPickProfilePicture()">Pick</button>
-						<div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
-					</div>
-				</div>
-			`;
-		},
-		3: function () {
-			return `
-				<div class="setup-bg ${setupTheme}">
-					<div id="setup-page">
-						<div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-text">${__("setup.pages.3.title")}</div>
-						<div id="setup-themes">
-				<div class="setup-theme">
-					<img src="../assets/landscape-preview.png" onclick="setTheme('landscape')">
-					<p>${__("settings.category.appearance.landscape")}</p>
-				</div>
-				<div class="setup-theme">
-					<img src="../assets/gradient-preview.png" onclick="setTheme('gradient')">
-					<p>${__("settings.category.appearance.gradient")}</p>
-				</div>
-				<div class="setup-theme">
-					<img src="../assets/dark-preview.png" onclick="setTheme('dark')">
-					<p>${__("settings.category.appearance.dark")}</p>
-				</div>
-				<div class="setup-theme">
-					<img src="../assets/light-preview.png" onclick="setTheme('light')">
-					<p>${__("settings.category.appearance.light")}</p>
-				</div>
-			</div>
-						<div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
-					</div>
-				</div>
-			`;
-		},
-		4: function () {
-			return `
-				<div class="setup-bg ${setupTheme}">
-					<div id="setup-page">
-						<div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
-						<div id="setup-icon"><img src="../assets/roomber-logo.png"></div>
-						<div id="setup-text">${__("setup.pages.4.title")}</div>
-						<button id="setup-btn" class="setup-button button" onclick="setupClose()">${__("setup.pages.4.button")}</button>
-					</div>
-				</div>
-			`;
-		}
-	}[setupCurrentPage]();
+    return {
+        1: () => `
+            <div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
+            <div id="setup-icon"><i class="material-icons">build</i></div>
+            <div id="setup-text">${__("setup.pages.1.title")}</div>
+            <button id="setup-btn" class="setup-button button" onclick="setupNext()">${__("setup.pages.1.go")}</button>
+        `,
+        2: () => `
+            <div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
+            <div id="setup-text">${__("setup.pages.2.title")}</div>
+            <div id="setup-pfp"><img src="../avatars/default.png"></div>
+            <button id="setup-btn" class="setup-button button" onclick="setupPickProfilePicture()">Pick</button>
+            <div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
+        `,
+        3: () => `
+            <div id="setup-user"><div id="setup-top-icon"><i class="megasmall material-icons">build</i></div><i class="megasmall material-icons">person</i>${username}</div>
+            <div id="setup-text">${__("setup.pages.3.title")}</div>
+            <div id="setup-themes">
+                ${themeButtons()}
+            </div>
+            <div id="setup-next"><button class="setup-button button" onclick="setupNext()"><i class="material-icons">arrow_forward</i></button></div>
+        `,
+        4: () => `
+            <div id="setup-user"><i class="megasmall material-icons">person</i>${username}</div>
+            <div id="setup-icon"><img src="../assets/roomber-logo.png"></div>
+            <div id="setup-text">${__("setup.pages.4.title")}</div>
+            <button id="setup-btn" class="setup-button button" onclick="setupClose()">${__("setup.pages.4.button")}</button>
+        `,
+    }[setupCurrentPage]();
 }
 
 function setupClose() {
-	$(".setup-bg").remove();
-	$.post(serverUrl + '/setup', {
-		session: session.session,
-		user: session.user
-	});
-	onSetupFinished(setupTheme);
-}
-
-function setup() {
-	setupNext();
+    $(".setup").remove();
+    $.post(serverUrl + "/setup", {
+        session: session.session,
+        user: session.user,
+    });
+    onSetupFinished();
 }
