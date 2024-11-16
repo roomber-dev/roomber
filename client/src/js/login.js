@@ -189,7 +189,7 @@ function checkSetup() {
 function loginInit() {
 	let id = getCookie("session");
 	let uid = getCookie("userid");
-	if (id == "" || uid == "") {
+	if (id == null || uid == null) {
 		session = {};
 		reg();
 	} else {
