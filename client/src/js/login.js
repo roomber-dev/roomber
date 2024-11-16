@@ -114,7 +114,7 @@ function reg() {
 						<p>${__("email")}</p>
 						<input type="email" id="reg-email" class="textbox" placeholder="E-mail"/>
 						<br>
-						<p>${__("email")}</p>
+						<p>${__("username")}</p>
 						<input type="username" id="reg-username" class="textbox" placeholder="Username"/>
 						<br>
 						${regPass()}
