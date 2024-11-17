@@ -104,13 +104,12 @@
       const serverInfo = fetch("/api/v1/server?id=" + server)
         .then((res) => res.json())
         .then((res) => {
-          document.querySelector("body #main p").innerHTML = res.name;
+          document.querySelector("body #main p").innerText = res.name;
           if (res.picture) {
             document.querySelector("body #main img").src = res.picture;
           } else {
-            document.querySelector("body #main #img-container").innerHTML = `
-						<div class="basic-server">${res.name.at(0).toUpperCase()}</div>
-					`;
+            document.querySelector("body #main #img-container").innerHTML = `<div class="basic-server"></div>`;
+            document.querySelector("body #main #img-container .basic-server").innerText = res.name.at(0).toUpperCase();
           }
         });
     </script>
